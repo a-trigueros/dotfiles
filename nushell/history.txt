@@ -1,0 +1,62 @@
+cd dot-files/
+exit
+$nu
+exit
+pwd
+clear
+exit
+ls
+pwd
+clear
+exit
+:q
+exit
+$nu
+cd dot-files/
+ls
+clear
+nvim Brewfile
+$env.PATH
+$nu
+open $nu.env-path
+$env.PATH
+clear
+ls
+exit
+$env.PATH
+exit
+cd dot-files/
+ls
+cd ..
+$env.PATH
+open ~/.MacOSX/environment.plist
+exit
+nvim .zshrc
+$env.PATH
+$nu
+open /Users/atrigueros/dot-files/nushell/env.nu
+$env.PATH
+exit
+$env.PATH
+$nu
+ls
+clear
+ls
+nu
+$nu
+env /Users/atrigueros/dot-files/nushell/config.nu
+open /Users/atrigueros/dot-files/nushell/config.nu
+open /Users/atrigueros/dot-files/nushell/env.nu
+exit
+$env.PATH
+exit
+$env.PATH
+nvim .zsh_history
+clear
+pwd
+clear
+:w
+exit
+exti
+exit
+exit
