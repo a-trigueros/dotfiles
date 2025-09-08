@@ -27,4 +27,10 @@
     | append ($env.HOME + "/.dotnet/tools")
     | append "/opt/tcr"
     | append ($env.HOME + "/.cache/lm-studio/bin")
-    | append ($env.HOME + "/tools/flutter/bin"))
+    | append ($env.HOME + "/tools/flutter/bin")
+)
+
+
+($env.NU_LIB_DIRS = $env.NU_LIB_DIRS 
+    | append ($nu.default-config-dir | path join "/nu_scripts")
+)

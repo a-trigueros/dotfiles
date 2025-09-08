@@ -1,18 +1,28 @@
 #! /bin/bash
 
+git submodule update --depth 1
+
 stow git -t $HOME
 stow tmux -t $HOME
 
-mkdir -p $HOME/.config/nvim
-stow nvim -t $HOME/.config/nvim
+# Function to stow a directory into a specified config directory
+STOW_DIR() {
+    local dir="$1"
+    local config_dir="${2:-$HOME/.config}"
+    rm -rf "$config_dir/$dir"
+    mkdir -p "$config_dir/$dir"
+    stow "$dir" -t "$config_dir/$dir"
+}
 
-mkdir -p $HOME/.config/wezterm
-stow wezterm -t $HOME/.config/wezterm
+
+# Use the function for nvim et wezterm
+STOW_DIR nu_scripts
+STOW_DIR nvim
+STOW_DIR wezterm
 
 if [ -z "$XDG_CONFIG_HOME" ]; then
-    mkdir -p "$HOME/Library/Application Support/nushell"
-    stow nushell -t "$HOME/Library/Application Support/nushell"
+    STOW_DIR nushell "$HOME/Library/Application Support"
 else
     echo "XDG_CONFIG_HOME est défini : $XDG_CONFIG_HOME"    
-    mkdir -p $XDG_CONFIG_HOME/nushell
+    STOW_DIR nushell "$XDG_CONFIG_HOME"
 fi
