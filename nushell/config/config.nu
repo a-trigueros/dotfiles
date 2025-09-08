@@ -17,6 +17,8 @@
 # options using:
 #     config nu --doc | nu-highlight | less -R
 
+$env.EDITOR = "nvim"
+
 ($env.PATH = $env.PATH 
     | append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     | append "/opt/homebrew/bin"
@@ -28,9 +30,4 @@
     | append "/opt/tcr"
     | append ($env.HOME + "/.cache/lm-studio/bin")
     | append ($env.HOME + "/tools/flutter/bin")
-)
-
-
-($env.NU_LIB_DIRS = $env.NU_LIB_DIRS 
-    | append ($nu.default-config-dir | path join "/nu_scripts")
 )

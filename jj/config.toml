@@ -1,0 +1,6 @@
+[user]
+name = "Alexandre Trigueros"
+
+[ui]
+default-command = "log"
+#:schema https://jj-vcs.github.io/jj/latest/config-schema.json

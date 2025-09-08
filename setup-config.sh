@@ -16,13 +16,24 @@ STOW_DIR() {
 
 
 # Use the function for nvim et wezterm
-STOW_DIR nu_scripts
+STOW_DIR jj
 STOW_DIR nvim
 STOW_DIR wezterm
 
 if [ -z "$XDG_CONFIG_HOME" ]; then
-    STOW_DIR nushell "$HOME/Library/Application Support"
+    rm -rf "$HOME/Library/Application Support/nushell"
+    mkdir -p "$HOME/Library/Application Support/nushell"
+    stow --target "$HOME/Library/Application Support/nushell" --dir=nushell config
 else
     echo "XDG_CONFIG_HOME est défini : $XDG_CONFIG_HOME"    
-    STOW_DIR nushell "$XDG_CONFIG_HOME"
+    echo "Pas encore implémenté"
 fi
+
+rm -rf $HOME/.config/nushell/nu_scripts
+rm -rf $HOME/.config/nushell/completions
+
+mkdir -p $HOME/.config/nushell/nu_scripts
+mkdir -p $HOME/.config/nushell/completions
+
+stow --target $HOME/.config/nushell/nu_scripts --dir=nushell nu_scripts
+stow --target $HOME/.config/nushell/completions --dir=nushell completions
