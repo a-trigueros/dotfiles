@@ -17,6 +17,10 @@
 # options using:
 #     config nu --doc | nu-highlight | less -R
 
+source ~/.config/atuin/init.nu
+source ~/.config/carapace/init.nu
+
+
 $env.EDITOR = "nvim"
 
 ($env.PATH = $env.PATH 

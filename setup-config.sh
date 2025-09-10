@@ -16,6 +16,8 @@ STOW_DIR() {
 
 
 # Use the function for nvim et wezterm
+STOW_DIR atuin
+STOW_DIR carapace
 STOW_DIR jj
 STOW_DIR nvim
 STOW_DIR wezterm

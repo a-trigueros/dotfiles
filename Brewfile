@@ -1,6 +1,8 @@
 tap "dail8859/notepadnext"
 tap "jesseduffield/lazygit"
 tap "remotemobprogramming/brew"
+brew "atuin"
+brew "carapace"
 brew "curl"
 brew "docker"
 brew "fd"
