@@ -27,8 +27,7 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
     mkdir -p "$HOME/Library/Application Support/nushell"
     stow --target "$HOME/Library/Application Support/nushell" --dir=nushell config
 else
-    echo "XDG_CONFIG_HOME est défini : $XDG_CONFIG_HOME"    
-    echo "Pas encore implémenté"
+    STOW_DIR nushell
 fi
 
 rm -rf $HOME/.config/nushell/nu_scripts
