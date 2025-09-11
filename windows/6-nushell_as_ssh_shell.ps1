@@ -14,7 +14,7 @@ if (-Not (Test-Path $SshdConfig)) {
 
 $ConfigBlock = @"
 Match User $User
-    ForceCommand "$NuPath"
+    ForceCommand C:\Windows\System32\cmd.exe /c "if not defined SSH_ORIGINAL_COMMAND ("$NuPath") else ( %SSH_ORIGINAL_COMMAND% )"
 "@
 
 Copy-Item $SshdConfig "$SshdConfig.bak" -Force
