@@ -19,7 +19,7 @@ function New-Symlink
   }
 
   New-Item -ItemType SymbolicLink -Path $Target -Target $Source | Out-Null
-  Write-Host "🔗 Symlink créé : $Target → $Source"
+  Write-Host "Symlink créé : $Target → $Source"
 }
 
 $folderAndDestinations = @{
@@ -62,4 +62,4 @@ foreach ($sub in @("nu_scripts","completions"))
   New-Symlink -Source $srcSub -Target $dstSub
 }
 
-Write-Host "`n✅ Tous les symlinks ont été créés avec succès !"
+Write-Host "Tous les symlinks ont été créés avec succès !"
