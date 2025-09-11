@@ -38,7 +38,7 @@ if wezterm.target_triple:find("windows") then
 	-- Mets à jour ce chemin si nécessaire
 	local nu_path = wezterm.home_dir .. "\\AppData\\Local\\Programs\\nu\\bin\\nu.exe"
 	config.default_prog = { nu_path }
-	config.prefer_egl = false
+	config.prefer_egl = true
 end
 
 return config
