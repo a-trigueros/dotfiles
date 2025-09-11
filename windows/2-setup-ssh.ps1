@@ -32,6 +32,11 @@ Set-ConfigLine "ChallengeResponseAuthentication" "no"
 Set-ConfigLine "PubkeyAuthentication" "yes"
 Set-ConfigLine "AuthorizedKeysFile" ".ssh/authorized_keys"
 
+# Configuration du keepalive côté serveur pour éviter les déconnexions
+Set-ConfigLine "ClientAliveInterval" "60"
+Set-ConfigLine "ClientAliveCountMax" "3"
+Set-ConfigLine "TCPKeepAlive" "yes"
+
 $config | Set-Content -Encoding utf8 $sshdConfig
 
 $userProfile = $env:USERPROFILE
