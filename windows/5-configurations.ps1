@@ -1,65 +1,70 @@
-$HOME = [Environment]::GetFolderPath("UserProfile")
-$DOTFILES = (Get-Location).Path
+$DOTFILES = Split-Path -Parent (Get-Location).Path
 
-git -C $DOTFILES submodule update --init --recursive --depth 1
+git submodule update --init --recursive --depth 1
 
-function New-Symlink
-{
+function Symlink-Dir {
+    param(
+      [string]$Source,
+      [string]$Target
+    )
+
+    if (Test-Path $Target) 
+    {
+      Remove-Item $Target -Recurse -Force 
+    }
+
+    $parent = Split-Path -Parent $Target
+    if (-not (Test-Path $parent)) 
+    {
+      New-Item -ItemType Directory -Path $parent -Force | Out-Null 
+    }
+    cmd /c mklink /D $Target $Source | Out-Null
+}
+
+function Symlink-File {
   param(
     [string]$Source,
     [string]$Target
   )
-
-  if (Test-Path $Target)
-  { Remove-Item $Target -Recurse -Force 
+  if (Test-Path $Target) 
+  { 
+    Remove-Item $Target -Force 
   }
-  $parent = Split-Path $Target
-  if (-not (Test-Path $parent))
-  { New-Item -ItemType Directory -Path $parent -Force | Out-Null 
-  }
-
   New-Item -ItemType SymbolicLink -Path $Target -Target $Source | Out-Null
-  Write-Host "Symlink créé : $Target → $Source"
 }
 
-$folderAndDestinations = @{
-  "git"      = Join-Path $HOME ".gitconfig"
-  "atuin"    = Join-Path $HOME "AppData\Roaming\atuin"
-  "carapace" = Join-Path $HOME "AppData\Roaming\carapace"
-  "jj"       = Join-Path $HOME "AppData\Local\jj"
+$linkToFolders = @{
+  "carapace" = Join-Path $HOME ".config\carapace"
+  "jj"       = Join-Path $HOME ".config\jj"
+  "wezterm"  = Join-Path $HOME ".config\wezterm"
   "nvim"     = Join-Path $HOME "AppData\Local\nvim"
-  "wezterm"  = Join-Path $HOME "AppData\Local\wezterm"
+  "nushell\config" = Join-Path $HOME "AppData\Roaming\nushell"
+  "nushell\completions" = Join-Path $HOME ".config\nushell\completions"
+  "nushell\nu_scripts" = Join-Path $HOME ".config\nushell\nu_scripts"
 }
 
-foreach ($tool in $folderAndDestinations.Keys)
+foreach ($tool in $linkToFolders.Keys)
 {
   $src = Join-Path $DOTFILES $tool
-  $dst = $folderAndDestinations[$tool]
-  New-Symlink -Source $src -Target $dst
+  $dst = $linkToFolders[$tool]
+
+  Symlink-Dir -Source $src -Target $dst
 }
 
-$nushellDir = Join-Path $HOME "AppData\Roaming\nushell"
-if (-not (Test-Path $nushellDir)) 
-{ 
-  New-Item -ItemType Directory -Path $nushellDir -Force | Out-Null 
+$linkToFiles = @{
+  "git"       = $HOME
+  "starship"  = Join-Path $HOME ".config"
 }
 
-New-Symlink -Source (Join-Path $DOTFILES "nushell\config.nu") -Target (Join-Path $nushellDir "config.nu")
-
-$nushellScriptsDir = Join-Path $HOME ".config\nushell"
-if (-not (Test-Path $nushellScriptsDir))
+foreach($tool in $linkToFiles.Keys)
 {
-  New-Item -ItemType Directory -Path $nushellScriptsDir -Force | Out-Null
-}
+  $srcFolder = Join-Path $DOTFILES $tool
 
-foreach ($sub in @("nu_scripts","completions"))
-{
-  $srcSub = Join-Path $DOTFILES "nushell\$sub"
-  $dstSub = Join-Path $nushellScriptsDir $sub
-  if (Test-Path $dstSub)
-  { Remove-Item $dstSub -Recurse -Force 
-  }
-  New-Symlink -Source $srcSub -Target $dstSub
+  Get-ChildItem -Path $srcFolder -File | ForEach-Object {
+        $file = $_.FullName
+        $dst = Join-Path $linkToFiles[$tool] $_.Name
+        Symlink-File -Source $file -Target $dst
+    }
 }
 
 Write-Host "Tous les symlinks ont été créés avec succès !"

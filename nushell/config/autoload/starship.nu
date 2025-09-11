@@ -1,38 +1,16 @@
-# this file is both a valid
-# - overlay which can be loaded with `overlay use starship.nu`
-# - module which can be used with `use starship.nu`
-# - script which can be used with `source starship.nu`
-export-env { $env.STARSHIP_SHELL = "nu"; load-env {
-    STARSHIP_SESSION_KEY: (random chars -l 16)
-    PROMPT_MULTILINE_INDICATOR: (
-        ^/opt/homebrew/bin/starship prompt --continuation
-    )
+$env.STARSHIP_SHELL = "nu"
 
-    # Does not play well with default character module.
-    # TODO: Also Use starship vi mode indicators?
-    PROMPT_INDICATOR: ""
+def create_left_prompt [] {
+    starship prompt --cmd-duration $env.CMD_DURATION_MS $'--status=($env.LAST_EXIT_CODE)'
+}
 
-    PROMPT_COMMAND: {||
-        # jobs are not supported
-        (
-            ^/opt/homebrew/bin/starship prompt
-                --cmd-duration $env.CMD_DURATION_MS
-                $"--status=($env.LAST_EXIT_CODE)"
-                --terminal-width (term size).columns
-        )
-    }
+# Use nushell functions to define your right and left prompt
+$env.PROMPT_COMMAND = { || create_left_prompt }
+$env.PROMPT_COMMAND_RIGHT = ""
 
-    config: ($env.config? | default {} | merge {
-        render_right_prompt_on_last_line: true
-    })
-
-    PROMPT_COMMAND_RIGHT: {||
-        (
-            ^/opt/homebrew/bin/starship prompt
-                --right
-                --cmd-duration $env.CMD_DURATION_MS
-                $"--status=($env.LAST_EXIT_CODE)"
-                --terminal-width (term size).columns
-        )
-    }
-}}
+# The prompt indicators are environmental variables that represent
+# the state of the prompt
+$env.PROMPT_INDICATOR = ""
+$env.PROMPT_INDICATOR_VI_INSERT = ": "
+$env.PROMPT_INDICATOR_VI_NORMAL = "〉"
+$env.PROMPT_MULTILINE_INDICATOR = "::: "
