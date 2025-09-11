@@ -32,6 +32,27 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: cURL
+        allowPrerelease: true
+      settings:
+        id: cURL.cURL
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Fd
+        allowPrerelease: true
+      settings:
+        id: sharkdp.fd
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Fuzzy Finder
+        allowPrerelease: true
+      settings:
+        id: junegunn.fzf
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Git 
         allowPrerelease: true
       settings:
@@ -39,10 +60,31 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Jujutsu (SCM) 
+        description: Jetbrains Mono Nerd Font
+        allowPrerelease: true
+      settings:
+        id: DEVCOM.JetBrainsMonoNerdFont
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Jujutsu
         allowPrerelease: true
       settings:
         id: jj-vcs.jj
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: LazyGit 
+        allowPrerelease: true
+      settings:
+        id: JesseDuffield.lazygit
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: LuaJit 
+        allowPrerelease: true
+      settings:
+        id: DEVCOM.LuaJIT
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -53,6 +95,20 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: nTop
+        allowPrerelease: true
+      settings:
+        id: gsass1.NTop 
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Node version manager 
+        allowPrerelease: true
+      settings:
+        id: CoreyButler.NVMforWindows
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Nushell 
         allowPrerelease: true
       settings:
@@ -60,17 +116,31 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: PowerShell 
+        allowPrerelease: true
+      settings:
+        id: Microsoft.PowerShell
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Python install manager
+        allowPrerelease: true
+      settings:
+        id: Python.PythonInstallManager
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RipGrep
+        allowPrerelease: true
+      settings:
+        id: BurntSushi.ripgrep.MSVC
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Starship 
         allowPrerelease: true
       settings:
         id: Starship.Starship
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: LazyGit 
-        allowPrerelease: true
-      settings:
-        id: JesseDuffield.lazygit
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -88,66 +158,10 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Zip
-        allowPrerelease: true
-      settings:
-        id: GnuWin32.Zip
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
         description: Unzip
         allowPrerelease: true
       settings:
         id: GnuWin32.Unzip
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: cURL
-        allowPrerelease: true
-      settings:
-        id: cURL.cURL
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: nTop
-        allowPrerelease: true
-      settings:
-        id: gsass1.NTop 
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: LLVM (C compiler)
-        allowPrerelease: true
-      settings:
-        id: LLVM.LLVM 
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Zig
-        allowPrerelease: true
-      settings:
-        id: zig.zig 
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Fuzzy Finder
-        allowPrerelease: true
-      settings:
-        id: junegunn.fzf
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: RipGrep
-        allowPrerelease: true
-      settings:
-        id: BurntSushi.ripgrep.MSVC
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Fd
-        allowPrerelease: true
-      settings:
-        id: sharkdp.fd
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -158,8 +172,15 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Jetbrains Mono Nerd Font
+        description: Zig
         allowPrerelease: true
       settings:
-        id: DEVCOM.JetBrainsMonoNerdFont
+        id: zig.zig 
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Zip
+        allowPrerelease: true
+      settings:
+        id: GnuWin32.Zip
         source: winget
