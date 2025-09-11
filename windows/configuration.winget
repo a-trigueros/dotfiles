@@ -39,6 +39,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Jujutsu (SCM) 
+        allowPrerelease: true
+      settings:
+        id: jj-vcs.jj
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Neovim 
         allowPrerelease: true
       settings:
