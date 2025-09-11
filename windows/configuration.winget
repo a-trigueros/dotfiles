@@ -109,6 +109,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Nuget 
+        allowPrerelease: true
+      settings:
+        id: Microsoft.NuGet
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Nushell 
         allowPrerelease: true
       settings:
@@ -137,11 +144,25 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Rustup
+        allowPrerelease: true
+      settings:
+        id: Rustlang.Rustup
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Starship 
         allowPrerelease: true
       settings:
         id: Starship.Starship
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Sysinternal 
+        allowPrerelease: true
+      settings:
+        id: 9P7KNL5RWT25
+        source: msstore
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Tar
