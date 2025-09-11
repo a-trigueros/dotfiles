@@ -34,6 +34,7 @@ function Symlink-File {
 }
 
 $linkToFolders = @{
+  "atuin" = Join-Path $HOME ".config\atuin"
   "carapace" = Join-Path $HOME ".config\carapace"
   "jj"       = Join-Path $HOME ".config\jj"
   "wezterm"  = Join-Path $HOME ".config\wezterm"
