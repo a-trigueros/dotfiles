@@ -18,17 +18,14 @@
 #     config nu --doc | nu-highlight | less -R
 
 source ~/.config/carapace/init.nu
+source ~/.config/atuin/init.nu
 
 $env.EDITOR = "nvim"
 
 let os_version = (sys host).long_os_version
 
-if ($os_version | str starts-with -i 'windows') {
-    # Windows configuration here
-}
 
 if ($os_version | str starts-with -i 'macos') {
-    source ~/.config/atuin/init.nu
 
     # MacOs configuration here
     ($env.PATH = $env.PATH 
