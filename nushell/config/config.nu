@@ -19,6 +19,7 @@
 
 source ~/.config/carapace/init.nu
 source ~/.config/atuin/init.nu
+source ~/.config/zoxide/zoxide.nu
 
 $env.EDITOR = "nvim"
 
