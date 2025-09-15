@@ -5,7 +5,7 @@ CASE_SENSITIVE="true"
 zstyle ':omz:update' mode auto
 zstyle ':omz:update' frequency 7
 
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 
 plugins=(
   macos 
