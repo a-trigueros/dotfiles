@@ -1,7 +1,5 @@
 #! /bin/bash
 
-git submodule update --depth 1
-
 stow git -t $HOME
 stow tmux -t $HOME
 
@@ -29,12 +27,3 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
 else
   STOW_DIR nushell
 fi
-
-rm -rf $HOME/.config/nushell/nu_scripts
-rm -rf $HOME/.config/nushell/completions
-
-mkdir -p $HOME/.config/nushell/nu_scripts
-mkdir -p $HOME/.config/nushell/completions
-
-stow --target $HOME/.config/nushell/nu_scripts --dir=nushell nu_scripts
-stow --target $HOME/.config/nushell/completions --dir=nushell completions

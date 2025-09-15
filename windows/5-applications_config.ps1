@@ -1,7 +1,5 @@
 $DOTFILES = Split-Path -Parent (Get-Location).Path
 
-git submodule update --init --recursive --depth 1
-
 function Symlink-Dir {
     param(
       [string]$Source,
@@ -40,8 +38,6 @@ $linkToFolders = @{
   "wezterm"  = Join-Path $HOME ".config\wezterm"
   "nvim"     = Join-Path $HOME "AppData\Local\nvim"
   "nushell\config" = Join-Path $HOME "AppData\Roaming\nushell"
-  "nushell\completions" = Join-Path $HOME ".config\nushell\completions"
-  "nushell\nu_scripts" = Join-Path $HOME ".config\nushell\nu_scripts"
 }
 
 foreach ($tool in $linkToFolders.Keys)
