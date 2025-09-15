@@ -13,4 +13,4 @@ source $HOME/.config/zsh/devtoolstosort.zsh
 alias nv=nvim
 export EDITOR=nvim
 
-
+set -o vi

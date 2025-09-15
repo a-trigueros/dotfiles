@@ -17,6 +17,7 @@ STOW_DIR() {
 STOW_DIR atuin
 STOW_DIR carapace
 STOW_DIR jj
+STOW_DIR ghostty
 STOW_DIR nvim
 STOW_DIR wezterm
 STOW_DIR zoxide
