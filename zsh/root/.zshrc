@@ -5,6 +5,8 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 source $HOME/.config/zsh/oh-my-zsh.zsh
+source $HOME/.config/atuin/init.zsh
+
 source $HOME/.config/zsh/node.zsh
 source $HOME/.config/zsh/devtoolstosort.zsh
 
