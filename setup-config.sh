@@ -20,6 +20,7 @@ STOW_DIR jj
 STOW_DIR ghostty
 STOW_DIR nvim
 STOW_DIR wezterm
+STOW_DIR zellij
 STOW_DIR zoxide
 
 rm -rf "$HOME/.config/zsh"
