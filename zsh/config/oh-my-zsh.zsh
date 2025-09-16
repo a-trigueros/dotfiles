@@ -1,5 +1,6 @@
-ZSH_THEME="jovial"
-
+ZSH_THEME="catppuccin"
+CATPPUCCIN_FLAVOR="mocha"
+CATPPUCCIN_SHOW_TIME=true 
 
 CASE_SENSITIVE="true"
 zstyle ':omz:update' mode auto
