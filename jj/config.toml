@@ -4,4 +4,5 @@ email = "80602661+a-trigueros@users.noreply.github.com"
 
 [ui]
 default-command = "log"
+paginage = "never"
 #:schema https://jj-vcs.github.io/jj/latest/config-schema.json
