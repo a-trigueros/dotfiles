@@ -10,9 +10,9 @@ decorations_theme_variant = "Light" # "Dark"
 
 [font]
 
-normal.family = "CaskaydiaCove Nerd Font Mono"
-bold.family = "CaskaydiaCove Nerd Font Mono"
-italic.family = "CaskaydiaCove Nerd Font Mono"
-bold_italic.family = "CaskaydiaCove Nerd Font Mono"
+normal.family = "JetBrainsMono Nerd Font"
+bold.family = "JetBrainsMono Nerd Font"
+italic.family = "JetBrainsMono Nerd Font"
+bold_italic.family = "JetBrainsMono Nerd Font"
 
 size = 15.0
