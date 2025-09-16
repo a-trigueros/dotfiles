@@ -22,6 +22,7 @@ source ~/.config/atuin/init.nu
 source ~/.config/zoxide/zoxide.nu
 
 $env.EDITOR = "nvim"
+$env.config.edit_mode = 'vi'
 
 let os_version = (sys host).long_os_version
 
