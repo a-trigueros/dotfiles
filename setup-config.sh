@@ -1,5 +1,8 @@
 #! /bin/bash
 
+git submodule init 
+git submodule update --depth 1
+
 stow git -t $HOME
 stow tmux -t $HOME
 stow -t $HOME --dir=zsh root 
@@ -17,18 +20,24 @@ STOW_DIR() {
 STOW_DIR atuin
 STOW_DIR jj
 STOW_DIR ghostty
-STOW_DIR nvim
 STOW_DIR wezterm
 STOW_DIR zellij
 
+# Nvim configuration
+rm -rf "$HOME/.config/nvim"
+mkdir -p "$HOME/.config/nvim"
+stow --target "$HOME/.config/nvim" LazyVim
+
+# Custom config
+rm "$HOME/.config/nvim/lua/config/keymaps.lua"
+stow --target "$HOME/.config/nvim/lua/config" --dir="nvim/lua" config
+
+# Zsh configuration
 rm -rf "$HOME/.config/zsh"
 mkdir -p "$HOME/.config/zsh"
 stow --target "$HOME/.config/zsh" --dir=zsh config
 
-rm -rf "$HOME/.oh-my-zsh/themes"
-mkdir -p "$HOME/.oh-my-zsh/themes"
-stow --target "$HOME/.oh-my-zsh/themes" --dir="zsh/omz" themes
-
+# Nushell configuration
 if [ -z "$XDG_CONFIG_HOME" ]; then
   rm -rf "$HOME/Library/Application Support/nushell"
   mkdir -p "$HOME/Library/Application Support/nushell"
