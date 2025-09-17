@@ -3,9 +3,19 @@
 git submodule init 
 git submodule update --depth 1
 
+rm $HOME/.gitconfig
 stow git -t $HOME
+
+rm $HOME/.tmux.conf
 stow tmux -t $HOME
+
+rm $HOME/.zshrc
 stow -t $HOME --dir=zsh root 
+
+mkdir -p $HOME/.config
+
+rm $HOME/.config/starship.toml
+stow starship -t $HOME/.config
 
 # Function to stow a directory into a specified config directory
 STOW_DIR() {
