@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 
 local config = {
 	adjust_window_size_when_changing_font_size = false,
-	color_scheme = "Catppuccin Mocha",
+	color_scheme = "Catppuccin Macciato",
 	enable_tab_bar = false,
 	font_size = 16.0,
 	font = wezterm.font("JetBrains Mono"),
@@ -42,4 +42,3 @@ if wezterm.target_triple:find("windows") then
 end
 
 return config
-
