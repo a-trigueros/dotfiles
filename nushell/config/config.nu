@@ -17,6 +17,8 @@
 # options using:
 #     config nu --doc | nu-highlight | less -R
 
+source ./themes/catppuccin_macchiato.nu
+
 source ~/.config/carapace/init.nu
 source ~/.config/atuin/init.nu
 source ~/.config/zoxide/zoxide.nu
