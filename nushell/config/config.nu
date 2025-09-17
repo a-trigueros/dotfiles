@@ -19,10 +19,6 @@
 
 source ./themes/catppuccin_macchiato.nu
 
-source ~/.config/carapace/init.nu
-source ~/.config/atuin/init.nu
-source ~/.config/zoxide/zoxide.nu
-
 $env.EDITOR = "nvim"
 $env.config.edit_mode = 'vi'
 

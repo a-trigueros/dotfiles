@@ -15,13 +15,11 @@ STOW_DIR() {
 
 # Use the function for nvim et wezterm
 STOW_DIR atuin
-STOW_DIR carapace
 STOW_DIR jj
 STOW_DIR ghostty
 STOW_DIR nvim
 STOW_DIR wezterm
 STOW_DIR zellij
-STOW_DIR zoxide
 
 rm -rf "$HOME/.config/zsh"
 mkdir -p "$HOME/.config/zsh"
