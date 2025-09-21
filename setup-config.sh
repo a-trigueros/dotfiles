@@ -1,21 +1,24 @@
 #! /bin/bash
 
-git submodule init 
+git submodule init
 git submodule update --depth 1
 
-rm $HOME/.gitconfig
+rm -f $HOME/.gitconfig
 stow git -t $HOME
 
-rm $HOME/.tmux.conf
+rm -f $HOME/.tmux.conf
 stow tmux -t $HOME
 
-rm $HOME/.zshrc
-stow -t $HOME --dir=zsh root 
+rm -f $HOME/.zshrc
+stow -t $HOME --dir=zsh root
 
 mkdir -p $HOME/.config
 
-rm $HOME/.config/starship.toml
+rm -f $HOME/.config/starship.toml
 stow starship -t $HOME/.config
+
+rm -f ~/.ideavimrc
+stow --target=$HOME --dir=jetbrains ideavimrc
 
 # Function to stow a directory into a specified config directory
 STOW_DIR() {
