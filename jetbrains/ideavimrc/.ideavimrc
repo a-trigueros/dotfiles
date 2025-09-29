@@ -11,6 +11,7 @@ set relativenumber
 set showmode
 set showcmd
 
+
 set foldmethod=syntax
 
 set smartcase
@@ -29,17 +30,22 @@ inoremap <Esc> <Esc>:nohlsearch<CR>
 snoremap <Esc> <Esc>:nohlsearch<CR>
 inoremap jk <Esc>
 
-set which-key
 set notimeout
+set which-key
 
-" Navigation entre les zones
-" Rider configuration
-nnoremap <C-h> :action ActivateProjectToolWindow<CR>
-" Don't work :( nnoremap <C-l> :action ActivateToolWindowAiAssistant<CR>
+let g:WhichKey_FontSize = 16
+let g:WhichKey_CommandColor = "#41ead4"
+let g:WhichKey_PrefixColor = "#f335b2"
+let g:WhichKey_SortOrder = "by_key_prefix_first"
+
+let g:WhichKeyDesc_leader = "<leader> Leader key"
+
 
 " Popup navigation
-inoremap <C-j> <Action>(PopupMenu-selectNext)
-inoremap <C-k> <Action>(PopupMenu-selectPrev)
+inoremap <C-j> <C-n>
+inoremap <C-k> <C-p>
+" inoremap <C-j> <Action>(PopupMenu-selectNext)
+" inoremap <C-k> <Action>(PopupMenu-selectPrev)
 
 " Buffers navigation
 nnoremap <S-l> :tabnext<CR>
