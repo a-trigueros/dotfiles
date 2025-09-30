@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Reference: https://github.com/dotnet/aspnetcore/blob/main/docs/BuildFromSource.md
+
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: LuaJit 
+        allowPrerelease: true
+      settings:
+        id: DEVCOM.LuaJIT
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Python install manager
+        allowPrerelease: true
+      settings:
+        id: Python.PythonInstallManager
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Rustup
+        allowPrerelease: true
+      settings:
+        id: Rustlang.Rustup
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Zig
+        allowPrerelease: true
+      settings:
+        id: zig.zig 
+        source: winget

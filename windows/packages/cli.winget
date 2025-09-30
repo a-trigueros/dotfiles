@@ -1,0 +1,164 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Reference: https://github.com/dotnet/aspnetcore/blob/main/docs/BuildFromSource.md
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    # Clean stuff installed by default
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Microsoft Teams (Remove)
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Teams
+        source: winget
+        ensure: absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Microsoft OneDrive (Remove)
+        allowPrerelease: true
+      settings:
+        id: Microsoft.OneDrive
+        source: winget
+        ensure: absent
+    # Cli tooling
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: 7zip 
+        allowPrerelease: true
+      settings:
+        id: 7zip.7zip
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Carapace 
+        allowPrerelease: true
+      settings:
+        id: rsteube.Carapace
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: cURL
+        allowPrerelease: true
+      settings:
+        id: cURL.cURL
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Fd
+        allowPrerelease: true
+      settings:
+        id: sharkdp.fd
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Fuzzy Finder
+        allowPrerelease: true
+      settings:
+        id: junegunn.fzf
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Git 
+        allowPrerelease: true
+      settings:
+        id: Git.Git
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Gzip
+        allowPrerelease: true
+      settings:
+        id: GnuWin32.Gzip
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Jujutsu
+        allowPrerelease: true
+      settings:
+        id: jj-vcs.jj
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: LazyGit 
+        allowPrerelease: true
+      settings:
+        id: JesseDuffield.lazygit
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Neovim 
+        allowPrerelease: true
+      settings:
+        id: Neovim.Neovim
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: nTop
+        allowPrerelease: true
+      settings:
+        id: gsass1.NTop 
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Nushell 
+        allowPrerelease: true
+      settings:
+        id: Nushell.Nushell
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: PowerShell 
+        allowPrerelease: true
+      settings:
+        id: Microsoft.PowerShell
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RipGrep
+        allowPrerelease: true
+      settings:
+        id: BurntSushi.ripgrep.MSVC
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Starship 
+        allowPrerelease: true
+      settings:
+        id: Starship.Starship
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Sysinternal 
+        allowPrerelease: true
+      settings:
+        id: 9P7KNL5RWT25
+        source: msstore
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Tar
+        allowPrerelease: true
+      settings:
+        id: GnuWin32.Tar
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Unzip
+        allowPrerelease: true
+      settings:
+        id: GnuWin32.Unzip
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Vim
+        allowPrerelease: true
+      settings:
+        id: vim.vim
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Zip
+        allowPrerelease: true
+      settings:
+        id: GnuWin32.Zip
+        source: winget

@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Reference: https://github.com/dotnet/aspnetcore/blob/main/docs/BuildFromSource.md
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Node version manager 
+        allowPrerelease: true
+      settings:
+        id: CoreyButler.NVMforWindows
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: pnpm
+        allowPrerelease: true
+      settings:
+        id: pnpm.pnpm
+        source: winget

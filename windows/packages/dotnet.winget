@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Reference: https://github.com/dotnet/aspnetcore/blob/main/docs/BuildFromSource.md
+
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Dotnet SDK 
+        allowPrerelease: true
+      settings:
+        id: Microsoft.DotNet.SDK.9
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Nuget 
+        allowPrerelease: true
+      settings:
+        id: Microsoft.NuGet
+        source: winget
