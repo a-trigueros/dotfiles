@@ -1,0 +1,8 @@
+cask "battle-net"
+cask "crossover"
+cask "dolphin"
+cask "heroic"
+cask "nvidia-geforce-now"
+cask "retroarch-metal"
+cask "scummvm-app"
+cask "steam"
