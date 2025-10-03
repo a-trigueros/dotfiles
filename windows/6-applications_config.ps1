@@ -181,7 +181,6 @@ else {
 
 # Rebuild bat cache
 bat cache --build | Out-Null
-
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "Configuration copy completed!" -ForegroundColor Green
 Write-Host "Success: $successCount" -ForegroundColor Green

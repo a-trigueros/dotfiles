@@ -57,6 +57,14 @@ $PSStyle.FileInfo.Directory = "`e[34;1m"
 # Initialize Starship prompt
 if (Get-Command starship -ErrorAction SilentlyContinue) {
     $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship.toml"
+    
+    # Enable ANSI escape sequences support (important for Windows)
+    if ($IsWindows) {
+        # Enable Virtual Terminal Processing for ANSI colors
+        $null = [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        $null = [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
+    }
+    
     Invoke-Expression (&starship init powershell)
 }
 else {

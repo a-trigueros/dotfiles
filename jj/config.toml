@@ -9,7 +9,6 @@ default-command = "log"
 editor = "nvim"
 diff-editor = ":builtin"
 merge-editor = "nvim"
-pager = "bat"
 
 [merge-tools.nvim]
 program = "nvim"
