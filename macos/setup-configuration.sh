@@ -60,3 +60,15 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
 else
   STOW_DIR nushell
 fi
+
+# PowerShell profile (if pwsh is installed)
+if command -v pwsh &> /dev/null; then
+  echo "Installing PowerShell profile..."
+  PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
+  mkdir -p "$PWSH_PROFILE_DIR"
+  rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
+  cp powershell/Microsoft.PowerShell_profile.ps1 "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
+  echo "✓ PowerShell profile installed"
+else
+  echo "PowerShell (pwsh) not installed, skipping profile installation"
+fi

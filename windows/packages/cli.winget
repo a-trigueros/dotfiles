@@ -4,24 +4,6 @@
 properties:
   configurationVersion: 0.2.0
   resources:
-    # Clean stuff installed by default
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Microsoft Teams (Remove)
-        allowPrerelease: true
-      settings:
-        id: Microsoft.Teams
-        source: winget
-        ensure: absent
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Microsoft OneDrive (Remove)
-        allowPrerelease: true
-      settings:
-        id: Microsoft.OneDrive
-        source: winget
-        ensure: absent
-    # Cli tooling
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: 7zip 
@@ -42,6 +24,13 @@ properties:
         allowPrerelease: true
       settings:
         id: cURL.cURL
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Eza (better ls)
+        allowPrerelease: true
+      settings:
+        id: eza-community.eza
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -161,4 +150,11 @@ properties:
         allowPrerelease: true
       settings:
         id: GnuWin32.Zip
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Zoxide (fast cd)
+        allowPrerelease: true
+      settings:
+        id: ajeetdsouza.zoxide
         source: winget

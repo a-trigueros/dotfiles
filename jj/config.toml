@@ -5,3 +5,13 @@ email = "80602661+a-trigueros@users.noreply.github.com"
 
 [ui]
 default-command = "log"
+editor = "nvim"
+diff-editor = ":builtin"
+merge-editor = "nvim"
+pager = "bat"
+
+[merge-tools.nvim]
+program = "nvim"
+merge-args = ["-d", "$left", "$base", "$right", "$output", "-c", "wincmd J", "-c", "wincmd ="]
+diff-args = ["-d", "$left", "$right"]
+diff.tool = ["nvim", "-d", "$left", "$right"]

@@ -1,0 +1,30 @@
+# Local PowerShell Profile Overrides
+# This file is loaded at the end of the main profile
+# Use it for machine-specific configuration that shouldn't be in version control
+
+# Example: Custom aliases
+# Set-Alias -Name myproject -Value 'C:\Projects\MyProject'
+
+# Example: Custom environment variables
+# $env:MY_API_KEY = "secret-key-here"
+
+# Example: Custom functions
+# function Deploy-MyApp {
+#     Write-Host "Deploying application..." -ForegroundColor Green
+#     # Your deployment logic here
+# }
+
+# Example: Add custom paths
+# $env:PATH = "C:\MyTools\bin;$env:PATH"
+
+# Example: Machine-specific Git config
+# if ($env:COMPUTERNAME -eq "WORK-PC") {
+#     git config --global user.email "work@company.com"
+# }
+
+# Example: Load company-specific modules
+# if (Test-Path "C:\CompanyTools\CompanyModule.psm1") {
+#     Import-Module "C:\CompanyTools\CompanyModule.psm1"
+# }
+
+Write-Host "Local profile overrides loaded" -ForegroundColor Gray
