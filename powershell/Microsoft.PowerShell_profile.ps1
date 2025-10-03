@@ -1,6 +1,26 @@
 # PowerShell Profile
 # Equivalent to .zshrc configuration
 
+#region Module Dependencies
+
+# Ensure PSReadLine is installed and up to date
+if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
+    Write-Host "PSReadLine not found. Installing..." -ForegroundColor Yellow
+    try {
+        Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -Repository PSGallery
+        Write-Host "✓ PSReadLine installed successfully" -ForegroundColor Green
+    }
+    catch {
+        Write-Warning "Failed to install PSReadLine: $_"
+        Write-Warning "Some features may not work. Install manually with: Install-Module PSReadLine -Scope CurrentUser -Force"
+    }
+}
+
+# Import PSReadLine (should be automatic, but ensures it's loaded)
+Import-Module PSReadLine -ErrorAction SilentlyContinue
+
+#endregion
+
 #region Basic Configuration
 
 # Set editor
@@ -8,7 +28,7 @@ $env:EDITOR = "nvim"
 
 # Jujutsu (jj) configuration
 $env:JJ_EDITOR = "nvim"
-$env:JJ_CONFIG = "$HOME\.config\jj\config.toml"
+$env:JJ_CONFIG = Join-Path $HOME ".config" "jj" "config.toml"
 
 # Diff and merge tools for version control
 $env:VISUAL = "nvim"
@@ -16,11 +36,16 @@ $env:MERGE_TOOL = "nvim"
 $env:DIFF_TOOL = "nvim"
 
 # PSReadLine options for better command line editing
-Set-PSReadLineOption -EditMode Vi
-Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
-Set-PSReadLineOption -HistoryNoDuplicates
-Set-PSReadLineOption -MaximumHistoryCount 10000
+if (Get-Module -Name PSReadLine) {
+    Set-PSReadLineOption -EditMode Vi
+    Set-PSReadLineOption -PredictionSource History
+    Set-PSReadLineOption -PredictionViewStyle ListView
+    Set-PSReadLineOption -HistoryNoDuplicates
+    Set-PSReadLineOption -MaximumHistoryCount 10000
+}
+else {
+    Write-Warning "PSReadLine not available. Vi mode and advanced editing features disabled."
+}
 
 # Color scheme for directory listing
 $PSStyle.FileInfo.Directory = "`e[34;1m"
@@ -31,7 +56,7 @@ $PSStyle.FileInfo.Directory = "`e[34;1m"
 
 # Initialize Starship prompt
 if (Get-Command starship -ErrorAction SilentlyContinue) {
-    $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
+    $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship.toml"
     Invoke-Expression (&starship init powershell)
 }
 else {
@@ -44,8 +69,10 @@ else {
 
 # Initialize Carapace for completions
 if (Get-Command carapace -ErrorAction SilentlyContinue) {
-    Set-PSReadLineOption -Colors @{ "Selection" = "`e[7m" }
-    Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+    if (Get-Module -Name PSReadLine) {
+        Set-PSReadLineOption -Colors @{ "Selection" = "`e[7m" }
+        Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+    }
     carapace _carapace | Out-String | Invoke-Expression
 }
 else {
@@ -58,17 +85,19 @@ else {
 
 # Initialize Atuin for enhanced history
 if (Get-Command atuin -ErrorAction SilentlyContinue) {
-    # Atuin keybindings
-    Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
-        [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-        [Microsoft.PowerShell.PSConsoleReadLine]::Insert('atuin search --shell-up-key-binding')
-        [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
-    }
-    
-    Set-PSReadLineKeyHandler -Key Ctrl+r -ScriptBlock {
-        [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-        [Microsoft.PowerShell.PSConsoleReadLine]::Insert('atuin search -i')
-        [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+    if (Get-Module -Name PSReadLine) {
+        # Atuin keybindings
+        Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
+            [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+            [Microsoft.PowerShell.PSConsoleReadLine]::Insert('atuin search --shell-up-key-binding')
+            [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+        }
+        
+        Set-PSReadLineKeyHandler -Key Ctrl+r -ScriptBlock {
+            [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+            [Microsoft.PowerShell.PSConsoleReadLine]::Insert('atuin search -i')
+            [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+        }
     }
     
     # Initialize Atuin
@@ -97,6 +126,37 @@ else {
 
 #endregion
 
+#region bat (Better cat)
+
+# Configure bat if available
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+    # Check if Catppuccin theme is available
+    $batThemes = bat --list-themes 2>$null | Out-String
+    if ($batThemes -match "Catppuccin Macchiato") {
+        $env:BAT_THEME = "Catppuccin Macchiato"
+    }
+    else {
+        # Fallback to a good default dark theme
+        $env:BAT_THEME = "Monokai Extended"
+        
+        # Show installation hint only once per session
+        if (-not $env:BAT_THEME_WARNING_SHOWN) {
+            Write-Host "Tip: Install Catppuccin themes for bat with: " -NoNewline -ForegroundColor DarkGray
+            Write-Host "./powershell/install-bat-themes.ps1" -ForegroundColor Cyan
+            $env:BAT_THEME_WARNING_SHOWN = "1"
+        }
+    }
+    
+    $env:BAT_STYLE = "numbers,changes,header,grid"
+    $env:BAT_PAGER = "less -RF"
+    
+    # Set bat as pager for man pages
+    $env:MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+    $env:MANROFFOPT = "-c"
+}
+
+#endregion
+
 #region Fuzzy Finder (fzf)
 
 # Initialize fzf for fuzzy finding
@@ -104,26 +164,28 @@ if (Get-Command fzf -ErrorAction SilentlyContinue) {
     # Set fzf default options
     $env:FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border"
     
-    # Ctrl+T: File search
-    Set-PSReadLineKeyHandler -Key Ctrl+t -ScriptBlock {
-        $file = Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | 
-                Select-Object -ExpandProperty FullName | 
-                fzf --preview 'type {}'
-        
-        if ($file) {
-            [Microsoft.PowerShell.PSConsoleReadLine]::Insert($file)
-        }
-    }
-    
-    # Ctrl+R: History search (if not using Atuin)
-    if (-not (Get-Command atuin -ErrorAction SilentlyContinue)) {
-        Set-PSReadLineKeyHandler -Key Ctrl+r -ScriptBlock {
-            $history = Get-Content (Get-PSReadLineOption).HistorySavePath -ErrorAction SilentlyContinue
-            $selection = $history | Select-Object -Unique | fzf --tac --no-sort
+    if (Get-Module -Name PSReadLine) {
+        # Ctrl+T: File search
+        Set-PSReadLineKeyHandler -Key Ctrl+t -ScriptBlock {
+            $file = Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue | 
+                    Select-Object -ExpandProperty FullName | 
+                    fzf --preview 'type {}'
             
-            if ($selection) {
-                [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-                [Microsoft.PowerShell.PSConsoleReadLine]::Insert($selection)
+            if ($file) {
+                [Microsoft.PowerShell.PSConsoleReadLine]::Insert($file)
+            }
+        }
+        
+        # Ctrl+R: History search (if not using Atuin)
+        if (-not (Get-Command atuin -ErrorAction SilentlyContinue)) {
+            Set-PSReadLineKeyHandler -Key Ctrl+r -ScriptBlock {
+                $history = Get-Content (Get-PSReadLineOption).HistorySavePath -ErrorAction SilentlyContinue
+                $selection = $history | Select-Object -Unique | fzf --tac --no-sort
+                
+                if ($selection) {
+                    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+                    [Microsoft.PowerShell.PSConsoleReadLine]::Insert($selection)
+                }
             }
         }
     }
@@ -132,10 +194,6 @@ if (Get-Command fzf -ErrorAction SilentlyContinue) {
 #endregion
 
 #region Aliases
-
-# Core aliases
-Set-Alias -Name nv -Value nvim -Option AllScope -Scope Global
-Set-Alias -Name vim -Value nvim -Option AllScope -Scope Global
 
 # Navigation alias (z from zoxide)
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
@@ -169,14 +227,14 @@ function ~ { Set-Location $HOME }
 
 # Quick edit profile
 function Edit-Profile { nvim $PROFILE }
-Set-Alias -Name ep -Value Edit-Profile
+Set-Alias -Name ep -Value Edit-Profile -Force
 
 # Reload profile
 function Reload-Profile { 
     . $PROFILE
     Write-Host "Profile reloaded!" -ForegroundColor Green
 }
-Set-Alias -Name rp -Value Reload-Profile
+Set-Alias -Name rp -Value Reload-Profile -Force
 
 # System information
 function sysinfo {
@@ -195,15 +253,29 @@ function which($command) {
 
 # Add common paths if they exist
 $pathsToAdd = @(
-    "$HOME\.cargo\bin",                    # Rust
-    "$HOME\.dotnet\tools",                 # .NET tools
-    "$HOME\AppData\Local\Microsoft\WinGet\Links",  # WinGet packages
-    "$HOME\AppData\Roaming\npm",           # npm global packages
-    "$HOME\go\bin",                        # Go binaries
-    "$env:ProgramFiles\Docker\Docker\resources\bin",  # Docker
-    "$env:ProgramFiles\nodejs",            # Node.js
-    "${env:ProgramFiles(x86)}\GnuWin32\bin"  # GnuWin32 tools
+    (Join-Path $HOME ".cargo" "bin"),                    # Rust
+    (Join-Path $HOME ".dotnet" "tools"),                 # .NET tools
+    (Join-Path $HOME "go" "bin")                         # Go binaries
 )
+
+# Windows-specific paths
+if ($IsWindows) {
+    $pathsToAdd += @(
+        (Join-Path $HOME "AppData" "Local" "Microsoft" "WinGet" "Links"),  # WinGet packages
+        (Join-Path $HOME "AppData" "Roaming" "npm")                        # npm global packages
+    )
+    
+    if ($env:ProgramFiles) {
+        $pathsToAdd += @(
+            (Join-Path $env:ProgramFiles "Docker" "Docker" "resources" "bin"),  # Docker
+            (Join-Path $env:ProgramFiles "nodejs")                              # Node.js
+        )
+    }
+    
+    if (${env:ProgramFiles(x86)}) {
+        $pathsToAdd += (Join-Path ${env:ProgramFiles(x86)} "GnuWin32" "bin")  # GnuWin32 tools
+    }
+}
 
 foreach ($path in $pathsToAdd) {
     if (Test-Path $path) {
@@ -222,7 +294,7 @@ if (Test-Path "$env:NVM_HOME\nvm.exe") {
 }
 
 # Set npm global packages location
-$env:NPM_CONFIG_PREFIX = "$HOME\.config\npm-packages"
+$env:NPM_CONFIG_PREFIX = Join-Path $HOME ".config" "npm-packages"
 if (-not (Test-Path $env:NPM_CONFIG_PREFIX)) {
     New-Item -ItemType Directory -Path $env:NPM_CONFIG_PREFIX -Force | Out-Null
 }

@@ -48,12 +48,49 @@ fi
 source $HOME/.config/zsh/node.zsh
 source $HOME/.config/zsh/devtoolstosort.zsh
 
-alias nv=nvim
-alias ls='ls -G'
-alias cd=z
+# ----- Editor -----
 export EDITOR=nvim
+export VISUAL=nvim
+export PAGER=bat
 
+# ----- Vi mode -----
 set -o vi
+
+# ----- Aliases -----
+alias nv=nvim
+
+# ----- bat configuration -----
+export BAT_THEME="Catppuccin Macchiato"
+export BAT_STYLE="numbers,changes,header,grid"
+export BAT_PAGER="less -RF"
+
+alias cat='bat'
+
+# bat as man pager
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+# ----- eza configuration -----
+# Default eza options
+export EZA_COLORS="da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40:ue=38;5;40:gr=38;5;226:gw=38;5;226:gx=38;5;226:tr=38;5;196:tw=38;5;196:tx=38;5;196"
+export EZA_ICON_SPACING=2
+
+# eza aliases
+alias ls='eza --color=always --icons=always'
+alias ll='eza -lbF --git --icons=always --color=always'
+alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --icons=always --color=always'
+alias lt='eza --tree --level=2 --icons=always --color=always'
+alias ltt='eza --tree --level=3 --icons=always --color=always'
+alias lttt='eza --tree --level=4 --icons=always --color=always'
+alias lg='eza -lbhHigUmuSa@ --git --color=always --icons=always'  # avec attributs étendus
+alias lm='eza -lbhHigUmuSa --sort=modified --color=always --icons=always'  # trié par date de modification
+alias lz='eza -lbhHigUmuSa --sort=size --color=always --icons=always'  # trié par taille
+
+# Navigation
+alias cd='z'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
 zstyle ':completion:*' list-prompt ''
 zstyle ':completion:*' list-colors ''

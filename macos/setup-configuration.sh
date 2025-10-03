@@ -67,7 +67,7 @@ if command -v pwsh &> /dev/null; then
   PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
   mkdir -p "$PWSH_PROFILE_DIR"
   rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
-  cp powershell/Microsoft.PowerShell_profile.ps1 "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
+  stow powershell -t "$PWSH_PROFILE_DIR"
   echo "✓ PowerShell profile installed"
 else
   echo "PowerShell (pwsh) not installed, skipping profile installation"
