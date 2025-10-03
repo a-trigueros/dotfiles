@@ -94,6 +94,7 @@ function Adapt-GitConfigForWindows {
     return $true
 }
 
+
 $directoriesToCopy = @{
     "atuin" = Join-Path $HOME ".config\atuin"
     "carapace" = Join-Path $HOME ".config\carapace"
@@ -101,6 +102,7 @@ $directoriesToCopy = @{
     "wezterm" = Join-Path $HOME ".config\wezterm"
     "nvim" = Join-Path $HOME "AppData\Local\nvim"
     "nushell\config" = Join-Path $HOME "AppData\Roaming\nushell"
+    "bat\themes" = Join-Path $env:APPDATA "bat\themes"
 }
 
 Write-Host "`nCopying configuration directories..." -ForegroundColor Cyan
@@ -176,6 +178,9 @@ if (Test-Path $profileSource) {
 else {
     Write-Warning "PowerShell profile not found at: $profileSource"
 }
+
+# Rebuild bat cache
+bat cache --build | Out-Null
 
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "Configuration copy completed!" -ForegroundColor Green

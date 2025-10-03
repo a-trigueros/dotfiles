@@ -33,10 +33,13 @@ STOW_DIR() {
 
 # Use the function for nvim et wezterm
 STOW_DIR atuin
+STOW_DIR bat
 STOW_DIR jj
 STOW_DIR ghostty
 STOW_DIR wezterm
 STOW_DIR zellij
+
+bat cache --build
 
 # Nvim configuration
 rm -rf "$HOME/.config/nvim"
@@ -61,14 +64,6 @@ else
   STOW_DIR nushell
 fi
 
-# PowerShell profile (if pwsh is installed)
-if command -v pwsh &> /dev/null; then
-  echo "Installing PowerShell profile..."
-  PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
-  mkdir -p "$PWSH_PROFILE_DIR"
-  rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
-  stow powershell -t "$PWSH_PROFILE_DIR"
-  echo "✓ PowerShell profile installed"
-else
-  echo "PowerShell (pwsh) not installed, skipping profile installation"
-fi
+PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
+rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
+stow powershell -t "$PWSH_PROFILE_DIR"
