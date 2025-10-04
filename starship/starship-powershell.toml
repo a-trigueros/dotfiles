@@ -29,11 +29,9 @@ format = "[$path]($style)[$lock_symbol]($lock_style) "
 # JJ status for PowerShell
 [custom.jj]
 description = "The current jj status"
-when = "jj root"
+when = "jj --ignore-working-copy root"
 symbol = "🥋 "
-format = "[$symbol$output]($style) "
-style = "bold purple"
-command = "jj log -r '@' -T 'change_id.short() ++ \" \" ++ description.first_line()' --no-graph --color=always --limit 1"
+command = "jj log --ignore-working-copy -r '@' -T 'change_id.shortest(4) ++ \" | \" ++ raw_escape_sequence(\"\\x1b[1;32m\") ++ coalesce(truncate_end(30, description.first_line(), \"…\"), \"(no description set)\") ++ raw_escape_sequence(\"\\x1b[0m\")' --no-graph --color=always --limit 1"
 
 # Disable all Git modules - we'll use custom ones
 [git_branch]
@@ -48,10 +46,14 @@ disabled = true
 [git_metrics]
 disabled = true
 
+[git_state]
+disabled = true
+
 # Custom Git branch - only show if NOT in a jj repo
 [custom.git_branch]
-when = 'pwsh -NoProfile -NonInteractive -Command "if (!(Test-Path .jj)) { exit 0 } else { exit 1 }"'
-command = 'git rev-parse --abbrev-ref HEAD'
+disabled = false
+when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+command = 'git rev-parse --abbrev-ref HEAD 2>$null'
 description = "Only show git_branch if we're not in a jj repo"
 format = "[$symbol$output]($style) "
 symbol = "🌱 "
@@ -59,16 +61,18 @@ style = "bold yellow"
 
 # Custom Git commit - only show if NOT in a jj repo
 [custom.git_commit]
-when = 'pwsh -NoProfile -NonInteractive -Command "if (!(Test-Path .jj)) { exit 0 } else { exit 1 }"'
-command = 'git rev-parse --short HEAD'
+disabled = false
+when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+command = 'git rev-parse --short HEAD 2>$null'
 format = "[\\($output\\)]($style) "
 style = "bold yellow"
 description = "Only show git_commit if we're not in a jj repo"
 
 # Custom Git status - only show if NOT in a jj repo
 [custom.git_status]
-when = 'pwsh -NoProfile -NonInteractive -Command "if (!(Test-Path .jj)) { exit 0 } else { exit 1 }"'
-command = 'git status --porcelain'
+disabled = false
+when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+command = 'git status --porcelain 2>$null'
 format = "[[$output](bold green)]($style) "
 style = "bold red"
 description = "Only show git_status if we're not in a jj repo"
