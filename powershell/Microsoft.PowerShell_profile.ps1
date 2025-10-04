@@ -56,7 +56,8 @@ $PSStyle.FileInfo.Directory = "`e[34;1m"
 
 # Initialize Starship prompt
 if (Get-Command starship -ErrorAction SilentlyContinue) {
-    $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship.toml"
+    # Use PowerShell-specific Starship config
+    $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship-powershell.toml"
     
     # Enable ANSI escape sequences support (important for Windows)
     if ($IsWindows) {

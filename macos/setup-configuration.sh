@@ -17,6 +17,7 @@ stow -t $HOME --dir=zsh root
 mkdir -p $HOME/.config
 
 rm -f $HOME/.config/starship.toml
+rm -f $HOME/.config/starship-powershell.toml
 stow starship -t $HOME/.config
 
 rm -f ~/.ideavimrc

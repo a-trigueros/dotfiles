@@ -126,7 +126,6 @@ foreach ($tool in $directoriesToCopy.Keys) {
 
 $filesToCopy = @{
     "git" = $HOME
-    "starship" = Join-Path $HOME ".config"
 }
 
 Write-Host "`n`nCopying configuration files..." -ForegroundColor Cyan
@@ -156,6 +155,38 @@ foreach ($tool in $filesToCopy.Keys) {
         else {
             $failCount++
         }
+    }
+}
+
+# Copy Starship configuration files
+Write-Host "`n`nInstalling Starship configuration..." -ForegroundColor Cyan
+$starshipConfigDir = Join-Path $HOME ".config\starship"
+if (-not (Test-Path $starshipConfigDir)) {
+    New-Item -ItemType Directory -Path $starshipConfigDir -Force | Out-Null
+}
+
+$starshipFiles = @(
+    "starship.toml",
+    "starship-powershell.toml"
+)
+
+foreach ($file in $starshipFiles) {
+    $sourceFile = Join-Path $dotfilesPath "starship\$file"
+    $targetFile = Join-Path $starshipConfigDir $file
+    
+    if (Test-Path $sourceFile) {
+        Write-Host "Processing: $file" -ForegroundColor Cyan
+        
+        if (Copy-ConfigFile -source $sourceFile -target $targetFile) {
+            $successCount++
+            Write-Host "  ✓ Starship config installed: $file" -ForegroundColor Green
+        }
+        else {
+            $failCount++
+        }
+    }
+    else {
+        Write-Warning "Starship config file not found: $sourceFile"
     }
 }
 
