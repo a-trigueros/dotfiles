@@ -51,7 +51,7 @@ source $HOME/.config/zsh/devtoolstosort.zsh
 # ----- Editor -----
 export EDITOR=nvim
 export VISUAL=nvim
-export PAGER=less -RFX
+export PAGER="less -RFX"
 
 # ----- Vi mode -----
 set -o vi
