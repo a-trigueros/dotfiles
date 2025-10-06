@@ -67,4 +67,5 @@ fi
 
 PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
 rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
+mkdir -p "$PWSH_PROFILE_DIR"
 stow powershell -t "$PWSH_PROFILE_DIR"
