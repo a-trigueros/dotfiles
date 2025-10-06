@@ -29,6 +29,7 @@ inoremap <Esc> <Esc>:nohlsearch<CR>
 snoremap <Esc> <Esc>:nohlsearch<CR>
 inoremap jk <Esc>
 
+set easymotion
 set which-key
 set notimeout
 
@@ -44,6 +45,10 @@ imap <C-k> <C-p>
 " Buffers navigation
 nnoremap <S-l> :tabnext<CR>
 nnoremap <S-h> :tabprev<CR>
+
+" Easymotion
+let g:WhichKeyDesc_jumg = "<leader>j Jump"
+map <leader>j <Plug>(easymotion-s)
 
 " Buffer operations
 let g:WhichKeyDesc_buffer = "<leader>b Buffers"
