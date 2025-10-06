@@ -13,6 +13,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Caddy 
+        allowPrerelease: true
+      settings:
+        id: CaddyServer.Caddy
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Carapace 
         allowPrerelease: true
       settings:
