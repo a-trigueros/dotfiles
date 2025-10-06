@@ -38,8 +38,8 @@ nnoremap <C-h> :action ActivateProjectToolWindow<CR>
 " Don't work :( nnoremap <C-l> :action ActivateToolWindowAiAssistant<CR>
 
 " Popup navigation
-inoremap <C-j> <Action>(PopupMenu-selectNext)
-inoremap <C-k> <Action>(PopupMenu-selectPrev)
+" imap <C-j> <C-n> " DONE with Karabiner elements
+imap <C-k> <C-p>
 
 " Buffers navigation
 nnoremap <S-l> :tabnext<CR>
@@ -68,21 +68,19 @@ let g:WhichKeyDesc_code = "<leader>c Code"
 let g:WhichKeyDesc_code_format = "<leader>cf Format code"
 nnoremap <leader>cf :action ReformatCode<CR>
 xnoremap <leader>cf :action ReformatCode<CR>
-let g:WhichKeyDesc_code_format = "<leader>cd Show error description"
+let g:WhichKeyDesc_code_errorDescription = "<leader>cd Show error description"
 nnoremap <leader>cd :action ShowErrorDescription<CR>
 let g:WhichKeyDesc_code_intentions = "<leader>cl Show suggestions"
 nnoremap <leader>cl :action ShowIntentionActions<CR>
-let g:WhichKeyDesc_code_intentions = "<leader>cc Run CodeLens"
-nnoremap <leader>cc :action RunLineMarker<CR>
-xnoremap <leader>cc :action RunLineMarker<CR>
-let g:WhichKeyDesc_code_RefreshAndDisplayCodeLens = "<leader>cC Refresh and run CodeLens"
-nnoremap <leader>cC :action RefreshLineMarkers<CR>
 let g:WhichKeyDesc_code_RenameSymbol = "<leader>cr Rename Symbol"
 nnoremap <leader>cr :action RenameElement<CR>
 let g:WhichKeyDesc_code_RenameFile = "<leader>cR Rename File"
-nnoremap <leader>cR :action RenameFile<CR>
-let g:WhichKeyDesc_code_alternateIntentions = "<leader> cA Show intention actions"
+nnoremap <leader>cR :action RenameElement<CR>
+let g:WhichKeyDesc_code_alternateIntentions = "<leader>cA Show intention actions"
 nnoremap <leader>cA :action ShowIntentionActions<CR>
+let g:WhichKeyDesc_code_surroundWith = "<leader>cs Surround with"
+nmap <leader>cs :action SurroundWith<CR>
+vmap <leader>cs :action SurroundWith<CR>
 
 let g:WhichKeyDesc_debug = "<leader>d Debug"
 let g:WhichKeyDesc_debug_run_with_args = "<leader>da Run with args"
@@ -124,31 +122,17 @@ nnoremap <leader>de :action EvaluateExpression<CR>
 xnoremap <leader>de :action EvaluateExpression<CR>
 
 let g:WhichKeyDesc_Refactor = "<leader>r Refactor"
-let g:WhichKeyDesc_Refactor_extract_block = "<leader>rb Extract block"
-nnoremap <leader>rb :action ExtractBlock<CR>
-xnoremap <leader>rb :action ExtractBlock<CR>
-let g:WhichKeyDesc_Refactor_cleanup = "<leader>rc Remove debug statements"
-nnoremap <leader>rc :action RemoveDebugStatements<CR>
+let g:WhichKeyDesc_Refactor_this = "<leader>rr Refactor this"
+nmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
 let g:WhichKeyDesc_Refactor_extract_function = "<leader>rf Extract function"
 nnoremap <leader>rf :action ExtractMethod<CR>
 xnoremap <leader>rf :action ExtractMethod<CR>
-let g:WhichKeyDesc_Refactor_extract_function_to_file = "<leader>rf Extract function to file"
-nnoremap <leader>rF :action ExtractMethodToFile<CR>
-xnoremap <leader>rF :action ExtractMethodToFile<CR>
 let g:WhichKeyDesc_Refactor_inline_variable = "<leader>ri Inline variable"
 nnoremap <leader>ri :action Inline<CR>
 xnoremap <leader>ri :action Inline<CR>
-let g:WhichKeyDesc_Refactor_debug_print_variable = "<leader>rp Debug print variable"
-nnoremap <leader>rp :action DebugPrint<CR>
-xnoremap <leader>rp :action DebugPrint<CR>
-let g:WhichKeyDesc_Refactor_debug_print = "<leader>rP Debug print variable"
-nnoremap <leader>rP :action DebugPrint<CR>
-let g:WhichKeyDesc_Refactor_Refactor = "<leader>rs Refactor this"
-nnoremap <leader>rs :action RefactorThis<CR>
-xnoremap <leader>rs :action RefactorThis<CR>
 let g:WhichKeyDesc_Refactor_Extract_variable = "<leader>rx Extract variable"
-nnoremap <leader>rx :action ExtractVariable<CR>
-xnoremap <leader>rx :action ExtractVariable<CR>
+nnoremap <leader>rx :action IntroduceVariable<CR>
+xnoremap <leader>rx :action IntroduceVariable<CR>
 
 let g:WhichKeyDesc_test = "<leader>t Tests"
 let g:WhichKeyDesc_test_run_last = "<leader>tl Last run"
