@@ -47,21 +47,32 @@ nnoremap <S-l> :tabnext<CR>
 nnoremap <S-h> :tabprev<CR>
 
 " Easymotion
-let g:WhichKeyDesc_jumg = "<leader>j Jump"
+let g:WhichKeyDesc_jump = "<leader>j Jump"
 map <leader>j <Plug>(easymotion-s)
 
-" Buffer operations
-let g:WhichKeyDesc_buffer = "<leader>b Buffers"
-let g:WhichKeyDesc_buffer_switch = "<leader>bb Switch to other buffer"
-nnoremap <leader>bb :action Switcher<CR>
-let g:WhichKeyDesc_buffer_delete = "<leader>bd Delete buffer"
+" Buffer and build operations
+let g:WhichKeyDesc_bufferbuild = "<leader>b Buffers / build"
+let g:WhichKeyDesc_bufferbuild_delete = "<leader>bd Delete buffer"
 nnoremap <leader>bd :action CloseContent<CR>
-let g:WhichKeyDesc_buffer_delete_others = "<leader>bo Delete other buffers"
+let g:WhichKeyDesc_bufferbuild_delete_others = "<leader>bo Delete other buffers"
 nnoremap <leader>bo :action CloseAllEditorsButActive<CR>
-let g:WhichKeyDesc_buffer_toggle_pin= "<leader>bp Toggle pin on buffer"
+let g:WhichKeyDesc_bufferbuild_toggle_pin= "<leader>bp Toggle pin on buffer"
 nnoremap <leader>bp :action PinActiveEditorTab<CR>
-let g:WhichKeyDesc_buffer_delete_unpinned= "<leader>bP Close all non-pinned buffers"
+let g:WhichKeyDesc_bufferbuild_delete_unpinned= "<leader>bP Close all non-pinned buffers"
 nnoremap <leader>bP :action CloseAllUnpinnedEditors<CR>
+" Build
+let g:WhichKeyDesc_bufferbuild_clean_project = "<leader>bc Clean project"
+nnoremap <leader>bc :action CleanCurrentProject<CR>
+let g:WhichKeyDesc_bufferbuild_clean_solution = "<leader>bC Clean solution"
+nnoremap <leader>bC :action CleanSolutionAction<CR>
+let g:WhichKeyDesc_bufferbuild_Build_project = "<leader>bb Build project"
+nnoremap <leader>bb :action BuildCurrentProject<CR>
+let g:WhichKeyDesc_bufferbuild_build_solution = "<leader>bB Build solution"
+nnoremap <leader>bB :action BuildSolutionAction<CR>
+let g:WhichKeyDesc_bufferbuild_rebuild_project = "<leader>br Rebuild project"
+nnoremap <leader>br :action RebuildCurrentProject<CR>
+let g:WhichKeyDesc_bufferbuild_rebuild_solution = "<leader>bR Rebuild solution"
+nnoremap <leader>bR :action BuildSolutionAction<CR>
 
 " Comments
 nnoremap gco o<Esc>:action CommentByLineComment<CR>
@@ -87,45 +98,64 @@ let g:WhichKeyDesc_code_surroundWith = "<leader>cs Surround with"
 nmap <leader>cs :action SurroundWith<CR>
 vmap <leader>cs :action SurroundWith<CR>
 
+" Collapse 
+let g:WhichKeyDesc_collapse = "<leader>z Col/ Open"
+let g:WhickKeyDesc_collapse_all = "<leader>zc Collapse all"
+map <leader>zc :action CollapseAllRegion<CR>
+let g:WhickKeyDesc_open_all = "<leader>zo Open all"
+map <leader>zo :action ExpandAllRegions<CR>
+
+" Debug
 let g:WhichKeyDesc_debug = "<leader>d Debug"
-let g:WhichKeyDesc_debug_run_with_args = "<leader>da Run with args"
-nnoremap <leader>da :action RunWithArgs<CR>
+let g:WhichKeyDesc_debug_attach_to_process = "<leader>da Attach to process"
+nnoremap <leader>da :action XDebugger.AttachToProcess<CR>
+let g:WhichKeyDesc_debug_reattach = "<leader>dA Attach to last process"
+nnoremap <leader>dA :action RiderReattach<CR>
 let g:WhichKeyDesc_debug_toggle_breakpoint = "<leader>db Toggle breakpoint"
 nnoremap <leader>db :action ToggleLineBreakpoint<CR>
 let g:WhichKeyDesc_debug_edit_breakpoint = "<leader>dB Edit breakpoint"
 nnoremap <leader>dB :action EditBreakpoint<CR>
-let g:WhichKeyDesc_debug_run_continue = "<leader>dc Run/Continue"
+let g:WhichKeyDesc_debug_continue = "<leader>dc continue"
 nnoremap <leader>dc :action Resume<CR>
-let g:WhichKeyDesc_debug_run_to_cursor = "<leader>dC Run to cursor"
-nnoremap <leader>dC :action RunToCursor<CR>
-let g:WhichKeyDesc_debug_goto_line = "<leader>dg Goto line"
-nnoremap <leader>dg :action GotoLine<CR>
+let g:WhichKeyDesc_debug_jump_to_cursor = "<leader>dC Jump to cursor"
+nnoremap <leader>dC :action JumpToStatement<CR>
+let g:WhichKeyDesc_debug_run = "<leader>dr Run"
+nnoremap <leader>dr :action Run<CR>
+let g:WhichKeyDesc_debug_debug = "<leader>dR Debug"
+nnoremap <leader>dR :action Debug<CR>
 let g:WhichKeyDesc_debug_step_into = "<leader>di Step into"
 nnoremap <leader>di :action StepInto<CR>
 let g:WhichKeyDesc_debug_step_into_alternate = "<leader>dj Step into"
 nnoremap <leader>dj :action StepInto<CR>
+let g:WhichKeyDesc_debug_step_out = "<leader>dO Step out"
+nnoremap <leader>dO :action StepOut<CR>
 let g:WhichKeyDesc_debug_step_out_alternate = "<leader>dk Step out"
 nnoremap <leader>dk :action StepOut<CR>
-let g:WhichKeyDesc_debug_run_last = "<leader>dl Run last"
-nnoremap <leader>dl :action Run<CR>
-let g:WhichKeyDesc_debug_step_out = "<leader>do Step out"
-nnoremap <leader>do :action StepOut<CR>
-let g:WhichKeyDesc_debug_step_over = "<leader>dO Step over"
-nnoremap <leader>dO :action StepOver<CR>
-let g:WhichKeyDesc_debug_pause = "<leader>dP Pause"
-nnoremap <leader>dP :action Pause<CR>
-let g:WhichKeyDesc_debug_toggle_REPL = "<leader>dr Toggle REPL"
-nnoremap <leader>dr :action DebugConsole<CR>
-let g:WhichKeyDesc_debug_show_window = "<leader>ds Show debug window"
-nnoremap <leader>ds :action ShowDebugWindows<CR>
+let g:WhichKeyDesc_debug_step_over = "<leader>do Step over"
+nnoremap <leader>do :action StepOver<CR>
+let g:WhichKeyDesc_debug_step_over_alternate = "<leader>dl Step over"
+nnoremap <leader>dl :action StepOver<CR>
 let g:WhichKeyDesc_debug_terminate = "<leader>dt Terminate debug"
 nnoremap <leader>dt :action Stop<CR>
-let g:WhichKeyDesc_debug_activate_window = "<leader>dw Activate debug window"
-nnoremap <leader>dw :action ActivateDebugToolWindow<CR>
-let g:WhichKeyDesc_debug_evaluate_expression = "<leader>de Evaluate"
-nnoremap <leader>de :action EvaluateExpression<CR>
-xnoremap <leader>de :action EvaluateExpression<CR>
 
+" Find
+let g:WhichKeyDesc_Find = "<leader>f Find"
+let g:WhichKeyDesc_Find_buffer = "<leader>fb Find buffer"
+nnoremap <leader>fb :action Switcher<CR>
+let g:WhichKeyDesc_Find_everywhere = "<leader>fe Find everywhere"
+nnoremap <leader>fe :action SearchEverywhere<CR>
+let g:WhichKeyDesc_Find_file = "<leader>ff Find file"
+nnoremap <leader>ff :action GotoFile<CR>
+let g:WhichKeyDesc_Find_class = "<leader>fc Find class"
+nnoremap <leader>fc :action GotoClass<CR>
+let g:WhichKeyDesc_Find_symbol = "<leader>fs Find symbol"
+nnoremap <leader>fs :action GotoSymbol<CR>
+let g:WhichKeyDesc_Find_action = "<leader>fa Find action"
+nnoremap <leader>fa :action GotoAction<CR>
+let g:WhichKeyDesc_Find_text = "<leader>ft Find text"
+nnoremap <leader>ft :action TextSearchAction<CR>
+
+" Refactor
 let g:WhichKeyDesc_Refactor = "<leader>r Refactor"
 let g:WhichKeyDesc_Refactor_this = "<leader>rr Refactor this"
 nmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
@@ -158,11 +188,6 @@ let g:WhichKeyDesc_test_run_all_tests = "<leader>tT Run all tests"
 nnoremap <leader>tT :action RunAllTests<CR>
 let g:WhichKeyDesc_test_toggle_Watch = "<leader>tw Toggle watch"
 nnoremap <leader>tw :action ActivateWatchToolWindow<CR>
-
-let g:WhichKeyDesc_search = "<leader>s Search / Show"
-let g:WhichKeyDesc_search_symbol = "<leader>ss Go to symbol"
-nnoremap <leader>ss :action GotoSymbol<CR>
-
 
 nnoremap gd :action GotoDeclaration<CR>
 nnoremap gD :action GotoDeclaration<CR>
