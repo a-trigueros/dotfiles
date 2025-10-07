@@ -51,7 +51,7 @@ let g:WhichKeyDesc_jump = "<leader>j Jump"
 map <leader>j <Plug>(easymotion-s)
 
 " Buffer and build operations
-let g:WhichKeyDesc_bufferbuild = "<leader>b Buffers / build"
+let g:WhichKeyDesc_bufferbuild = "<leader>b Buffers / Build"
 let g:WhichKeyDesc_bufferbuild_delete = "<leader>bd Delete buffer"
 nnoremap <leader>bd :action CloseContent<CR>
 let g:WhichKeyDesc_bufferbuild_delete_others = "<leader>bo Delete other buffers"
@@ -155,6 +155,21 @@ nnoremap <leader>fa :action GotoAction<CR>
 let g:WhichKeyDesc_Find_text = "<leader>ft Find text"
 nnoremap <leader>ft :action TextSearchAction<CR>
 
+" Go
+let g:WhichKeyDesc_go = "<leader>g Go"
+let g:WhichKeyDesc_go_toline = "<leader>gl Go to line"
+nnoremap <leader>gl :action GotoLine<CR>
+let g:WhichKeyDesc_Go_tolocation = "<leader>gL Go to location"
+nnoremap <leader>gL :action SelectIn<CR>
+let g:WhichKeyDesc_Go_next = "<leader>gn Go Forward"
+nnoremap <leader>gn :action Forward<CR>
+let g:WhichKeyDesc_Go_next_alternate = "<leader>gf Go Forward"
+nnoremap <leader>gf :action Forward<CR>
+let g:WhichKeyDesc_Go_back = "<leader>gp Go Backward"
+nnoremap <leader>gp :action Back<CR>
+let g:WhichKeyDesc_Go_back_alternate = "<leader>gb Go Backward"
+nnoremap <leader>gb :action Back<CR>
+
 " Refactor
 let g:WhichKeyDesc_Refactor = "<leader>r Refactor"
 let g:WhichKeyDesc_Refactor_this = "<leader>rr Refactor this"
@@ -170,24 +185,12 @@ nnoremap <leader>rx :action IntroduceVariable<CR>
 xnoremap <leader>rx :action IntroduceVariable<CR>
 
 let g:WhichKeyDesc_test = "<leader>t Tests"
-let g:WhichKeyDesc_test_run_last = "<leader>tl Last run"
-nnoremap <leader>tl :action RunLastRun<CR>
-let g:WhichKeyDesc_test_show_context = "<leader>to Show output"
-nnoremap <leader>to :action ShowRunContent<CR>
-let g:WhichKeyDesc_test_toggle_output_Panel = "<leader>tO Toggle output panel"
-nnoremap <leader>tO :action ActivateRunToolWindow<CR>
-let g:WhichKeyDesc_test_run_nearest = "<leader>tr Run nearest"
-nnoremap <leader>tr :action Run<CR>
-let g:WhichKeyDesc_test_toggle_result = "<leader>ts Show results"
-nnoremap <leader>ts :action ToggleTestResults<CR>
-let g:WhichKeyDesc_test_stop = "<leader>tS Stop tests"
-nnoremap <leader>tS :action Stop<CR>
-let g:WhichKeyDesc_test_run_file = "<leader>tt Run all tests in file"
-nnoremap <leader>tt :action RunFile<CR>
-let g:WhichKeyDesc_test_run_all_tests = "<leader>tT Run all tests"
-nnoremap <leader>tT :action RunAllTests<CR>
-let g:WhichKeyDesc_test_toggle_Watch = "<leader>tw Toggle watch"
-nnoremap <leader>tw :action ActivateWatchToolWindow<CR>
+let g:WhichKeyDesc_test_run = "<leader>tr Run or debug test"
+nnoremap <leader>tr :action Rider.UnitTesting.RunContext<CR>
+let g:WhichKeyDesc_test_run_session = "<leader>ts Run test session"
+nnoremap <leader>ts :action Rider.UnitTesting.RunSession<CR>
+let g:WhichKeyDesc_test_run_solution = "<leader>tS Run all tests in solution"
+nnoremap <leader>tS :action RiderUnitTestRunSolutionAction<CR>
 
 nnoremap gd :action GotoDeclaration<CR>
 nnoremap gD :action GotoDeclaration<CR>
