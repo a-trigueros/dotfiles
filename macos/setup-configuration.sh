@@ -56,6 +56,11 @@ rm -rf "$HOME/.config/zsh"
 mkdir -p "$HOME/.config/zsh"
 stow --target "$HOME/.config/zsh" --dir=zsh config
 
+# Karabiner configuration
+rm -rf "$HOME/.config/karabiner"
+mkdir -p "$HOME/.config/karabiner"
+stow --target "$HOME/.config/karabiner" karabiner
+
 # Nushell configuration
 if [ -z "$XDG_CONFIG_HOME" ]; then
   rm -rf "$HOME/Library/Application Support/nushell"
