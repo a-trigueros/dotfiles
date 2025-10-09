@@ -28,6 +28,8 @@ fi
 # ----- Fast cd (zoxide) -----
 eval "$(zoxide init zsh)"
 
+source $HOME/.config/zsh/jj.zsh
+
 # ----- Fuzzy finder (fzf) -----
 # Only in interactive shell
 if [[ $- == *i* ]]; then
