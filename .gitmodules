@@ -1,6 +1,3 @@
 [submodule "LazyVim"]
 	path = LazyVim
 	url = https://github.com/LazyVim/starter.git
-[submodule "jetbrains/Lazy-idea"]
-	path = jetbrains/Lazy-idea
-	url = https://github.com/cufarvid/lazy-idea
