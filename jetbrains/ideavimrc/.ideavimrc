@@ -40,7 +40,7 @@ nnoremap <C-h> :action ActivateProjectToolWindow<CR>
 
 " Popup navigation
 " imap <C-j> <C-n> " DONE with Karabiner elements
-imap <C-k> <C-p>
+" imap <C-k> <C-p> " DONE with Karabiner elements
 
 " Buffers navigation
 nnoremap <S-l> :tabnext<CR>
