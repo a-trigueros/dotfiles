@@ -18,6 +18,7 @@ cask "ilspy"
 cask "jetbrains-toolbox"
 cask "keepassxc"
 cask "keka"
+cask "kindavim"
 cask "microsoft-auto-update"
 cask "microsoft-teams"
 cask "notepadnext"
@@ -30,6 +31,7 @@ cask "utm"
 cask "visual-studio-code"
 cask "vlc"
 cask "wezterm"
+cask "wooshy"
 mas "1Password for Safari", id: 1569813296
 mas "Amphetamine", id: 937984704
 mas "Calendar 366 II", id: 1265895169
