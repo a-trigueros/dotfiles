@@ -20,6 +20,10 @@ rm -f $HOME/.config/starship.toml
 rm -f $HOME/.config/starship-powershell.toml
 stow starship -t $HOME/.config
 
+rm -rf $HOME/.config/jetbrains/Lazy-idea
+mkdir -p $HOME/.config/jetbrains/Lazy-idea
+stow --target=$HOME/.config/jetbrains/Lazy-idea --dir=jetbrains Lazy-idea
+
 rm -f ~/.ideavimrc
 stow --target=$HOME --dir=jetbrains ideavimrc
 
