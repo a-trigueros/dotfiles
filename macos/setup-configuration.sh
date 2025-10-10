@@ -24,7 +24,7 @@ rm -rf $HOME/.config/jetbrains/Lazy-idea
 mkdir -p $HOME/.config/jetbrains/Lazy-idea
 stow --target=$HOME/.config/jetbrains/Lazy-idea --dir=jetbrains Lazy-idea
 
-rm -f ~/.ideavimrc
+rm -f $HOME/.ideavimrc
 stow --target=$HOME --dir=jetbrains ideavimrc
 
 # Function to stow a directory into a specified config directory
