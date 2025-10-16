@@ -23,6 +23,10 @@ eval "$(carapace _carapace)"
 # Chargé uniquement en mode interactif
 if [[ $- == *i* ]]; then
   eval "$(atuin init zsh)"
+
+  alias asl="atuin script list"
+  alias asr="atuin script run"
+
 fi
 
 # ----- Fast cd (zoxide) -----
