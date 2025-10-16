@@ -42,10 +42,16 @@ let g:WhichKeyDesc_collapse__open_all = "<leader>zo Open all"
 nnoremap <leader>zo :action ExpandAllRegions<CR>
 
 " Move
-let g:WhichKeyDesc_Move_Back = "<leader>[[ Move back"
-nmap <leader>[[ <Action>(Back)
-let g:WhichKeyDesc_Move_Forward = "<leader>]] Move forward"
-nmap <leader>]] <Action>(Forward)
+
+let g:WhichKeyDesc_reference_next = "]] Next"
+nmap ]] <Action>(Forward)
+let g:WhichKeyDesc_reference_prev = "[[ Prev"
+nmap [[ <Action>(Back)
+
+let g:WhichKeyDesc_function_next = "]f Next function"
+nmap ]f <Action>(MethodDown)
+let g:WhichKeyDesc_function_prev = "[f Previous function"
+nmap [f <Action>(MethodUp)
 
 " Extensions
 let g:WhichKeyDesc_leader_f_s = "<leader>fs find symbol"
