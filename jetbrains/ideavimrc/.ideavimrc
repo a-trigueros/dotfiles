@@ -31,6 +31,25 @@ let g:WhichKeyDesc_run_rebuild_solution = "<leader>rR Rebuild solution"
 nnoremap <leader>rR :action RebuildSolutionAction<CR>
 let g:WhichKeyDesc_run_test = "<leader>rt Run closest test" 
 nnoremap <leader>rt :action Rider.UnitTesting.RunContext<CR>
+let g:WhichKeyDesc_run_query = "<leader>rq Run query"
+nnoremap <leader>rq <Action>(Console.Jdbc.Execute)
+
+" Collapse / Expand
+let g:WhichKeyDesc_collapse = "<leader>z Collapse" 
+let g:WhichKeyDesc_collapse_all = "<leader>zc Collapse all" 
+nnoremap <leader>zc :action CollapseAllRegions<CR>
+let g:WhichKeyDesc_collapse__open_all = "<leader>zo Open all" 
+nnoremap <leader>zo :action ExpandAllRegions<CR>
+
+" Move
+let g:WhichKeyDesc_Move_Back = "<leader>[[ Move back"
+nmap <leader>[[ <Action>(Back)
+let g:WhichKeyDesc_Move_Forward = "<leader>]] Move forward"
+nmap <leader>]] <Action>(Forward)
+
+" Extensions
+let g:WhichKeyDesc_leader_f_s = "<leader>fs find symbol"
+nmap <leader>fs <Action>(GotoSymbol)
 
 " Overrides
 nnoremap <leader>dc :action CIDR.Debugger.ResumeAll<CR>
