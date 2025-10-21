@@ -62,15 +62,10 @@ export PAGER="less -RFX"
 # ----- Vi mode -----
 set -o vi
 
-# ----- Aliases -----
-alias nv=nvim
-
 # ----- bat configuration -----
 export BAT_THEME="Catppuccin Macchiato"
 export BAT_STYLE="numbers,changes,header,grid"
 export BAT_PAGER="less -RF"
-
-alias cat='bat'
 
 # bat as man pager
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
