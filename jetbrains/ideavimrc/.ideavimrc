@@ -32,22 +32,24 @@ nnoremap <leader>rR :action RebuildSolutionAction<CR>
 let g:WhichKeyDesc_run_test = "<leader>rt Run closest test" 
 nnoremap <leader>rt :action Rider.UnitTesting.RunContext<CR>
 let g:WhichKeyDesc_run_query = "<leader>rq Run query"
-nnoremap <leader>rq <Action>(Console.Jdbc.Execute)
+nmap <leader>rq :action Console.Jdbc.Execute<CR>
 
 " Collapse / Expand
 let g:WhichKeyDesc_collapse = "<leader>z Collapse" 
 let g:WhichKeyDesc_collapse_all = "<leader>zc Collapse all" 
-nnoremap <leader>zc :action CollapseAllRegions<CR>
+nmap <leader>zc :action CollapseAllRegions<CR>
 let g:WhichKeyDesc_collapse__open_all = "<leader>zo Open all" 
-nnoremap <leader>zo :action ExpandAllRegions<CR>
+nmap <leader>zo :action ExpandAllRegions<CR>
+let g:WhichKeyDesc_collapse_all_aleternate = "gzc Collapse all" 
+nmap gzc :action CollapseAllRegions<CR>
+let g:WhichKeyDesc_collapse__open_all_alternate = "gzo Open all" 
+nmap gzo :action ExpandAllRegions<CR>
 
 " Move
-
 let g:WhichKeyDesc_reference_next = "]] Next"
 nmap ]] <Action>(Forward)
 let g:WhichKeyDesc_reference_prev = "[[ Prev"
 nmap [[ <Action>(Back)
-
 let g:WhichKeyDesc_function_next = "]f Next function"
 nmap ]f <Action>(MethodDown)
 let g:WhichKeyDesc_function_prev = "[f Previous function"
@@ -57,7 +59,12 @@ nmap [f <Action>(MethodUp)
 let g:WhichKeyDesc_leader_f_s = "<leader>fs find symbol"
 nmap <leader>fs <Action>(GotoSymbol)
 
+let g:WhickKeyDesc_leader_w_M = "<leader>wM Maximize window"
+nnoremap <leader>wM :action HideAllWindows<CR>
+
 " Overrides
 nnoremap <leader>dc :action CIDR.Debugger.ResumeAll<CR>
-nnoremap <leader>dg :action JumpToStatement<CR>
+nnoremap <leader>dt :action CIDR.Debugger.StopAll<CR>
+nmap <leader>dg :action JumpToStatement<CR>
 nnoremap <leader>cf :action ReformatCode<CR>
+nmap 
