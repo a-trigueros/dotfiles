@@ -13,10 +13,10 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Caddy 
+        description: Btop 
         allowPrerelease: true
       settings:
-        id: CaddyServer.Caddy
+        id: aristocratos.btop4win
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -76,10 +76,24 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: LazyDocker 
+        allowPrerelease: true
+      settings:
+        id: JesseDuffield.Lazydocker
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: LazyGit 
         allowPrerelease: true
       settings:
         id: JesseDuffield.lazygit
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: LazyJj 
+        allowPrerelease: true
+      settings:
+        id: Cretezy.lazyjj
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
@@ -157,6 +171,13 @@ properties:
         allowPrerelease: true
       settings:
         id: GnuWin32.Zip
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Yazi (File browser)
+        allowPrerelease: true
+      settings:
+        id: sxyiazi.yazi
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
