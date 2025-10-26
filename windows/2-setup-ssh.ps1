@@ -14,8 +14,6 @@
 [CmdletBinding()]
 param()
 
-$ErrorActionPreference = 'Stop'
-
 # Constants
 $SSHD_CONFIG_PATH = "C:\ProgramData\ssh\sshd_config"
 $SSH_COMPUTER_DIR = "C:\ProgramData\ssh"
@@ -30,7 +28,7 @@ function Install-OpenSSHServer {
     
     try {
         Add-WindowsCapability -Online -Name OpenSSH.Server -ErrorAction Stop
-        Write-Host "✓ OpenSSH Server installed successfully" -ForegroundColor Green
+        Write-Host "OpenSSH Server installed successfully" -ForegroundColor Green
     }
     catch {
         Write-Error "Failed to install OpenSSH Server: $_"
@@ -44,12 +42,33 @@ function Initialize-SSHDConfigFile {
         Initializes the SSH daemon configuration file by starting and stopping the service
     #>
     Write-Host "Initializing SSH daemon configuration..." -ForegroundColor Cyan
-    
-    Start-Service sshd -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 5
+
+    # Ensure service is stopped before resetting config
     Stop-Service sshd -ErrorAction SilentlyContinue
+
+    # Always remove existing sshd_config to guarantee homogeneous configuration
+    if (Test-Path -LiteralPath $SSHD_CONFIG_PATH) {
+        Write-Host "Removing existing sshd_config to reset configuration..." -ForegroundColor Yellow
+        Remove-Item -LiteralPath $SSHD_CONFIG_PATH -Force -ErrorAction SilentlyContinue
+    }
     
-    Write-Host "✓ SSH daemon configuration initialized" -ForegroundColor Green
+    # Attempt to start/stop to let OpenSSH create initial files if installed
+    Start-Service sshd -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
+    Stop-Service sshd -ErrorAction SilentlyContinue
+
+    # Ensure sshd_config exists to avoid empty/NULL content later
+    if (-not (Test-Path -LiteralPath $SSHD_CONFIG_PATH)) {
+        Write-Host "sshd_config not found after reset, creating a minimal one..." -ForegroundColor Yellow
+        $base = @(
+            "# Minimal sshd_config initialized by setup script",
+            "Port 22",
+            "Subsystem sftp sftp-server.exe"
+        )
+        $base | Set-Content -Encoding ascii -LiteralPath $SSHD_CONFIG_PATH
+    }
+    
+    Write-Host "SSH daemon configuration initialized" -ForegroundColor Green
 }
 
 function Add-SSHFirewallRule {
@@ -75,21 +94,7 @@ function Add-SSHFirewallRule {
         -Action Allow `
         -LocalPort 22 | Out-Null
     
-    Write-Host "✓ Firewall rule configured" -ForegroundColor Green
-}
-
-function Backup-SSHDConfig {
-    <#
-    .SYNOPSIS
-        Creates a backup of the original sshd_config file
-    #>
-    $backupPath = "$SSHD_CONFIG_PATH.bak"
-    
-    if (-Not (Test-Path $backupPath)) {
-        Write-Host "Creating backup of original sshd_config..." -ForegroundColor Cyan
-        Copy-Item $SSHD_CONFIG_PATH $backupPath
-        Write-Host "✓ Backup created at $backupPath" -ForegroundColor Green
-    }
+    Write-Host "Firewall rule configured" -ForegroundColor Green
 }
 
 function Set-SSHDConfigLine {
@@ -105,7 +110,7 @@ function Set-SSHDConfigLine {
     #>
     param(
         [Parameter(Mandatory)]
-        [string[]]$Config,
+        [Object[]]$Config,
         
         [Parameter(Mandatory)]
         [string]$Key,
@@ -131,9 +136,12 @@ function Set-SSHDSecurityConfiguration {
     #>
     Write-Host "Configuring SSH daemon security settings..." -ForegroundColor Cyan
     
-    Backup-SSHDConfig
-    
-    $config = Get-Content $SSHD_CONFIG_PATH
+    # Read sshd_config robustly and validate
+    try {
+        $config = Get-Content -LiteralPath $SSHD_CONFIG_PATH -ErrorAction Stop
+    } catch {
+        throw "Impossible de lire $SSHD_CONFIG_PATH : $($_.Exception.Message)"
+    }
     
     # Disable password authentication, enable key-based only
     $config = Set-SSHDConfigLine -Config $config -Key "PasswordAuthentication" -Value "no"
@@ -146,9 +154,9 @@ function Set-SSHDSecurityConfiguration {
     $config = Set-SSHDConfigLine -Config $config -Key "ClientAliveCountMax" -Value "3"
     $config = Set-SSHDConfigLine -Config $config -Key "TCPKeepAlive" -Value "yes"
     
-    $config | Set-Content -Encoding UTF8 $SSHD_CONFIG_PATH
+    $config | Set-Content -Encoding ascii -LiteralPath $SSHD_CONFIG_PATH
     
-    Write-Host "✓ SSH daemon security configured" -ForegroundColor Green
+    Write-Host "SSH daemon security configured" -ForegroundColor Green
 }
 
 function Install-UserAuthorizedKeys {
@@ -169,7 +177,7 @@ function Install-UserAuthorizedKeys {
     if (-Not (Test-Path $authorizedKeysPath)) {
         if (Test-Path $PUBLIC_KEYS_SOURCE) {
             Copy-Item $PUBLIC_KEYS_SOURCE $authorizedKeysPath
-            Write-Host "✓ User authorized keys installed" -ForegroundColor Green
+            Write-Host "User authorized keys installed" -ForegroundColor Green
         }
         else {
             Write-Warning "Public keys source file not found: $PUBLIC_KEYS_SOURCE"
@@ -192,7 +200,7 @@ function Install-AdministratorAuthorizedKeys {
     if (-Not (Test-Path $adminKeysPath)) {
         if (Test-Path $PUBLIC_KEYS_SOURCE) {
             Copy-Item $PUBLIC_KEYS_SOURCE $adminKeysPath -Force
-            Write-Host "✓ Administrator authorized keys installed" -ForegroundColor Green
+            Write-Host "Administrator authorized keys installed" -ForegroundColor Green
         }
         else {
             Write-Warning "Public keys source file not found: $PUBLIC_KEYS_SOURCE"
@@ -213,12 +221,12 @@ function Start-SSHServices {
     # Start and configure SSH daemon
     Start-Service sshd
     Set-Service -Name sshd -StartupType 'Automatic'
-    Write-Host "✓ SSH daemon started and set to automatic" -ForegroundColor Green
+    Write-Host "SSH daemon started and set to automatic" -ForegroundColor Green
     
     # Start and configure SSH agent
     Start-Service 'ssh-agent'
     Set-Service -Name 'ssh-agent' -StartupType 'Automatic'
-    Write-Host "✓ SSH agent started and set to automatic" -ForegroundColor Green
+    Write-Host "SSH agent started and set to automatic" -ForegroundColor Green
 }
 
 # Main execution
@@ -238,10 +246,10 @@ try {
     Write-Host "=== Setup completed successfully! ===" -ForegroundColor Magenta
     Write-Host ""
     Write-Host "SSH Server is now running and configured with:" -ForegroundColor Green
-    Write-Host "  • Key-based authentication only" -ForegroundColor Gray
-    Write-Host "  • Password authentication disabled" -ForegroundColor Gray
-    Write-Host "  • Keepalive configured (60s interval)" -ForegroundColor Gray
-    Write-Host "  • Firewall rule enabled on port 22" -ForegroundColor Gray
+    Write-Host "  - Key-based authentication only" -ForegroundColor Gray
+    Write-Host "  - Password authentication disabled" -ForegroundColor Gray
+    Write-Host "  - Keepalive configured (60s interval)" -ForegroundColor Gray
+    Write-Host "  - Firewall rule enabled on port 22" -ForegroundColor Gray
     Write-Host ""
 }
 catch {
