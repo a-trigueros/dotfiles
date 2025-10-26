@@ -13,6 +13,10 @@ else
   compinit
 fi
 
+fpath+=('/opt/homebrew/share/zsh/site-functions')
+# fzf
+ZF_CTRL_R_COMMAND= FZF_ALT_C_COMMAND= source <(fzf --zsh)
+
 # ----- Prompt -----
 eval "$(starship init zsh)"
 
