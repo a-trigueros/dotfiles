@@ -17,7 +17,6 @@ stow -t $HOME --dir=zsh root
 mkdir -p $HOME/.config
 
 rm -f $HOME/.config/starship.toml
-rm -f $HOME/.config/starship-powershell.toml
 stow starship -t $HOME/.config
 
 rm -rf $HOME/.config/jetbrains/Lazy-idea
@@ -73,8 +72,3 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
 else
   STOW_DIR nushell
 fi
-
-PWSH_PROFILE_DIR=$(pwsh -NoProfile -Command 'Split-Path $PROFILE')
-rm -f "$PWSH_PROFILE_DIR/Microsoft.PowerShell_profile.ps1"
-mkdir -p "$PWSH_PROFILE_DIR"
-stow powershell -t "$PWSH_PROFILE_DIR"
