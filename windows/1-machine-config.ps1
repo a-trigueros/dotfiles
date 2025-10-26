@@ -39,7 +39,23 @@ function Set-ComputerName {
     }
 }
 
-function Configure-AutoLogin {
+function Set-AutoLoginRegistryKeys {
+    param(
+        [string]$Username = "",
+        [string]$Password = "",
+        [bool]$Enable
+    )
+    
+    if ($Enable) {
+        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "1" /f
+        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultUserName" /t REG_SZ /d $Username /f
+        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d $Password /f
+    } else {
+        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "0" /f
+    }
+}
+
+function Set-AutoLogin {
     $autoLoginChoice = Read-Host "Do you want to enable automatic login (Y/N)?"
     if ($autoLoginChoice -match '^[Yy]$') {
         $username = $env:USERNAME
@@ -55,20 +71,15 @@ function Configure-AutoLogin {
     }
 }
 
-function Set-AutoLoginRegistryKeys {
-    param(
-        [string]$Username = "",
-        [string]$Password = "",
-        [bool]$Enable
-    )
-    
-    if ($Enable) {
-        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "1" /f
-        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultUserName" /t REG_SZ /d $Username /f
-        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d $Password /f
-    } else {
-        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "0" /f
-    }
+function Set-PowerConfigurationSettings {
+    powercfg /change monitor-timeout-ac 0
+    powercfg /change monitor-timeout-dc 0
+    powercfg /change standby-timeout-ac 0
+    powercfg /change standby-timeout-dc 0
+}
+
+function Set-LockScreenRegistryKey {
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_SZ /d "1" /f
 }
 
 function Disable-AutoLock {
@@ -86,58 +97,51 @@ function Disable-AutoLock {
     }
 }
 
-function Set-PowerConfigurationSettings {
-    powercfg /change monitor-timeout-ac 0
-    powercfg /change monitor-timeout-dc 0
-    powercfg /change standby-timeout-ac 0
-    powercfg /change standby-timeout-dc 0
-}
-
-function Set-LockScreenRegistryKey {
-    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_SZ /d "1" /f
-}
-
 function Enable-WindowsSudo {
-    <#
-    .SYNOPSIS
-        Enable Windows 11 sudo feature via registry
-    .DESCRIPTION
-        Configures sudo in inline mode for optimal SSH usage.
-        Only works on Windows 11 Build 26045 or later.
-    #>
     Write-Host "`nConfiguring Windows Sudo..." -ForegroundColor Cyan
-    
     try {
-        # Check Windows version
         $winVersion = [System.Environment]::OSVersion.Version
         if ($winVersion.Build -lt 26045) {
-            Write-Host "  ⓘ Windows 11 Build 26045+ required for sudo" -ForegroundColor Yellow
-            Write-Host "    Current build: $($winVersion.Build)" -ForegroundColor Gray
-            Write-Host "    Skipping sudo configuration" -ForegroundColor Gray
+            Write-Host "Windows 11 Build 26045+ required for sudo" -ForegroundColor Yellow
+            Write-Host "Current build: $($winVersion.Build). Skipping sudo configuration." -ForegroundColor Gray
             return
         }
-        
-        # Create sudo registry path if it doesn't exist
+
+        # Ensure current user is in Administrators (required to run sudo)
+        $currentUser = "$env:USERDOMAIN\$env:USERNAME"
+        $adminsGroup = "Administrators"
+        $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+        $inAdmins = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+        if (-not $inAdmins) {
+            Write-Host "Adding $currentUser to local Administrators group..." -ForegroundColor Yellow
+            $addResult = & net localgroup $adminsGroup "$currentUser" /add 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                throw "Failed to add user to Administrators: $addResult"
+            }
+            Write-Host "User added to Administrators. You must sign out and sign in again for changes to take effect." -ForegroundColor Green
+        } else {
+            Write-Host "User is already in Administrators group." -ForegroundColor Gray
+        }
+
         $sudoPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Sudo"
         if (-not (Test-Path $sudoPath)) {
             New-Item -Path $sudoPath -Force | Out-Null
-            Write-Host "  Created sudo registry key" -ForegroundColor Gray
+            Write-Host "Created sudo registry key" -ForegroundColor Gray
         }
-        
-        # Enable sudo
+
+        # Enable sudo and set mode
         New-ItemProperty -Path $sudoPath -Name "Enabled" -Value 1 -PropertyType DWord -Force | Out-Null
-        Write-Host "  ✓ Sudo enabled" -ForegroundColor Green
-        
-        # Set inline mode (0 = inline, 1 = new window, 2 = disable input)
-        # Inline mode is best for SSH sessions
+        # Mode: 0 = inline, 1 = new window, 2 = disable input
         New-ItemProperty -Path $sudoPath -Name "Mode" -Value 0 -PropertyType DWord -Force | Out-Null
-        Write-Host "  ✓ Sudo configured in inline mode (optimal for SSH)" -ForegroundColor Green
-        
-        Write-Host "  ℹ Sudo will be available after restart" -ForegroundColor Yellow
-    }
-    catch {
+        # Optional: Require UAC prompt for elevation (0 = no, 1 = yes). Keep default behavior: 1
+        New-ItemProperty -Path $sudoPath -Name "RequireUAC" -Value 1 -PropertyType DWord -Force | Out-Null
+
+        Write-Host "Sudo enabled and configured (inline mode)." -ForegroundColor Green
+        Write-Host "If you were just added to Administrators, sign out/in or reboot before using 'sudo'." -ForegroundColor Yellow
+    } catch {
         Write-Warning "Failed to configure sudo: $_"
-        Write-Host "  You can configure it manually later with: .\windows\8-enable-sudo.ps1" -ForegroundColor Gray
+        Write-Host "You can configure it manually later with: .\windows\8-enable-sudo.ps1" -ForegroundColor Gray
     }
 }
 
@@ -148,7 +152,7 @@ function Start-MachineConfiguration {
     Write-Host "Running with administrator privileges..." -ForegroundColor Green
     
     Set-ComputerName
-    Configure-AutoLogin
+    Set-AutoLogin
     Disable-AutoLock
     Enable-WindowsSudo
     
