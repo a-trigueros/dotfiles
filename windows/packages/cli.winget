@@ -13,6 +13,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Bat 
+        allowPrerelease: true
+      settings:
+        id: sharkdp.bat
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Btop 
         allowPrerelease: true
       settings:
@@ -160,13 +167,6 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Vim
-        allowPrerelease: true
-      settings:
-        id: vim.vim
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
         description: Zip
         allowPrerelease: true
       settings:
@@ -177,7 +177,7 @@ properties:
         description: Yazi (File browser)
         allowPrerelease: true
       settings:
-        id: sxyiazi.yazi
+        id: sxyazi.yazi
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
