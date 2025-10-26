@@ -49,11 +49,11 @@ bat cache --build
 # Nvim configuration
 rm -rf "$HOME/.config/nvim"
 mkdir -p "$HOME/.config/nvim"
-stow --target "$HOME/.config/nvim" LazyVim
+stow --target "$HOME/.config/nvim" --dir="nvim" LazyVim
 
 # Custom config
 rm "$HOME/.config/nvim/lua/config/keymaps.lua"
-stow --target "$HOME/.config/nvim/lua/config" --dir="nvim/lua" config
+stow --target "$HOME/.config/nvim/lua/config" --dir="nvim/custom" config
 
 # Zsh configuration
 rm -rf "$HOME/.config/zsh"
