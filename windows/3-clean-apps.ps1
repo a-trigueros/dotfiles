@@ -61,14 +61,14 @@ function Remove-AppxPackages {
         }
     }
     
-    Write-Host "`n✓ Removed $removedCount packages" -ForegroundColor Green
+    Write-Host "Removed $removedCount packages" -ForegroundColor Green
     if ($failedCount -gt 0) {
         Write-Host "✗ Failed to remove $failedCount packages" -ForegroundColor Red
     }
 }
 
 function Uninstall-MicrosoftTeams {
-    Write-Host "`n=== Removing Microsoft Teams ===" -ForegroundColor Cyan
+    Write-Host "=== Removing Microsoft Teams ===" -ForegroundColor Cyan
     
     try {
         # Try WinGet first
@@ -78,7 +78,7 @@ function Uninstall-MicrosoftTeams {
             winget uninstall --id Microsoft.Teams --silent --accept-source-agreements
             
             if ($LASTEXITCODE -eq 0) {
-                Write-Host "✓ Microsoft Teams uninstalled" -ForegroundColor Green
+                Write-Host "Microsoft Teams uninstalled" -ForegroundColor Green
             }
             else {
                 Write-Warning "Failed to uninstall Teams via WinGet"
@@ -104,7 +104,7 @@ function Uninstall-OneDrive {
             winget uninstall --id Microsoft.OneDrive --silent --accept-source-agreements
             
             if ($LASTEXITCODE -eq 0) {
-                Write-Host "✓ OneDrive uninstalled" -ForegroundColor Green
+                Write-Host "OneDrive uninstalled" -ForegroundColor Green
             }
             else {
                 Write-Warning "Failed to uninstall OneDrive via WinGet"
@@ -132,9 +132,9 @@ function Show-CleanupSummary {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "The following have been removed:" -ForegroundColor Yellow
-    Write-Host "  • Default Windows apps (Xbox, Paint, etc.)" -ForegroundColor Gray
-    Write-Host "  • Microsoft Teams" -ForegroundColor Gray
-    Write-Host "  • OneDrive" -ForegroundColor Gray
+    Write-Host "  - Default Windows apps (Xbox, Paint, etc.)" -ForegroundColor Gray
+    Write-Host "  - Microsoft Teams" -ForegroundColor Gray
+    Write-Host "  - OneDrive" -ForegroundColor Gray
     Write-Host ""
 }
 
