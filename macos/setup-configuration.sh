@@ -52,7 +52,7 @@ stow --target "$HOME/.config/nvim" --dir="nvim" LazyVim
 
 # Custom config
 rm "$HOME/.config/nvim/lua/config/keymaps.lua"
-stow --target "$HOME/.config/nvim/lua/config" --dir="nvim/custom" config
+stow --target "$HOME/.config/nvim/lua" --dir="nvim" lua
 
 # Zsh configuration
 rm -rf "$HOME/.config/zsh"

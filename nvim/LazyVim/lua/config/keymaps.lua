@@ -1,1 +1,1 @@
-../../../custom/config/keymaps.lua
+../../../lua/config/keymaps.lua
