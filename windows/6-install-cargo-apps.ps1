@@ -1,8 +1,11 @@
+# TODO : SETUP Build tools
+
 rustup default stable
 
 # Essential tools for PowerShell profile
-if ($env:PROCESSOR_ARCHITECTURE -ne 'ARM64') {
-    cargo install atuin
+if ($env:PROCESSOR_ARCHITECTURE -ne 'ARM64')
+{
+  cargo install atuin
 }
 
 cargo install --locked tree-sitter-cli
