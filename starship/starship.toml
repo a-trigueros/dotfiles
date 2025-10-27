@@ -55,10 +55,10 @@ jj log --revisions @ --no-graph --ignore-working-copy --color always --limit 1 -
 disabled = true
 
 [custom.git_branch]
-when = "! jj --ignore-working-copy root"
-command = "starship module git_metrics"
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = "git branch --show-current"
 description = "Only show git_branch if we're not in a jj repo"
-format = " [$symbol$branch]($style) "
+format = "[$symbol$output]($style) "
 symbol = "🌱 "
 style = "bold yellow"
 
@@ -66,28 +66,57 @@ style = "bold yellow"
 disabled = true
 
 [custom.git_commit]
-when = "! jj --ignore-working-copy root"
-command = "starship module git_commit"
-style = ""
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = "git rev-parse --short HEAD 2>/dev/null || echo ''"
+format = "[$symbol$output]($style) "
+symbol = "@"
 description = "Only show git_commit if we're not in a jj repo"
 
 [git_status]
 disabled = true
 
 [custom.git_status]
-when = "! jj --ignore-working-copy root"
-command = "starship module git_status"
-style = ""                                                     # This disables the default "(bold green)" style
-description = "Only show git_status if we're not in a jj repo"
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = '''
+git status --porcelain=v1 2>/dev/null | awk '
+BEGIN { modified=0; staged=0; untracked=0; deleted=0; renamed=0; conflicted=0 }
+/^M/ { modified++ }
+/^A/ { staged++ }
+/^D/ { deleted++ }
+/^R/ { renamed++ }
+/^U/ { conflicted++ }
+/^\?/ { untracked++ }
+/^ M/ { modified++ }
+/^ D/ { deleted++ }
+END {
+  output = ""
+  if (staged > 0) output = output "+" staged
+  if (modified > 0) output = output "!" modified  
+  if (deleted > 0) output = output "-" deleted
+  if (renamed > 0) output = output "»" renamed
+  if (untracked > 0) output = output "?" untracked
+  if (conflicted > 0) output = output "=" conflicted
+  print output
+}'
+'''
+format = "[$output]($style) "
+style = "bold red"
+
 
 [git_metrics]
 disabled = true
 
 [custom.git_metrics]
-when = "! jj --ignore-working-copy root"
-command = "starship module git_metrics"
-description = "Only show git_metrics if we're not in a jj repo"
-style = ""
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = '''
+git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null | awk '{
+  if ($1 > 0 && $2 > 0) print "↑" $1 "↓" $2
+  else if ($1 > 0) print "↑" $1
+  else if ($2 > 0) print "↓" $2
+}' || echo ""
+'''
+format = "[$output]($style) "
+style = "bold blue"
 
 [hostname]
 ssh_only = true
