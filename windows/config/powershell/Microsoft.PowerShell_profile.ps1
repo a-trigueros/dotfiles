@@ -323,7 +323,6 @@ function Initialize-Profile
   # Environment setup
   Set-EnvironmentVariables
   Initialize-NodeEnvironment
-  Initialize-DevelopmentTools
   
   # Shell integrations
   Initialize-Starship
