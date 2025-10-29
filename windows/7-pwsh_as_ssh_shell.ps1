@@ -35,9 +35,11 @@ function Add-PwshConfiguration {
         [string]$pwshPath
     )
     
+    $escapedPwshPath = "`"$pwshPath`"" 
+    
     $configBlock = @"
 Match User $username
-    ForceCommand $pwshPath -NoLogo
+    ForceCommand $escapedPwshPath -NoLogo
 "@
     
     Add-Content -Path $configPath -Value "`n$configBlock`n"
