@@ -98,6 +98,10 @@ function Install-WingetPackages {
             $VsInstaller = Join-Path $InstallerDir "vs_installer.exe"
 
             & $VsInstaller modify --installPath "$InstallPath" --quiet --wait --norestart --importConfig "./BuildTools/.vsconfig"
+        } 
+
+        if($file.Name -eq "javascript.winget") {
+            nvm install lts
         }
     }
     
