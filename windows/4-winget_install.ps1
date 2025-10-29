@@ -92,6 +92,13 @@ function Install-WingetPackages {
             Write-Error "Error configuring packages from $($file.Name): $_"
             $failedPackages += $file.Name
         }
+
+        if($file.Name -eq "compilers.winget") {
+           $InstallerDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+            $VsInstaller = Join-Path $InstallerDir "vs_installer.exe"
+
+            & $VsInstaller modify --installPath "$InstallPath" --quiet --wait --norestart --importConfig "./BuildTools/.vsconfig"
+        }
     }
     
     if ($failedPackages.Count -gt 0) {
