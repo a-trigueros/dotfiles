@@ -131,12 +131,6 @@ foreach ($pkg in $selectedPackages) {
     Write-Host "  - $($pkg.BaseName)" -ForegroundColor White
 }
 
-$confirm = Read-Host "`nConfirm installation? (Y/N)"
-if ($confirm -ne 'Y' -and $confirm -ne 'y') {
-    Write-Host "Installation cancelled." -ForegroundColor Yellow
-    exit 0
-}
-
 $success = Install-WingetPackages -packageFiles $selectedPackages
 
 if ($success) {
