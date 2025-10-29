@@ -108,10 +108,10 @@ function Adapt-GitConfigForWindows
 
 $directoriesToCopy = @(
   @{ Source = "atuin"; Target = Join-Path $HOME ".config\atuin" }
-  @{ Source = "carapace"; Target = Join-Path $HOME ".config\carapace" }
-  @{ Source = "jj"; Target = Join-Path $HOME ".config\jj" }
+  @{ Source = "carapace"; Target = Join-Path $HOME "AppData\Roaming\carapace" }
+  @{ Source = "jj"; Target = Join-Path $HOME "AppData\Roaming\jj" }
   @{ Source = "wezterm"; Target = Join-Path $HOME ".config\wezterm" }
-  @{ Source = "nvim"; Target = Join-Path $HOME "AppData\Local\nvim" }
+  @{ Source = "nvim\\LazyVim"; Target = Join-Path $HOME "AppData\Local\nvim" }
   @{ Source = "nushell\config"; Target = Join-Path $HOME "AppData\Roaming\nushell" }
   @{ Source = "bat\themes"; Target = Join-Path $env:APPDATA "bat\themes" }
   @{ Source = "windows\\config\\starship"; Target = Join-Path $HOME ".config\starship" }
