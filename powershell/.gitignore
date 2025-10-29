@@ -1,9 +1,0 @@
-# Local profile overrides (machine-specific)
-profile.local.ps1
-
-# PowerShell history
-ConsoleHost_history.txt
-
-# Temporary files
-*.tmp
-*.bak

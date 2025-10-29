@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$dotfilesPath = $PSScriptRoot
+$dotfilesPath = Join-Path $PSScriptRoot ".."
 
 function Copy-ConfigDirectory {
     param(
@@ -103,6 +103,9 @@ $directoriesToCopy = @{
     "nvim" = Join-Path $HOME "AppData\Local\nvim"
     "nushell\config" = Join-Path $HOME "AppData\Roaming\nushell"
     "bat\themes" = Join-Path $env:APPDATA "bat\themes"
+    "windows\\config\\starship" = Join-Path $HOME ".config\starship"
+    "windows\\config\\powershell" = Join-Path $HOME "Documents\PowerShell"
+    "windows\\config\\powershell" = Join-Path $HOME "Documents\WindowsPowerShell"
 }
 
 Write-Host "`nCopying configuration directories..." -ForegroundColor Cyan
