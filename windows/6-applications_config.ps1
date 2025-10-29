@@ -115,7 +115,7 @@ $directoriesToCopy = @(
   @{ Source = "bat\themes"; Target = Join-Path $env:APPDATA "bat\themes" }
   @{ Source = "windows\\config\\starship"; Target = Join-Path $HOME ".config\starship" }
   @{ Source = "windows\\config\\powershell"; Target = Join-Path $HOME "Documents\PowerShell" }
-  @{ Source = "windows\\config\\powershell"; Target = Join-Path $HOME "Documents\WindowsPowerShell" }
+  # @{ Source = "windows\\config\\powershell"; Target = Join-Path $HOME "Documents\WindowsPowerShell" }
 )
 
 Write-Host "`nCopying configuration directories..." -ForegroundColor Cyan
