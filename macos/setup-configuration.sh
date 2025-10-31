@@ -22,6 +22,10 @@ mkdir -p $HOME/.config
 rm -f $HOME/.config/starship.toml
 stow starship -t $HOME/.config
 
+rm -rf $HOME/.config/tmux/themes
+mkdir -p $HOME/.config/tmux/themes
+stow --target=$HOME/.config/tmux/themes --dir=tmux themes
+
 rm -rf $HOME/.config/jetbrains/Lazy-idea
 mkdir -p $HOME/.config/jetbrains/Lazy-idea
 stow --target=$HOME/.config/jetbrains/Lazy-idea --dir=jetbrains Lazy-idea
