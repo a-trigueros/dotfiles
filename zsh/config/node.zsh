@@ -8,3 +8,5 @@ export PATH="$PATH:$NPM_PACKAGES/bin"
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 source /opt/homebrew/opt/nvm/nvm.sh
+
+nvm use --lts --silent
