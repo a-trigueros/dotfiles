@@ -9,7 +9,7 @@ rm -f $HOME/.gitconfig
 stow git -t $HOME
 
 rm -f $HOME/.tmux.conf
-stow tmux -t $HOME
+stow -t $HOME --dir=tmux config
 
 rm -f $HOME/.zshrc
 stow -t $HOME --dir=zsh root

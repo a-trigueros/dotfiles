@@ -5,6 +5,7 @@ rustup default stable
 # Essential tools for PowerShell profile
 cargo install --git https://github.com/ltrzesniewski/atuin.git --branch powershell-pr
 cargo install --locked tree-sitter-cli
+cargo install --locked zellij
 
 # Optional but recommended
 # cargo install bat # Already available via winget (sharkdp.bat)
