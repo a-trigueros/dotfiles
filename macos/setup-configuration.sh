@@ -5,6 +5,9 @@ cd "$(dirname "$0")/.."
 git submodule init
 git submodule update --depth 1
 
+# Checkout specific tag for tmux catppuccin theme
+cd tmux/themes/catppuccin && git checkout v2.1.3 && cd -
+
 rm -f $HOME/.gitconfig
 stow git -t $HOME
 

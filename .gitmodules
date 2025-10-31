@@ -7,4 +7,4 @@
 [submodule "tmux/themes/catppuccin"]
 	path = tmux/themes/catppuccin
 	url = https://github.com/catppuccin/tmux
-	branch = v2.1.3
+
