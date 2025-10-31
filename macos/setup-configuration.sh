@@ -5,6 +5,9 @@ cd "$(dirname "$0")/.." || exit
 git submodule init
 git submodule update --depth 1
 
+rm -f "$HOME/.alacritty.toml"
+stow alacritty -t "$HOME"
+
 rm -f "$HOME/.gitconfig"
 stow git -t "$HOME"
 
@@ -13,6 +16,9 @@ stow tmux -t "$HOME"
 
 rm -f "$HOME/.zshrc"
 stow -t "$HOME" --dir=zsh root
+
+rm -f "$HOME/.aerospace.toml"
+stow -t "$HOME" aerospace
 
 mkdir -p "$HOME/.config"
 
