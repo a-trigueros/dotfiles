@@ -4,7 +4,3 @@
 [submodule "jetbrains/Lazy-idea"]
 	path = jetbrains/Lazy-idea
 	url = https://github.com/cufarvid/lazy-idea
-[submodule "tmux/themes/catppuccin"]
-	path = tmux/themes/catppuccin
-	url = https://github.com/catppuccin/tmux
-

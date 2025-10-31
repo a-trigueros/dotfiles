@@ -1,37 +1,34 @@
 #! /bin/bash
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit
 
 git submodule init
 git submodule update --depth 1
 
-# Checkout specific tag for tmux catppuccin theme
-cd tmux/themes/catppuccin && git checkout v2.1.3 && cd -
+rm -f "$HOME/.gitconfig"
+stow git -t "$HOME"
 
-rm -f $HOME/.gitconfig
-stow git -t $HOME
+rm -f "$HOME/.tmux.conf"
+stow tmux -t "$HOME"
 
-rm -f $HOME/.tmux.conf
-stow -t $HOME --dir=tmux config
+rm -f "$HOME/.zshrc"
+stow -t "$HOME" --dir=zsh root
 
-rm -f $HOME/.zshrc
-stow -t $HOME --dir=zsh root
+mkdir -p "$HOME/.config"
 
-mkdir -p $HOME/.config
+rm -f "$HOME/.config/starship.toml"
+stow starship -t "$HOME/.config"
 
-rm -f $HOME/.config/starship.toml
-stow starship -t $HOME/.config
+rm -rf "$HOME/.tmux"
+mkdir -p "$HOME/.tpm/plugins"
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-rm -rf $HOME/.config/tmux/themes
-mkdir -p $HOME/.config/tmux/themes
-stow --target=$HOME/.config/tmux/themes --dir=tmux themes
+rm -rf "$HOME/.config/jetbrains/Lazy-idea"
+mkdir -p "$HOME/.config/jetbrains/Lazy-idea"
+stow --target="$HOME/.config/jetbrains/Lazy-idea" --dir=jetbrains Lazy-idea
 
-rm -rf $HOME/.config/jetbrains/Lazy-idea
-mkdir -p $HOME/.config/jetbrains/Lazy-idea
-stow --target=$HOME/.config/jetbrains/Lazy-idea --dir=jetbrains Lazy-idea
-
-rm -f $HOME/.ideavimrc
-stow --target=$HOME --dir=jetbrains ideavimrc
+rm -f "$HOME/.ideavimrc"
+stow --target="$HOME" --dir=jetbrains ideavimrc
 
 # Function to stow a directory into a specified config directory
 STOW_DIR() {
