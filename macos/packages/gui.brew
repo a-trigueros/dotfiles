@@ -1,9 +1,9 @@
 
 tap "dail8859/notepadnext"
 cask "1password"
-cask "alfred"
+cask "raycast"
 cask "alacritty"
-cask "alt-tab"
+cask "nikitabobko/tap/aerospace"
 cask "appcleaner"
 cask "beyond-compare"
 cask "karabiner-elements"
