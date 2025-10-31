@@ -55,7 +55,57 @@ function Initialize-Starship
 {
   if (Get-Command starship -ErrorAction SilentlyContinue)
   {
-    $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship-powershell.toml"
+    $ENV:STARSHIP_CONFIG = Join-Path $HOME ".config" "starship" "starship.toml"
+    # JJ status for PowerShell
+    [custom.jj]
+    description = "The current jj status"
+    when = "jj --ignore-working-copy root"
+    symbol = "🥋 "
+    command = "jj log --ignore-working-copy -r '@' -T 'change_id.shortest(4) ++ \" | \" ++ raw_escape_sequence(\"\\x1b[1;32m\") ++ coalesce(truncate_end(30, description.first_line(), \"…\"), \"(no description set)\") ++ raw_escape_sequence(\"\\x1b[0m\")' --no-graph --color=always --limit 1"
+
+    # Disable all Git modules - we'll use custom ones
+    [git_branch]
+    disabled = true
+
+    [git_commit]
+    disabled = true
+
+    [git_status]
+    disabled = true
+
+    [git_metrics]
+    disabled = true
+
+    [git_state]
+    disabled = true
+
+    # Custom Git branch - only show if NOT in a jj repo
+    [custom.git_branch]
+    disabled = false
+    when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+    command = 'git rev-parse --abbrev-ref HEAD 2>$null'
+    description = "Only show git_branch if we're not in a jj repo"
+    format = "[$symbol$output]($style) "
+    symbol = "🌱 "
+    style = "bold yellow"
+
+    # Custom Git commit - only show if NOT in a jj repo
+    [custom.git_commit]
+    disabled = false
+    when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+    command = 'git rev-parse --short HEAD 2>$null'
+    format = "[\\($output\\)]($style) "
+    style = "bold yellow"
+    description = "Only show git_commit if we're not in a jj repo"
+
+    # Custom Git status - only show if NOT in a jj repo
+    [custom.git_status]
+    disabled = false
+    when = 'sh -c "[ ! -d .jj ] && git rev-parse --git-dir >/dev/null 2>&1"'
+    command = 'git status --porcelain 2>$null'
+    format = "[[$output](bold green)]($style) "
+    style = "bold red"
+    description = "Only show git_status if we're not in a jj repo"
     
     $null = [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     $null = [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
