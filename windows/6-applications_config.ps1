@@ -113,7 +113,8 @@ $directoriesToCopy = @(
   @{ Source = "nvim\\LazyVim"; Target = Join-Path $HOME "AppData\Local\nvim" }
   @{ Source = "nushell\config"; Target = Join-Path $HOME "AppData\Roaming\nushell" }
   @{ Source = "bat\themes"; Target = Join-Path $env:APPDATA "bat\themes" }
-  @{ Source = "windows\\config\\starship"; Target = Join-Path $HOME ".config\starship" }
+  @{ Source = "starship"; Target = Join-Path $HOME ".config\starship" }
+  @{ Source = "windows\\config\\starship"; Target = Join-Path $HOME ".config\starship-pwsh" }
   @{ Source = "windows\\config\\powershell"; Target = Join-Path $HOME "Documents\PowerShell" }
   # @{ Source = "windows\\config\\powershell"; Target = Join-Path $HOME "Documents\WindowsPowerShell" }
 )
