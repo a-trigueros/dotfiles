@@ -94,10 +94,36 @@ function Install-WingetPackages {
         }
 
         if($file.Name -eq "compilers.winget") {
-           $InstallerDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
-            $VsInstaller = Join-Path $InstallerDir "vs_installer.exe"
-
-            & $VsInstaller modify --installPath "$InstallPath" --quiet --wait --norestart --importConfig "./BuildTools/.vsconfig"
+            Write-Host "Configuring Visual Studio Build Tools with .vsconfig..." -ForegroundColor Cyan
+            
+            $VsConfigPath = Join-Path $PSScriptRoot "BuildTools\.vsconfig"
+            
+            if (-not (Test-Path $VsConfigPath)) {
+                Write-Warning ".vsconfig file not found at: $VsConfigPath"
+                continue
+            }
+            
+            $VsInstallPath = "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+            $VsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
+            
+            if (-not (Test-Path $VsInstaller)) {
+                Write-Warning "Visual Studio Installer not found at: $VsInstaller"
+                continue
+            }
+            
+            try {
+                Write-Host "Running: $VsInstaller modify --installPath `"$VsInstallPath`" --config `"$VsConfigPath`"" -ForegroundColor Gray
+                & $VsInstaller modify --installPath $VsInstallPath --config $VsConfigPath --quiet --wait --norestart
+                
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Visual Studio Build Tools configured successfully!" -ForegroundColor Green
+                } else {
+                    Write-Warning "Visual Studio Build Tools configuration returned exit code: $LASTEXITCODE"
+                }
+            }
+            catch {
+                Write-Error "Failed to configure Visual Studio Build Tools: $_"
+            }
         } 
 
         if($file.Name -eq "javascript.winget") {
