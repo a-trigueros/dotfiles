@@ -94,40 +94,40 @@ function Install-WingetPackages {
         }
 
         if($file.Name -eq "compilers.winget") {
+
             Write-Host "Configuring Visual Studio Build Tools with .vsconfig..." -ForegroundColor Cyan
             
             $VsConfigPath = Join-Path $PSScriptRoot "BuildTools\.vsconfig"
-            
-            if (-not (Test-Path $VsConfigPath)) {
-                Write-Warning ".vsconfig file not found at: $VsConfigPath"
-                continue
-            }
-            
             $VsInstallPath = "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
             $VsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
-            
-            if (-not (Test-Path $VsInstaller)) {
-                Write-Warning "Visual Studio Installer not found at: $VsInstaller"
-                continue
-            }
-            
-            try {
-                Write-Host "Running: $VsInstaller modify --installPath `"$VsInstallPath`" --config `"$VsConfigPath`"" -ForegroundColor Gray
-                & $VsInstaller modify --installPath $VsInstallPath --config $VsConfigPath --quiet --wait --norestart
+            $process = Start-Process -FilePath $VsInstaller -ArgumentList "modify", "--installPath", $VsInstallPath, "--config", $VsConfigPath, "--quiet", "--norestart" -Wait -PassThru -NoNewWindow
                 
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Host "Visual Studio Build Tools configured successfully!" -ForegroundColor Green
-                } else {
-                    Write-Warning "Visual Studio Build Tools configuration returned exit code: $LASTEXITCODE"
-                }
-            }
-            catch {
-                Write-Error "Failed to configure Visual Studio Build Tools: $_"
+            if ($process.ExitCode -eq 0) {
+                Write-Host "Visual Studio Build Tools configured successfully!" -ForegroundColor Green
+            } elseif ($process.ExitCode -eq 3010) {
+                Write-Host "Visual Studio Build Tools configured successfully! (Reboot required)" -ForegroundColor Yellow
+            } else {
+                Write-Warning "Visual Studio Build Tools configuration returned exit code: $($process.ExitCode)"
             }
         } 
 
         if($file.Name -eq "javascript.winget") {
-            nvm install lts
+
+            Write-Host "Configuring Node.js with nvm-windows..." -ForegroundColor Cyan
+            
+            # Recharger les variables d'environnement pour que nvm soit disponible
+            $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+            
+            $nvmPath = "$env:LOCALAPPDATA\nvm\nvm.exe"
+            
+            Write-Host "Installing latest LTS version of Node.js..." -ForegroundColor Gray
+            $process = Start-Process -FilePath $nvmPath -ArgumentList "install", "lts" -Wait -PassThru -NoNewWindow
+            
+            if ($process.ExitCode -eq 0) {
+                Write-Host "Setting latest LTS as default Node.js version..." -ForegroundColor Gray
+            } else {
+                Write-Warning "nvm install returned exit code: $($process.ExitCode)"
+            }
         }
     }
     
