@@ -100,7 +100,7 @@ function Install-WingetPackages {
             $VsConfigPath = Join-Path $PSScriptRoot "BuildTools\.vsconfig"
             $VsInstallPath = "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
             $VsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
-            $process = Start-Process -FilePath $VsInstaller -ArgumentList "modify", "--installPath", $VsInstallPath, "--config", $VsConfigPath, "--quiet", "--norestart" -Wait -PassThru -NoNewWindow
+            $process = Start-Process -FilePath $VsInstaller -ArgumentList "modify", "--installPath", "`"$VsInstallPath`"", "--config", "`"$VsConfigPath`"", "--quiet", "--norestart" -Wait -PassThru -NoNewWindow
                 
             if ($process.ExitCode -eq 0) {
                 Write-Host "Visual Studio Build Tools configured successfully!" -ForegroundColor Green
@@ -117,16 +117,32 @@ function Install-WingetPackages {
             
             # Recharger les variables d'environnement pour que nvm soit disponible
             $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+            $env:NVM_HOME = [System.Environment]::GetEnvironmentVariable("NVM_HOME","Machine")
+            $env:NVM_SYMLINK = [System.Environment]::GetEnvironmentVariable("NVM_SYMLINK","Machine")
             
-            $nvmPath = "$env:LOCALAPPDATA\nvm\nvm.exe"
+            # Vérifier si nvm est installé
+            $nvmHome = $env:NVM_HOME
+            if (-not $nvmHome) {
+                $nvmHome = "$env:LOCALAPPDATA\nvm"
+            }
+            
+            $nvmPath = Join-Path $nvmHome "nvm.exe"
             
             Write-Host "Installing latest LTS version of Node.js..." -ForegroundColor Gray
             $process = Start-Process -FilePath $nvmPath -ArgumentList "install", "lts" -Wait -PassThru -NoNewWindow
             
             if ($process.ExitCode -eq 0) {
+                Write-Host "Node.js LTS installed successfully!" -ForegroundColor Green
                 Write-Host "Setting latest LTS as default Node.js version..." -ForegroundColor Gray
+                $process = Start-Process -FilePath $nvmPath -ArgumentList "use", "lts" -Wait -PassThru -NoNewWindow
+                if ($process.ExitCode -eq 0) {
+                    Write-Host "Node.js LTS set as default successfully!" -ForegroundColor Green
+                } else {
+                    Write-Warning "nvm use returned exit code: $($process.ExitCode)"
+                }
             } else {
                 Write-Warning "nvm install returned exit code: $($process.ExitCode)"
+                Write-Host "You may need to restart your terminal and run: nvm install lts && nvm use lts" -ForegroundColor Yellow
             }
         }
     }
