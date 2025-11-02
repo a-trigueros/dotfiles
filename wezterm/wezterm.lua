@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 
-local config = {
+return {
 	adjust_window_size_when_changing_font_size = false,
 	color_scheme = "Catppuccin Macciato",
 	enable_tab_bar = false,
@@ -16,29 +16,3 @@ local config = {
 		},
 	},
 }
-
--- macOS spécifique
-if wezterm.target_triple:find("apple") then
-	-- Fonction pour lancer Nushell via un shell login (Zsh) afin d'hériter de l'environnement
-	local function shell_command()
-		return {
-			"/bin/zsh",
-			"-l",
-			"-c",
-			"exec /opt/homebrew/bin/nu",
-		}
-	end
-
-	config.default_prog = shell_command()
-	config.macos_window_background_blur = 30
-end
-
--- Windows spécifique
-if wezterm.target_triple:find("windows") then
-	-- Mets à jour ce chemin si nécessaire
-	local nu_path = wezterm.home_dir .. "\\AppData\\Local\\Programs\\nu\\bin\\nu.exe"
-	config.default_prog = { nu_path }
-	config.prefer_egl = true
-end
-
-return config

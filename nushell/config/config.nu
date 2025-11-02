@@ -21,23 +21,3 @@ source ./themes/catppuccin_macchiato.nu
 
 $env.EDITOR = "nvim"
 $env.config.edit_mode = 'vi'
-
-let os_version = (sys host).long_os_version
-
-
-if ($os_version | str starts-with -i 'macos') {
-
-    # MacOs configuration here
-    ($env.PATH = $env.PATH 
-        | append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-        | append "/opt/homebrew/bin"
-        | append ($env.HOME + "/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
-        | append ($env.HOME + "/.config/npm-packages/bin")
-        | append "/opt/homebrew/opt/openjdk/bin"
-        | append "/usr/local/share/dotnet"
-        | append ($env.HOME + "/.dotnet/tools")
-        | append "/opt/tcr"
-        | append ($env.HOME + "/.cache/lm-studio/bin")
-        | append ($env.HOME + "/tools/flutter/bin")
-    )
-}
