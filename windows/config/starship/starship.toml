@@ -28,35 +28,16 @@ format = "[$path]($style)[$lock_symbol]($lock_style) "
 
 [custom.jj]
 description = "The current jj status"
-when = "jj --ignore-working-copy root"
+when = 'pwsh -NoProfile -Command "jj --ignore-working-copy root 2>$null; exit $LASTEXITCODE"'
 symbol = "🥋 "
-command = '''
-jj log --revisions '@' --no-graph --ignore-working-copy --color always --limit 1 --template '
-  separate(" ",
-    change_id.shortest(4),
-    bookmarks,
-    "|",
-    concat(
-      if(conflict, "💥"),
-      if(divergent, "🚧"),
-      if(hidden, "👻"),
-      if(immutable, "🔒"),
-    ),
-    raw_escape_sequence("\x1b[1;32m") ++ if(empty, "(empty)"),
-    raw_escape_sequence("\x1b[1;32m") ++ coalesce(
-      truncate_end(29, description.first_line(), "…"),
-      "(no description set)",
-    ) ++ raw_escape_sequence("\x1b[0m"),
-  )
-'
-'''
+command = '''pwsh -NoProfile -Command "jj log --revisions '@' --no-graph --ignore-working-copy --color always --limit 1 --template 'separate(\" \", change_id.shortest(4), bookmarks, \"|\", concat(if(conflict, \"💥\"), if(divergent, \"🚧\"), if(hidden, \"👻\"), if(immutable, \"🔒\")), raw_escape_sequence(\"\x1b[1;32m\") ++ if(empty, \"(empty)\"), raw_escape_sequence(\"\x1b[1;32m\") ++ coalesce(truncate_end(29, description.first_line(), \"…\"), \"(no description set)\") ++ raw_escape_sequence(\"\x1b[0m\"))' 2>$null"'''
 
 [git_branch]
 disabled = true
 
 [custom.git_branch]
-when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
-command = "git branch --show-current"
+when = 'pwsh -NoProfile -Command "jj --ignore-working-copy root 2>$null; if ($LASTEXITCODE -ne 0) { git rev-parse --git-dir 2>$null; exit $LASTEXITCODE } else { exit 1 }"'
+command = 'pwsh -NoProfile -Command "git branch --show-current 2>$null"'
 description = "Only show git_branch if we're not in a jj repo"
 format = "[$symbol$output]($style) "
 symbol = "🌱 "
@@ -66,8 +47,8 @@ style = "bold yellow"
 disabled = true
 
 [custom.git_commit]
-when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
-command = "git rev-parse --short HEAD 2>/dev/null || echo ''"
+when = 'pwsh -NoProfile -Command "jj --ignore-working-copy root 2>$null; if ($LASTEXITCODE -ne 0) { git rev-parse --git-dir 2>$null; exit $LASTEXITCODE } else { exit 1 }"'
+command = 'pwsh -NoProfile -Command "git rev-parse --short HEAD 2>$null"'
 format = "[$symbol$output]($style) "
 symbol = "@"
 description = "Only show git_commit if we're not in a jj repo"
@@ -76,29 +57,8 @@ description = "Only show git_commit if we're not in a jj repo"
 disabled = true
 
 [custom.git_status]
-when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
-command = '''
-git status --porcelain=v1 2>/dev/null | awk '
-BEGIN { modified=0; staged=0; untracked=0; deleted=0; renamed=0; conflicted=0 }
-/^M/ { modified++ }
-/^A/ { staged++ }
-/^D/ { deleted++ }
-/^R/ { renamed++ }
-/^U/ { conflicted++ }
-/^\?/ { untracked++ }
-/^ M/ { modified++ }
-/^ D/ { deleted++ }
-END {
-  output = ""
-  if (staged > 0) output = output "+" staged
-  if (modified > 0) output = output "!" modified  
-  if (deleted > 0) output = output "-" deleted
-  if (renamed > 0) output = output "»" renamed
-  if (untracked > 0) output = output "?" untracked
-  if (conflicted > 0) output = output "=" conflicted
-  print output
-}'
-'''
+when = 'pwsh -NoProfile -Command "jj --ignore-working-copy root 2>$null; if ($LASTEXITCODE -ne 0) { git rev-parse --git-dir 2>$null; exit $LASTEXITCODE } else { exit 1 }"'
+command = '''pwsh -NoProfile -Command "$status = git status --porcelain=v1 2>$null; if ($status) { $staged=0; $modified=0; $deleted=0; $renamed=0; $conflicted=0; $untracked=0; $status -split \"`n\" | ForEach-Object { if ($_ -match '^M') { $staged++ } elseif ($_ -match '^A') { $staged++ } elseif ($_ -match '^D') { $deleted++ } elseif ($_ -match '^R') { $renamed++ } elseif ($_ -match '^U') { $conflicted++ } elseif ($_ -match '^\?') { $untracked++ } elseif ($_ -match '^ M') { $modified++ } elseif ($_ -match '^ D') { $deleted++ } }; $output = ''; if ($staged -gt 0) { $output += \"+$staged\" }; if ($modified -gt 0) { $output += \"!$modified\" }; if ($deleted -gt 0) { $output += \"-$deleted\" }; if ($renamed -gt 0) { $output += \"»$renamed\" }; if ($untracked -gt 0) { $output += \"?$untracked\" }; if ($conflicted -gt 0) { $output += \"=$conflicted\" }; Write-Output $output }"'''
 format = "[$output]($style) "
 style = "bold red"
 
@@ -107,14 +67,8 @@ style = "bold red"
 disabled = true
 
 [custom.git_metrics]
-when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
-command = '''
-git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null | awk '{
-  if ($1 > 0 && $2 > 0) print "↑" $1 "↓" $2
-  else if ($1 > 0) print "↑" $1
-  else if ($2 > 0) print "↓" $2
-}' || echo ""
-'''
+when = 'pwsh -NoProfile -Command "jj --ignore-working-copy root 2>$null; if ($LASTEXITCODE -ne 0) { git rev-parse --git-dir 2>$null; exit $LASTEXITCODE } else { exit 1 }"'
+command = '''pwsh -NoProfile -Command "$counts = git rev-list --left-right --count HEAD...@{upstream} 2>$null; if ($counts) { $parts = $counts -split '\s+'; $ahead = [int]$parts[0]; $behind = [int]$parts[1]; if ($ahead -gt 0 -and $behind -gt 0) { Write-Output \"↑$ahead↓$behind\" } elseif ($ahead -gt 0) { Write-Output \"↑$ahead\" } elseif ($behind -gt 0) { Write-Output \"↓$behind\" } }"'''
 format = "[$output]($style) "
 style = "bold blue"
 
