@@ -23,8 +23,8 @@ function Initialize-PSReadLine
   if (Get-Module -Name PSReadLine)
   {
     Set-PSReadLineOption -EditMode Vi
-    Set-PSReadLineOption -PredictionSource History
-    Set-PSReadLineOption -PredictionViewStyle ListView
+    # Désactiver les prédictions PSReadLine car Atuin gère l'historique
+    Set-PSReadLineOption -PredictionSource None
     Set-PSReadLineOption -HistoryNoDuplicates
     Set-PSReadLineOption -MaximumHistoryCount 10000
   } else
