@@ -98,9 +98,9 @@ function Adapt-GitConfigForWindows
     
   Set-Content -Path $gitConfigPath -Value $content -NoNewline
     
-  Write-Host "    ✓ Disabled GPG signing (for remote development)" -ForegroundColor Gray
-  Write-Host "    ✓ Set autocrlf = true (Windows line endings)" -ForegroundColor Gray
-  Write-Host "    ✓ Configured credential helper" -ForegroundColor Gray
+  Write-Host "    Disabled GPG signing (for remote development)" -ForegroundColor Gray
+  Write-Host "    Set autocrlf = true (Windows line endings)" -ForegroundColor Gray
+  Write-Host "    Configured credential helper" -ForegroundColor Gray
     
   return $true
 }
