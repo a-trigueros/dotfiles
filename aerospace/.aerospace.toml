@@ -92,7 +92,9 @@ outer.right = 0
 # '''
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
+# on MacOS Azerty keyboards: '+' / '=' sign
 alt-period = 'layout tiles horizontal vertical'
+# on MacOS Azerty keyboards: '/' / ':' sign
 alt-slash = 'layout accordion horizontal vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
@@ -108,7 +110,9 @@ alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+# on MacOS Azerty keyboards: '%' / 'ù' sign
 alt-quote = 'resize smart -50'
+# on MacOS Azerty keyboards: '£' / '`' sign
 alt-backslash = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
