@@ -18,7 +18,7 @@ cask "ilspy"
 cask "jetbrains-toolbox"
 cask "keepassxc"
 cask "keka"
-cask "kindavim"
+# cask "kindavim"
 cask "microsoft-auto-update"
 cask "microsoft-teams"
 cask "notepadnext"
@@ -31,7 +31,7 @@ cask "utm"
 cask "visual-studio-code"
 cask "vlc"
 cask "wezterm"
-cask "wooshy"
+# cask "wooshy"
 mas "1Password for Safari", id: 1569813296
 mas "Amphetamine", id: 937984704
 mas "Calendar 366 II", id: 1265895169
@@ -39,6 +39,7 @@ mas "Command X", id: 6448461551
 mas "Cyberduck", id: 409222199
 mas "Hidden Bar", id: 1452453066
 mas "MindNode", id: 1289197285
+mas "VimLike", id: 1584519802
 mas "Windows App", id: 1295203466
 mas "Wipr", id: 1662217862
 mas "Xcode", id: 497799835
