@@ -1,0 +1,8 @@
+[".config/nvim"]
+type = "archive"
+url = "https://github.com/LazyVim/starter/archive/refs/heads/main.zip"
+stripComponents = 1
+
+[".tmp/plugins"]
+type = "git-repo"
+url = "https://github.com/tmux-plugins/tpm.git"

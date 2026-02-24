@@ -1,0 +1,20 @@
+[user]
+	name = Alexandre Trigueros
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC75roWhcgC7qy7xHzp6fq3m28CZyFFm5GgYtGhYg628+ktGY2zv++9i15k9+PkwuYtVbcCmIPQrRCbrGa1QCSYs+PvCQKubC8ZmJ9SrP3mwfPqRwX0OA3gVHEG7PHnhuu7Pl0TQazKzkcYtpeatA5vXl39Yzp9Z8bep9QlayyerKV35wYkdjMwwocNICVS3DUdd+iOmdlIjoyPmGp9Oa1p+ToCkFVKy02I+gUFPfvZq9E4T0gHetP+GjzKwtcM4ukaHeABiFBoLUhCjjhy5Y7HQrS+iLtUTbIOXF3vegqwsSjlJC+3qFjeXlMwc+GEi4vAlE+ajWCuLvmmk42aN8rwM29LLd+8BZtfWQsaAWQzQM5hTNZLGNOj/wrmr46olfG4PcYonJ/uLUAPTyqS6ZydQI/2l5koHm0G2MQvpJNCXaeGzvDwC+c8BpsD1VcJnGgXD7AB6zucOXYwunm/PHRBUTq5gphflMx3Pkh8Tbv5325zVRHMMEpezOyJDehGdDE=
+[merge]
+  tool = nvimdiff
+[mergetool]
+  prompt = false
+  keepBackup = false
+[mergetool "nvimdiff"]
+  layout = "LOCAL, BASE, REMOTE / MERGED"
+[core]
+	autocrlf = input
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
+[init]
+	defaultBranch = main

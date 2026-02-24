@@ -1,0 +1,186 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[✖](bold red)"
+
+[package]
+disabled = true
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "🔌"
+discharging_symbol = "⚡"
+
+[[battery.display]]
+threshold = 30
+style = "bold red"
+
+[cmd_duration]
+min_time = 10_000                    # Show command duration over 10,000 milliseconds (=10 sec)
+format = " took [$duration]($style)"
+
+[directory]
+truncation_length = 5
+format = "[$path]($style)[$lock_symbol]($lock_style) "
+
+[custom.jj]
+description = "The current jj status"
+when = "jj --ignore-working-copy root"
+symbol = "🥋 "
+command = '''
+jj log --revisions @ --no-graph --ignore-working-copy --color always --limit 1 --template '
+  separate(" ",
+    change_id.shortest(4),
+    bookmarks,
+    "|",
+    concat(
+      if(conflict, "💥"),
+      if(divergent, "🚧"),
+      if(hidden, "👻"),
+      if(immutable, "🔒"),
+    ),
+    raw_escape_sequence("\x1b[1;32m") ++ if(empty, "(empty)"),
+    raw_escape_sequence("\x1b[1;32m") ++ coalesce(
+      truncate_end(29, description.first_line(), "…"),
+      "(no description set)",
+    ) ++ raw_escape_sequence("\x1b[0m"),
+  )
+'
+'''
+
+[git_branch]
+disabled = true
+
+[custom.git_branch]
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = "git branch --show-current"
+description = "Only show git_branch if we're not in a jj repo"
+format = "[$symbol$output]($style) "
+symbol = "🌱 "
+style = "bold yellow"
+
+[git_commit]
+disabled = true
+
+[custom.git_commit]
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = "git rev-parse --short HEAD 2>/dev/null || echo ''"
+format = "[$symbol$output]($style) "
+symbol = "@"
+description = "Only show git_commit if we're not in a jj repo"
+
+[git_status]
+disabled = true
+
+[custom.git_status]
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = '''
+git status --porcelain=v1 2>/dev/null | awk '
+BEGIN { modified=0; staged=0; untracked=0; deleted=0; renamed=0; conflicted=0 }
+/^M/ { modified++ }
+/^A/ { staged++ }
+/^D/ { deleted++ }
+/^R/ { renamed++ }
+/^U/ { conflicted++ }
+/^\?/ { untracked++ }
+/^ M/ { modified++ }
+/^ D/ { deleted++ }
+END {
+  output = ""
+  if (staged > 0) output = output "+" staged
+  if (modified > 0) output = output "!" modified  
+  if (deleted > 0) output = output "-" deleted
+  if (renamed > 0) output = output "»" renamed
+  if (untracked > 0) output = output "?" untracked
+  if (conflicted > 0) output = output "=" conflicted
+  print output
+}'
+'''
+format = "[$output]($style) "
+style = "bold red"
+
+
+[git_metrics]
+disabled = true
+
+[custom.git_metrics]
+when = "! jj --ignore-working-copy root && git rev-parse --git-dir"
+command = '''
+git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null | awk '{
+  if ($1 > 0 && $2 > 0) print "↑" $1 "↓" $2
+  else if ($1 > 0) print "↑" $1
+  else if ($2 > 0) print "↓" $2
+}' || echo ""
+'''
+format = "[$output]($style) "
+style = "bold blue"
+
+[hostname]
+ssh_only = true
+format = "<[$hostname]($style)>"
+trim_at = "-"
+style = "bold dimmed white"
+disabled = true
+
+[username]
+style_user = "bold dimmed blue"
+show_always = false
+
+[memory_usage]
+format = "$symbol[${ram}( | ${swap})]($style) "
+threshold = 70
+style = "bold dimmed white"
+disabled = false
+
+[time]
+time_format = "%T"
+format = "🕙 $time($style) "
+style = "bright-white"
+disabled = false
+
+[julia]
+format = "[$symbol$version]($style) "
+symbol = "ஃ "
+style = "bold green"
+
+[python]
+format = "[$symbol$version]($style) "
+style = "bold green"
+
+[rust]
+format = "[$symbol$version]($style) "
+style = "bold green"
+
+[nodejs]
+format = "via [🤖 $version](bold green) "
+
+[palettes.catppuccin_macchiato]
+rosewater = "#f4dbd6"
+flamingo = "#f0c6c6"
+pink = "#f5bde6"
+mauve = "#c6a0f6"
+red = "#ed8796"
+maroon = "#ee99a0"
+peach = "#f5a97f"
+yellow = "#eed49f"
+green = "#a6da95"
+teal = "#8bd5ca"
+sky = "#91d7e3"
+sapphire = "#7dc4e4"
+blue = "#8aadf4"
+lavender = "#b7bdf8"
+text = "#cad3f5"
+subtext1 = "#b8c0e0"
+subtext0 = "#a5adcb"
+overlay2 = "#939ab7"
+overlay1 = "#8087a2"
+overlay0 = "#6e738d"
+surface2 = "#5b6078"
+surface1 = "#494d64"
+surface0 = "#363a4f"
+base = "#24273a"
+mantle = "#1e2030"
+crust = "#181926"
