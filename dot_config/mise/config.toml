@@ -37,6 +37,40 @@ zellij = "latest"
 zoxide = "latest"
 "github:murex/TCR" = "latest"
 
+[env]
+_.path = [
+  "/opt/homebrew/bin",
+  "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
+]
+EDITOR = "nvim"
+VISUAL = "nvim"
+PAGER = "less -RFX"
+BAT_THEME = "Catppuccin Macchiato"
+BAT_STYLE = "numbers,changes,header,grid"
+BAT_PAGER = "less -RF"
+MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+MANROFFOPT = "-c"
+EZA_COLORS = "da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40:ue=38;5;40:gr=38;5;226:gw=38;5;226:gx=38;5;226:tr=38;5;196:tw=38;5;196:tx=38;5;196"
+EZA_ICON_SPACING = "2"
+
+[shell_alias]
+als = 'atuin script list'
+asr = 'atuin script run'
+ls = 'eza --color=always --icons=always'
+ll = 'eza -lbF --git --icons=always --color=always'
+la = 'eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --icons=always --color=always'
+lt = 'eza --tree --level=2 --icons=always --color=always'
+ltt = 'eza --tree --level=3 --icons=always --color=always'
+lttt = 'eza --tree --level=4 --icons=always --color=always'
+lg = 'eza -lbhHigUmuSa@ --git --color=always --icons=always'
+lm = 'eza -lbhHigUmuSa --sort=modified --color=always --icons=always'
+lz = 'eza -lbhHigUmuSa --sort=size --color=always --icons=always'
+cd = 'z'
+".." = 'cd ..'
+"..." = 'cd ../..'
+"...." = 'cd ../../..'
+DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
+SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
 
 [tasks.mac-install-gui]
 description = "Install GUI apps on MacOS"
