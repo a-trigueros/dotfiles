@@ -4,11 +4,14 @@ bat = "latest"
 caddy = "latest"
 carapace = "latest"
 deno = "latest"
+docker-cli = "latest"
+dotnet = "latest"
 eza = "latest"
 fd = "latest"
 fnox = "latest"
 fzf = "latest"
 hugo = "latest"
+java = "latest"
 jj = "latest"
 jjui = "latest"
 lazydocker = "latest"
@@ -27,7 +30,30 @@ sqlite = "latest"
 starship = "latest"
 tlrc = "latest"
 tmux = "latest"
+tree-sitter = "latest"
 yazi = "latest"
 yt-dlp = "latest"
 zellij = "latest"
 zoxide = "latest"
+"github:murex/TCR" = "latest"
+
+
+[tasks.mac-install-gui]
+description = "Install GUI apps on MacOS"
+run = '''
+if [ "$(uname)" != "Darwin" ]; then
+  exit 0
+fi
+
+brew bundle install --file="~/.config/scripts/mac/gui.brew"
+'''
+
+[tasks.mac-install-gaming]
+description = "Install GUI apps on MacOS"
+run = '''
+if [ "$(uname)" != "Darwin" ]; then
+  exit 0
+fi
+
+brew bundle install --file="~/.config/scripts/mac/gaming.brew"
+'''

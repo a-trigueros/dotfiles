@@ -1,2 +1,0 @@
-source <(COMPLETE=zsh jj)
-

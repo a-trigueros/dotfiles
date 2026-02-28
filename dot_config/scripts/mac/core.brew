@@ -1,0 +1,22 @@
+# Mob programming
+tap "remotemobprogramming/brew"
+brew "remotemobprogramming/brew/mob"
+
+# Podman dependency
+tap "slp/krunkit"
+brew "krunkit"
+
+brew "1password-cli"
+brew "btop"
+brew "chezmoi"
+brew "curl"
+brew "ffmpeg"
+brew "git"
+brew "htop"
+brew "mas"
+brew "nushell"
+brew "mise"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+cask container

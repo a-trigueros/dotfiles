@@ -40,7 +40,7 @@ fi
 # ----- Fast cd (zoxide) -----
 eval "$(zoxide init zsh)"
 
-source $HOME/.config/zsh/jj.zsh
+source <(COMPLETE=zsh jj)
 
 # ----- Fuzzy finder (fzf) -----
 # Only in interactive shell
@@ -68,7 +68,6 @@ if [[ $- == *i* ]]; then
   source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-source $HOME/.config/zsh/node.zsh
 source $HOME/.config/zsh/devtoolstosort.zsh
 
 # ----- Editor -----
