@@ -3,6 +3,10 @@ type = "archive"
 url = "https://github.com/LazyVim/starter/archive/refs/heads/main.zip"
 stripComponents = 1
 
+[".lazy-idea"]
+type = "git-repo"
+url = "https://github.com/cufarvid/lazy-idea.git"
+
 [".tmp/plugins"]
 type = "git-repo"
 url = "https://github.com/tmux-plugins/tpm.git"

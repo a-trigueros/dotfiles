@@ -1,0 +1,59 @@
+" Lazy-vim base
+
+source ~/.lazy-idea/lazy-idea.vim
+
+" Custom keymaps
+inoremap jk <Esc>
+
+" Run (Clean / Build / Rebuild / Run)
+let g:WhichKeyDesc_run = "<leader>r Run commands"
+let g:WhichKeyDesc_run_build_project = "<leader>rb Build project"
+nnoremap <leader>rb :action BuildCurrentProject<CR>
+let g:WhichKeyDesc_run_build_solution = "<leader>rB Build solution"
+nnoremap <leader>rB :action BuildSolutionAction<CR>
+let g:WhichKeyDesc_run_clean_project = "<leader>rc Clean project"
+nnoremap <leader>rc :action CleanCurrentProject<CR>
+let g:WhichKeyDesc_run_clean_solution = "<leader>rC Clean solution"
+nnoremap <leader>rC :action CleanSolutionAction<CR>
+let g:WhichKeyDesc_run_debug = "<leader>rd Debug"
+nnoremap <leader>rd :action Debug<CR>
+let g:WhichKeyDesc_run_execute = "<leader>re Execute (Run)"
+nnoremap <leader>re :action Run<CR>
+let g:WhichKeyDesc_run_execute_menu = "<leader>rE Execute (Run menu)"
+nnoremap <leader>rE :action RunMenu<CR>
+let g:WhichKeyDesc_run_attach = "<leader>ra Attach to process"
+nnoremap <leader>ra :action XDebugger.AttachToProcess<CR>
+let g:WhichKeyDesc_run_reattach = "<leader>rA Re-Attach to process"
+nnoremap <leader>ra :action RiderReattach<CR>
+let g:WhichKeyDesc_run_rebuild_project = "<leader>rr Rebuild project"
+nnoremap <leader>rr :action RebuildCurrentProject<CR>
+let g:WhichKeyDesc_run_rebuild_solution = "<leader>rR Rebuild solution" 
+nnoremap <leader>rR :action RebuildSolutionAction<CR>
+let g:WhichKeyDesc_run_test = "<leader>rt Run closest test" 
+nnoremap <leader>rt :action Rider.UnitTesting.RunContext<CR>
+let g:WhichKeyDesc_run_query = "<leader>rq Run query"
+nmap <leader>rq :action Console.Jdbc.Execute<CR>
+
+" Move
+let g:WhichKeyDesc_reference_next = "]] Next"
+nmap ]] <Action>(Forward)
+let g:WhichKeyDesc_reference_prev = "[[ Prev"
+nmap [[ <Action>(Back)
+let g:WhichKeyDesc_function_next = "]f Next function"
+nmap ]f <Action>(MethodDown)
+let g:WhichKeyDesc_function_prev = "[f Previous function"
+nmap [f <Action>(MethodUp)
+
+" Extensions
+let g:WhichKeyDesc_leader_f_s = "<leader>fs find symbol"
+nmap <leader>fs <Action>(GotoSymbol)
+
+let g:WhickKeyDesc_leader_w_M = "<leader>wM Maximize window"
+nnoremap <leader>wM :action HideAllWindows<CR>
+
+" Overrides
+nnoremap <leader>dc :action CIDR.Debugger.ResumeAll<CR>
+nnoremap <leader>dt :action CIDR.Debugger.StopAll<CR>
+nmap <leader>dg :action JumpToStatement<CR>
+nnoremap <leader>cf :action ReformatCode<CR>
+nmap 
