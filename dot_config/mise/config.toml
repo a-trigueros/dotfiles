@@ -98,3 +98,173 @@ fi
 
 brew bundle install --file="~/.config/scripts/mac/gaming.brew"
 '''
+
+[tasks.win-set-hostname]
+description = "Set host name"
+usage = '''
+arg "<hostname>" help="New hostname"
+'''
+run = '''
+Rename-Computer -NewName "{{ usage.hostname }}" -Force
+Write-Host "Machine name set to \"{{ usage.hostname }}\" (restart required to apply changes)"
+'''
+
+[tasks.win-set-autologin]
+description = "Login automatically as a given user"
+usage = '''
+arg "<username>" help="The username of the user to sign in"
+arg "<password>" help = "The password of the user to sign in"
+'''
+run = '''
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "1" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultUserName" /t REG_SZ /d "{{ usage.username }}" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d "{{ usage.password }}" /f
+
+Clear-History
+Remove-Item (Get-PSReadLineOption).HistorySavePath -Force
+'''
+
+[tasks.win-disable-lockscreen]
+description = "Disable lock screen"
+usage = '''
+arg ""
+'''
+run = '''
+powercfg /change monitor-timeout-ac 0
+powercfg /change monitor-timeout-dc 0
+powercfg /change standby-timeout-ac 0
+powercfg /change standby-timeout-dc 0
+
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_SZ /d "1" /f
+'''
+
+[tasks.win-enable-ssh]
+description = 'Allow the user to signin using its public key'
+
+run = '''
+$PUBLIC_KEYS_SOURCE = Join-Path $env:USERPROFILE ".config\win\ssh\public_keys"
+$SSH_COMPUTER_DIR = "C:\ProgramData\ssh"
+$SSHD_CONFIG_PATH = "C:\ProgramData\ssh\sshd_config"
+
+function Set-SSHDConfigLine
+{
+  <#
+    .SYNOPSIS
+        Updates or adds a configuration line in the SSH daemon config
+    .PARAMETER Config
+        The configuration content array
+    .PARAMETER Key
+        The configuration key to set
+    .PARAMETER Value
+        The value to assign to the key
+    #>
+  param(
+    [Parameter(Mandatory)]
+    [Object[]]$Config,
+        
+    [Parameter(Mandatory)]
+    [string]$Key,
+        
+    [Parameter(Mandatory)]
+    [string]$Value
+  )
+    
+  $pattern = "^\s*#?\s*$Key\s+.*$"
+    
+  if ($Config -match $pattern)
+  {
+    return $Config -replace $pattern, "$Key $Value"
+  } else
+  {
+    return $Config + "$Key $Value"
+  }
+}
+
+# Install sshd
+Add-WindowsCapability -Online -Name OpenSSH.Server -ErrorAction Stop
+
+# Create new basic sshd config file
+Remove-Item -LiteralPath $SSHD_CONFIG_PATH -Force -ErrorAction SilentlyContinue
+Start-Service sshd -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 2
+Stop-Service sshd -ErrorAction SilentlyContinue
+
+# Fine tune ssh configuration
+$config = Get-Content -LiteralPath $SSHD_CONFIG_PATH -ErrorAction Stop
+
+# Disable password authentication, enable key-based only
+$config = Set-SSHDConfigLine -Config $config -Key "PasswordAuthentication" -Value "no"
+$config = Set-SSHDConfigLine -Config $config -Key "ChallengeResponseAuthentication" -Value "no"
+$config = Set-SSHDConfigLine -Config $config -Key "PubkeyAuthentication" -Value "yes"
+$config = Set-SSHDConfigLine -Config $config -Key "AuthorizedKeysFile" -Value ".ssh/authorized_keys"
+  
+# Configure keepalive to prevent disconnections
+$config = Set-SSHDConfigLine -Config $config -Key "ClientAliveInterval" -Value "60"
+$config = Set-SSHDConfigLine -Config $config -Key "ClientAliveCountMax" -Value "3"
+$config = Set-SSHDConfigLine -Config $config -Key "TCPKeepAlive" -Value "yes"
+  
+$config | Set-Content -Encoding ascii -LiteralPath $SSHD_CONFIG_PATH
+
+# Install ssh public key
+
+$userSshDir = Join-Path $env:USERPROFILE ".ssh"
+$userAuthorizedKeysPath = Join-Path $userSshDir "authorized_keys"
+New-Item -ItemType Directory -Path $userSshDir -Force | Out-Null
+Copy-Item $PUBLIC_KEYS_SOURCE $authorizedKeysPath -Force
+
+# Install admin ssh key
+$adminKeysPath = Join-Path $SSH_COMPUTER_DIR "administrators_authorized_keys"
+Copy-Item $PUBLIC_KEYS_SOURCE $adminKeysPath -Force
+
+# Configure ssh service as automatic
+Set-Service -Name sshd -StartupType 'Automatic'
+
+Write-Host "Finished configuring ssh (restart required to apply changes)"
+'''
+
+[tasks.win-remove-bloatware]
+description = 'Uninstall windows embedded bloatware'
+run = '''
+$toCleanFilter = @(
+    'Microsoft.Paint',
+    'Microsoft.Xbox.',
+    'Microsoft.XboxGaming',
+    'Microsoft.XboxIdentityProvider',
+    'Microsoft.XboxSpeechToTextOverlay',
+    'Microsoft.ZuneMusic',
+    'Microsoft.WindowsAlarms',
+    'Microsoft.Todos',
+    'Microsoft.YourPhone',
+    'Microsoft.WindowsSoundRecorder',
+    'Microsoft.WindowsCamera',
+    'Microsoft.WindowsCalculator',
+    'Microsoft.Windows.Photos',
+    'Microsoft.MicrosoftStickyNotes',
+    'Microsoft.MicrosoftSolitaireCollection',
+    'Microsoft.MicrosoftOfficeHub',
+    'Microsoft.Bing',
+    'Clipchamp.Clipchamp',
+    'Microsoft.OutlookForWindows',
+    'Microsoft.WindowsNotepad',
+    'Microsoft.ScreenSketch',
+    'Microsoft.Edge.GameAssist',
+    'Microsoft.Copilot'
+)
+foreach ($filter in $toCleanFilter) {
+    Get-AppxPackage -Name "$filter*" | ForEach-Object {
+        Write-Host "Removing: $($_.Name)" -ForegroundColor Gray
+        Remove-AppxPackage -Package $_.PackageFullName -ErrorAction Stop
+    }
+}
+
+# Uninstall Teams & OneDrive
+$wingetIds = @(
+  'Microsoft.Teams',
+  'Microsoft.OneDrive'
+)
+
+foreach ($pkg in $wingetIds) {
+  Write-Host "Ensuring removal of: $pkg" -ForegroundColor Gray
+  winget uninstall --id $pkg --silent --accept-source-agreements 2>$null
+}
+'''
