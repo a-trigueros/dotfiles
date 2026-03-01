@@ -7,7 +7,7 @@ bat = "latest"
 caddy = "latest"
 carapace = "latest"
 deno = "latest"
-docker-cli = "latest"
+docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
 eza = "latest"
 fd = "latest"
@@ -19,7 +19,7 @@ jj = "latest"
 jjui = "latest"
 lazydocker = "latest"
 lazygit = "latest"
-lazyjournal = "latest"
+lazyjournal = { version = "latest", os = ["macos", "linux"] }
 lazyssh = "latest"
 neovim = "latest"
 node = "lts"
@@ -36,14 +36,16 @@ tmux = "latest"
 tree-sitter = "latest"
 yazi = "latest"
 yt-dlp = "latest"
-zellij = "latest"
+zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
 "github:murex/TCR" = "latest"
 
 
 [env]
 _.path = [
+  "~.cargo/bin",
   "/opt/homebrew/bin",
+  "/opt/homebrew/sbin",
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
 ]
 EDITOR = "nvim"
