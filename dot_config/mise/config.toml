@@ -37,6 +37,7 @@ tree-sitter = "latest"
 yazi = "latest"
 yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
+zig = "latest"
 zoxide = "latest"
 "github:murex/TCR" = "latest"
 
