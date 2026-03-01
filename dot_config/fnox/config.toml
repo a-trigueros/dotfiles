@@ -1,0 +1,6 @@
+[providers.1password]
+type = "1password"
+
+[secrets.GITHUB_TOKEN]
+provider = "1password"
+value = "op://Alex/GitHub - Alex/GITHUB_TOKEN"

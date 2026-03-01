@@ -1,3 +1,6 @@
+[settings]
+experimental = true
+
 [tools]
 atuin = "latest"
 bat = "latest"
@@ -37,6 +40,7 @@ zellij = "latest"
 zoxide = "latest"
 "github:murex/TCR" = "latest"
 
+
 [env]
 _.path = [
   "/opt/homebrew/bin",
@@ -52,6 +56,9 @@ MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 MANROFFOPT = "-c"
 EZA_COLORS = "da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40:ue=38;5;40:gr=38;5;226:gw=38;5;226:gx=38;5;226:tr=38;5;196:tw=38;5;196:tx=38;5;196"
 EZA_ICON_SPACING = "2"
+
+[hooks]
+preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 
 [shell_alias]
 als = 'atuin script list'
