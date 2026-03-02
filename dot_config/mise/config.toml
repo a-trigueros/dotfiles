@@ -46,6 +46,7 @@ _.path = [
   "/opt/homebrew/bin",
   "/opt/homebrew/sbin",
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
+  'C:\Users\vimaire\AppData\Local\mise\shims',
 ]
 EDITOR = "nvim"
 VISUAL = "nvim"
