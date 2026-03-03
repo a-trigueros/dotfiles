@@ -13,6 +13,11 @@ else
   compinit
 fi
 
+if [[ "$(uname)" == "Darwin" ]]; then
+    export MISE_ENV="darwin"
+else
+    export MISE_ENV="linux"
+fi
 
 # ----- Mise en place ----
 eval "$(mise activate zsh)"

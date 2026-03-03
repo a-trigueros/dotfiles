@@ -1,0 +1,23 @@
+[env]
+_.path = [
+  "/opt/homebrew/bin",
+  "/opt/homebrew/sbin",
+  "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
+]
+DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
+SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
+
+[tasks.install-gui]
+description = "Install GUI apps"
+run = '''
+brew bundle install --file="~/.config/scripts/mac/gui.brew"
+'''
+
+[hooks]
+preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
+
+[tasks.install-gaming]
+description = "Install Gaming apps"
+run = '''
+brew bundle install --file="~/.config/scripts/mac/gaming.brew"
+'''
