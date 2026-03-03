@@ -1,5 +1,6 @@
 [settings]
 experimental = true
+env_shell_expand = true
 
 [tools]
 atuin = "latest"
@@ -58,6 +59,8 @@ MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 MANROFFOPT = "-c"
 EZA_COLORS = "da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40:ue=38;5;40:gr=38;5;226:gw=38;5;226:gx=38;5;226:tr=38;5;196:tw=38;5;196:tx=38;5;196"
 EZA_ICON_SPACING = "2"
+DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
+SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
 
 [hooks]
 preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
@@ -78,8 +81,6 @@ cd = 'z'
 ".." = 'cd ..'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
-DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
-SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
 
 [tasks.mac-install-gui]
 description = "Install GUI apps on MacOS"
