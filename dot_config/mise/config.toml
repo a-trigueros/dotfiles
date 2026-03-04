@@ -69,3 +69,9 @@ cd = 'z'
 ".." = 'cd ..'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
+
+[tasks.update-mise]
+description = "Update mise en place tools"
+run = '''
+mise upgrade
+'''

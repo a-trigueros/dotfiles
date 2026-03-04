@@ -21,3 +21,27 @@ description = "Install Gaming apps"
 run = '''
 brew bundle install --file="~/.config/scripts/mac/gaming.brew"
 '''
+
+[tasks.update-homebrew]
+description = "Install homebrew apps"
+usage = '''
+flag "-g --greedy" help="Also include casks with auto_updates true or version :latest."
+'''
+run = '''
+brew update 
+brew upgrade {% if usage.greedy %} -g {% endif %}
+'''
+
+[tasks.update-mas]
+description = "Update AppStore applications"
+run = '''
+mas upgrade
+'''
+
+[tasks.update]
+description = "Update all applications"
+run = [
+  { task = "update-homebrew" },
+  { task = "update-mas" },
+  { task = "update-mise" },
+]
