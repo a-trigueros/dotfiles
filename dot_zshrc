@@ -19,8 +19,11 @@ else
     export MISE_ENV="linux"
 fi
 
+
 # ----- Mise en place ----
 eval "$(mise activate zsh)"
+
+eval "$(sheldon source)"
 
 fpath+=('/opt/homebrew/share/zsh/site-functions')
 # fzf
@@ -49,10 +52,6 @@ if [[ $- == *i* ]]; then
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
-# ----- Autosuggestions -----
-if [[ $- == *i* ]]; then
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
 
 # ------ Yazi --------
 function y() {
@@ -62,12 +61,6 @@ function y() {
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
-
-# ----- Syntax highlighting -----
-# ⚠️ always last, and only in interactive mode
-if [[ $- == *i* ]]; then
-  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
 
 # ----- Vi mode -----
 set -o vi

@@ -3,10 +3,12 @@ experimental = true
 env_shell_expand = true
 
 [tools]
+argocd = "latest"
 atuin = "latest"
 bat = "latest"
 caddy = "latest"
 carapace = "latest"
+cargo-binstall = "latest"
 deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
@@ -14,14 +16,17 @@ eza = { version = "latest", os = ["macos", "linux"] }
 fd = "latest"
 fnox = "latest"
 fzf = "latest"
+helm = "latest"
 hugo = "latest"
 java = "latest"
 jj = "latest"
 jjui = "latest"
+kubectl = "latest"
 lazydocker = "latest"
 lazygit = "latest"
 lazyjournal = { version = "latest", os = ["macos", "linux"] }
 lazyssh = "latest"
+mas = { version = "latest", os = "macos" }
 neovim = "latest"
 node = "lts"
 opencode = "latest"
@@ -30,6 +35,7 @@ podman = "latest"
 python = "latest"
 ripgrep = "latest"
 rust = "latest"
+"cargo:sheldon" = "latest"
 sqlite = "latest"
 starship = "latest"
 tlrc = "latest"
@@ -40,6 +46,7 @@ yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
 "github:murex/TCR" = "latest"
+"github:remotemobprogramming/mob" = "latest"
 
 [env]
 EDITOR = "nvim"
