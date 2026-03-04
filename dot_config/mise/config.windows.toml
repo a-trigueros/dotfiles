@@ -198,3 +198,13 @@ run = [
   { task = "remove-bloatware" },
   { task = "enable-ssh" },
 ]
+
+[tasks.update-winget]
+description = "Update winget packages"
+run = '''
+winget upgrade --all 
+'''
+
+[tasks.update]
+description = "Update mise and winget packages"
+run = [{ task = "update-mise" }, { task = "update-winget" }]
