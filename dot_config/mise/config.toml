@@ -35,7 +35,7 @@ podman = "latest"
 python = "latest"
 ripgrep = "latest"
 rust = "latest"
-"cargo:sheldon" = "latest"
+"cargo:sheldon" = { version = "latest", os = ["macos", "linux"] }
 sqlite = "latest"
 starship = "latest"
 tlrc = "latest"
@@ -46,7 +46,10 @@ yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
 "github:murex/TCR" = "latest"
-"github:remotemobprogramming/mob" = "latest"
+"github:remotemobprogramming/mob" = { version = "latest", os = [
+  "macos",
+  "linux",
+] }
 
 [env]
 EDITOR = "nvim"
