@@ -14,3 +14,13 @@ url = "https://github.com/cufarvid/lazy-idea.git"
 [".tmp/plugins"]
 type = "git-repo"
 url = "https://github.com/tmux-plugins/tpm.git"
+
+{{ if eq .chezmoi.os "darwin" }}
+["Library/Application Support/nushell/themes/catppuccin_macchiato.nu"]
+{{ else if eq .chezmoi.os "windows" }}
+["AppData/Roaming/nushell/themes/catppuccin_macchiato.nu"]
+{{ end }}
+{{ if ne .chezmoi.os "linux"}}
+type = "file"
+url = "https://raw.githubusercontent.com/catppuccin/nushell/refs/heads/main/themes/catppuccin_macchiato.nu"
+{{end}}
