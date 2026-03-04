@@ -188,11 +188,13 @@ foreach ($pkg in $wingetIds) {
 '''
 
 [tasks.setup-vm]
-description = "Set autologin for the current user and disable lockscreen"
+description = "Everything to do on a hosted VM"
 usage = '''
 arg "<password>" help = "The password of the user for autologin"
 '''
 run = [
-  "mise run disable-lockscreen",
   "mise run set-autologin {{ usage.password }}",
+  { task = "disable-lockscreen" },
+  { task = "remove-bloatware" },
+  { task = "enable-ssh" },
 ]
