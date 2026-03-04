@@ -1,4 +1,8 @@
+{{ if ne .chezmoi.os "windows" }}
 [".config/nvim"]
+{{ else }}
+["AppData/Local/nvim"]
+{{ end }}
 type = "archive"
 url = "https://github.com/LazyVim/starter/archive/refs/heads/main.zip"
 stripComponents = 1
