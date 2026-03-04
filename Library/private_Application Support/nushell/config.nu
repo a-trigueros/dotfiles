@@ -21,3 +21,10 @@ source ./themes/catppuccin_macchiato.nu
 
 $env.EDITOR = "nvim"
 $env.config.edit_mode = 'vi'
+
+let autoloadPath = $nu.default-config-dir | path join autoload
+^atuin init nu | save --force ($autoloadPath | path join atuin.nu)
+^carapace _carapace nushell | save --force ($autoloadPath | path join carapace.nu)
+^mise activate nu | save ($autoloadPath | path join mise.nu) --force
+^starship init nu | save ($autoloadPath | path join starship.nu) --force
+^zoxide init nushell | save ($autoloadPath | path join starship.nu) --force

@@ -1,7 +1,7 @@
 # env.nu
 #
 # Installed by:
-# version = "0.107.0"
+# version = "0.111.0"
 #
 # Previously, environment variables were typically configured in `env.nu`.
 # In general, most configuration can and should be performed in `config.nu`
@@ -16,3 +16,4 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
+$env.MISE_ENV = "windows"

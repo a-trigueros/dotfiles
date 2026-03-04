@@ -1,6 +1,14 @@
 {{ if ne .chezmoi.os "windows" }}
-/Documents/PowerShell
-/Documents/PowerShell/Microsoft.PowerShell_profile.ps1
-/Documents/WindowsPowerShell
-/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1
+/Documents/
+/AppData/
+/scripts/windows/
+{{ else }}
+/dot_config/karabiner
+/dot_config/nvim
+/dot_zshrc
+/dot_aerospace.toml
+/ghostty/
+/Library/
+/zellij/
+/scripts/darwin/
 {{ end }}
