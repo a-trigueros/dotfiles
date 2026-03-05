@@ -8,10 +8,11 @@ atuin = "latest"
 bat = "latest"
 caddy = "latest"
 carapace = "latest"
+cargo-binstall = "latest"
 deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
-eza = { version = "latest", os = ["macos", "linux"] }
+eza = "latest"
 fd = "latest"
 fnox = "latest"
 fzf = "latest"
