@@ -1,16 +1,18 @@
 {{ if ne .chezmoi.os "windows" }}
 /dot_cmdrc.bat
+/dot_config/packages/windows
 /Documents/
 /AppData/
 /scripts/windows/
 {{ else }}
+/dot_aerospace.toml
 /dot_config/karabiner
 /dot_config/nvim
+/dot_config/packages/windows
 /dot_config/sheldon
 /dot_zshrc
-/dot_aerospace.toml
-/ghostty/
+/dot_config/ghostty/
 /Library/
-/zellij/
 /scripts/darwin/
+/zellij/
 {{ end }}

@@ -97,13 +97,13 @@ preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 [tasks.install-gui]
 description = "Install GUI apps"
 run = '''
-brew bundle install --file="~/.config/scripts/mac/gui.brew"
+brew bundle install --file="~/.config/packages/darwin/gui.brew"
 '''
 
 [tasks.install-gaming]
 description = "Install Gaming apps"
 run = '''
-brew bundle install --file="~/.config/scripts/mac/gaming.brew"
+brew bundle install --file="~/.config/packages/darwin/gaming.brew"
 '''
 
 [tasks.update-homebrew]

@@ -1,9 +1,4 @@
-#! /bin/sh
-
-# install homebrew & core packages
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-brew install ~/.config/scripts/mac/core.brew
+{{- if eq .chezmoi.os "darwin" }}#! /bin/sh
 
 # Remove Message of the day prompt
 touch ~/.hushlogin
@@ -21,3 +16,4 @@ fi
 
 # Fix for when connected to displaylink devices
 defaults write ~/Library/Preferences/com.apple.security.authorization.plist ignoreArd -bool TRUE
+{{ end }}
