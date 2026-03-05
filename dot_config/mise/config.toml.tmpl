@@ -132,7 +132,7 @@ arg "<hostname>" help="New hostname"
 '''
 run = '''
 Write-Host "Setting hostname"
-Rename-Computer -NewName " "{{ "{{" }}  usage.hostname {{ "}}" }}" -Force
+Rename-Computer -NewName "{{ "{{" }}  usage.hostname {{ "}}" }}" -Force
 Write-Host "Machine name set to {{ "{{" }} usage.hostname }} (restart required to apply changes)"
 '''
 
