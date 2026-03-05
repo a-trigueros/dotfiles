@@ -1,3 +1,129 @@
+[settings]
+experimental = true
+env_shell_expand = true
+
+[tools]
+argocd = "latest"
+atuin = "latest"
+bat = "latest"
+caddy = "latest"
+carapace = "latest"
+cargo-binstall = "latest"
+deno = "latest"
+docker-cli = { version = "latest", os = ["macos", "linux"] }
+dotnet = "latest"
+eza = "latest"
+fd = "latest"
+fnox = "latest"
+fzf = "latest"
+helm = "latest"
+hugo = "latest"
+java = "latest"
+jj = "latest"
+jjui = "latest"
+kubectl = "latest"
+lazydocker = "latest"
+lazygit = "latest"
+lazyjournal = { version = "latest", os = ["macos", "linux"] }
+lazyssh = "latest"
+mas = { version = "latest", os = "macos" }
+neovim = "latest"
+node = "lts"
+opencode = "latest"
+pnpm = "latest"
+podman = "latest"
+python = "latest"
+ripgrep = "latest"
+rust = "latest"
+"cargo:sheldon" = { version = "latest", os = ["macos", "linux"] }
+sqlite = "latest"
+starship = "latest"
+tlrc = "latest"
+tmux = "latest"
+tree-sitter = "latest"
+yazi = "latest"
+yt-dlp = "latest"
+zellij = { version = "latest", os = ["macos", "linux"] }
+zoxide = "latest"
+"github:murex/TCR" = "latest"
+"github:remotemobprogramming/mob" = { version = "latest", os = [
+  "macos",
+  "linux",
+] }
+
+[env]
+EDITOR = "nvim"
+VISUAL = "nvim"
+PAGER = "less -RFX"
+BAT_THEME = "Catppuccin Macchiato"
+BAT_STYLE = "numbers,changes,header,grid"
+BAT_PAGER = "less -RF"
+MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+MANROFFOPT = "-c"
+EZA_COLORS = "da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40:ue=38;5;40:gr=38;5;226:gw=38;5;226:gx=38;5;226:tr=38;5;196:tw=38;5;196:tx=38;5;196"
+EZA_ICON_SPACING = "2"
+{{ if eq .chezmoi.os "darwin" }}
+DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
+SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
+
+_.path = [
+  "/opt/homebrew/bin",
+  "/opt/homebrew/sbin",
+  "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
+]
+{{ end }}
+
+[shell_alias]
+als = 'atuin script list'
+asr = 'atuin script run'
+ls = 'eza --color=always --icons=always'
+ll = 'eza -lbF --git --icons=always --color=always'
+la = 'eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --icons=always --color=always'
+lt = 'eza --tree --level=2 --icons=always --color=always'
+ltt = 'eza --tree --level=3 --icons=always --color=always'
+lttt = 'eza --tree --level=4 --icons=always --color=always'
+lg = 'eza -lbhHigUmuSa@ --git --color=always --icons=always'
+lm = 'eza -lbhHigUmuSa --sort=modified --color=always --icons=always'
+lz = 'eza -lbhHigUmuSa --sort=size --color=always --icons=always'
+cd = 'z'
+".." = 'cd ..'
+"..." = 'cd ../..'
+"...." = 'cd ../../..'
+
+{{ if eq .chezmoi.os "darwin" }}
+[hooks]
+preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
+
+[tasks.install-gui]
+description = "Install GUI apps"
+run = '''
+brew bundle install --file="~/.config/scripts/mac/gui.brew"
+'''
+
+[tasks.install-gaming]
+description = "Install Gaming apps"
+run = '''
+brew bundle install --file="~/.config/scripts/mac/gaming.brew"
+'''
+
+[tasks.update-homebrew]
+description = "Install homebrew apps"
+usage = '''
+flag "-g --greedy" help="Also include casks with auto_updates true or version :latest."
+'''
+run = '''
+brew update 
+brew upgrade {% if usage.greedy %} -g {% endif %}
+'''
+
+[tasks.update-mas]
+description = "Update AppStore applications"
+run = '''
+mas upgrade
+'''
+{{ end }}
+
+{{ if eq .chezmoi.os "windows" }}
 [tasks.set-hostname]
 description = "Set host name"
 shell = 'powershell -Command'
@@ -6,8 +132,8 @@ arg "<hostname>" help="New hostname"
 '''
 run = '''
 Write-Host "Setting hostname"
-Rename-Computer -NewName "{{ usage.hostname }}" -Force
-Write-Host "Machine name set to {{ usage.hostname }} (restart required to apply changes)"
+Rename-Computer -NewName " "{{ "{{" }}  usage.hostname {{ "}}" }}" -Force
+Write-Host "Machine name set to {{ "{{" }} usage.hostname }} (restart required to apply changes)"
 '''
 
 [tasks.set-autologin]
@@ -21,7 +147,7 @@ Write-Host "Setting autologin"
 $currentUser = $env:USERNAME
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "1" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultUserName" /t REG_SZ /d "$currentUser" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d "{{ usage.password }}" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d "{{ "{{" }} usage.password {{ "}}" }}" /f
 
 Clear-History
 Remove-Item (Get-PSReadLineOption).HistorySavePath -Force
@@ -193,7 +319,7 @@ usage = '''
 arg "<password>" help = "The password of the user for autologin"
 '''
 run = [
-  "mise run set-autologin {{ usage.password }}",
+  "mise run set-autologin {{ "{{" }} usage.password {{ "}}" }}",
   { task = "disable-lockscreen" },
   { task = "remove-bloatware" },
   { task = "enable-ssh" },
@@ -204,7 +330,22 @@ description = "Update winget packages"
 run = '''
 winget upgrade --all 
 '''
+{{ end }}
+[tasks.update-mise]
+description = "Update mise en place tools"
+run = '''
+mise upgrade
+'''
 
 [tasks.update]
-description = "Update mise and winget packages"
-run = [{ task = "update-mise" }, { task = "update-winget" }]
+description = "Update all mise & system applications"
+run = [
+{{ if eq .chezmoi.os "darwin" }}
+  { task = "update-homebrew" },
+  { task = "update-mas" },
+{{ end }}
+{{ if eq .chezmoi.os "windows" }}
+  { task = "update-winget" },
+{{ end }}
+  { task = "update-mise" },
+]
