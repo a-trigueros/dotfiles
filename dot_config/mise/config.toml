@@ -8,7 +8,6 @@ atuin = "latest"
 bat = "latest"
 caddy = "latest"
 carapace = "latest"
-cargo-binstall = "latest"
 deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
