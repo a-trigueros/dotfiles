@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Reference: https://github.com/dotnet/aspnetcore/blob/main/docs/BuildFromSource.md
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Beyond Compare 5
+        allowPrerelease: true
+      settings:
+        id: ScooterSoftware.BeyondCompare.5
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Jetbrains Mono Nerd Font
+        allowPrerelease: true
+      settings:
+        id: DEVCOM.JetBrainsMonoNerdFont
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Sysinternal 
+        allowPrerelease: true
+      settings:
+        id: 9P7KNL5RWT25
+        source: msstore
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: WezTerm
+        allowPrerelease: true
+      settings:
+        id: wez.wezterm
+        source: winget

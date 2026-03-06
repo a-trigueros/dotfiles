@@ -12,7 +12,7 @@ deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
 eza = "latest"
-fd = "latest
+fd = "latest"
 {{ if eq .chezmoi.os "darwin" }}
 fnox = "latest"
 {{ end }}
@@ -50,7 +50,7 @@ zoxide = "latest"
 "github:remotemobprogramming/mob" = { version = "latest", os = [
   "macos",
   "linux",
-] }
+]}
 
 [env]
 EDITOR = "nvim"
@@ -139,6 +139,7 @@ Write-Host "Machine name set to {{ "{{" }} usage.hostname }} (restart required t
 
 [tasks.set-autologin]
 description = "Login automatically as a given user"
+hide = true
 shell = 'powershell -Command'
 usage = '''
 arg "<password>" help = "The password of the user"
@@ -156,6 +157,7 @@ Remove-Item (Get-PSReadLineOption).HistorySavePath -Force
 
 [tasks.disable-lockscreen]
 description = "Disabling lock screen"
+hide = true
 shell = 'powershell -Command'
 run = '''
 Write-Host "Disabling lock screen"
@@ -328,12 +330,39 @@ run = [
 
 [tasks.update-winget]
 description = "Update winget packages"
+hide = true
 run = '''
 winget upgrade --all 
 '''
+[tasks.enable-winget-configure]
+description = "Enable winget configure feature"
+hide = true
+run = '''
+winget configure --enable
+'''
+
+[tasks.install-core-winget]
+description = 'Install core CLI packages using winget'
+depends = [ "enable-winget-configure" ]
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/core.winget"
+winget configure -f $file --accept-configuration-agreements --disable-interactivity --suppress-initial-details
+'''
+
+[tasks.install-gui-winget]
+description = 'Install core CLI packages using winget'
+depends = [ "enable-winget-configure" ]
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/gui.winget"
+winget configure -f $file --accept-configuration-agreements --disable-interactivity --suppress-initial-details
+'''
+
 {{ end }}
 [tasks.update-mise]
 description = "Update mise en place tools"
+hide = true
 run = '''
 mise upgrade
 '''
