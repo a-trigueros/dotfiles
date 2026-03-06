@@ -8,13 +8,14 @@ atuin = "latest"
 bat = "latest"
 caddy = "latest"
 carapace = "latest"
-cargo-binstall = "latest"
 deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
 eza = "latest"
-fd = "latest"
+fd = "latest
+{{ if eq .chezmoi.os "darwin" }}
 fnox = "latest"
+{{ end }}
 fzf = "latest"
 helm = "latest"
 hugo = "latest"
