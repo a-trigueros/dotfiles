@@ -6,19 +6,13 @@
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### Windows: Allow script execution & Git
+### Windows: Allow script execution
 
 ```powershell
 Set-ExecutionPolicy RemoteSigned
 ```
 
-#### Winget - Install Git
-
-```powershell
-winget install --source winget -e --id Git.Git
-```
-
-#### Scoop - Install Scoop and git
+#### Scoop - Install Scoop
 
 ```powershell
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
@@ -28,21 +22,17 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 scoop install main/git
 ```
 
-#### Chocolatey - Install Chocolatey and git
+#### Chocolatey - Install Chocolatey
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-```
-
-```powershell
-choco install git
 ```
 
 ### Linux
 
 TODO
 
-## Install chezmoi & mise-en-place
+## Install Git, chezmoi & mise-en-place
 
 ### MacOS
 
@@ -55,22 +45,22 @@ brew install git chezmoi mise
 #### Winget
 
 ```powershell
+winget install --source winget -e --id Git.Git
 winget install --source winget -e --id twpayne.chezmoi
 winget install --source winget -e --id jdx.mise
 ```
 
 #### Scoop
 
-TODO
+```powershell
+scoop install main/git
+scoop install main/mise
+scoop install main/chezmoi
+```
 
 #### Chocolatey
 
 TODO
-
-```powershell
-scoop install main/mise
-scoop install main/chezmoi
-```
 
 ### Linux
 
