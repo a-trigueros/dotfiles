@@ -1,17 +1,21 @@
+/README.md
 {{ if ne .chezmoi.os "windows" }}
-/dot_cmdrc.bat
-/dot_config/packages/windows
-/Documents/
+/.cmdrc.bat
+/.config/packages/windows
 /AppData/
+/Documents/
 /scripts/windows/
 {{ else }}
-/dot_aerospace.toml
-/dot_config/karabiner
-/dot_config/nvim
-/dot_config/packages/windows
-/dot_config/sheldon
-/dot_zshrc
-/dot_config/ghostty/
+/.aerospace.toml
+/.config/fnox/
+/.config/ghostty/
+/.config/karabiner
+/.config/nvim
+/.config/packages/darwin
+/.config/sheldon
+/.config/zellij
+/.tmux.conf
+/.zshrc
 /Library/
 /scripts/darwin/
 /zellij/
