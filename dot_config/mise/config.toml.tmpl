@@ -207,7 +207,7 @@ description = 'Allow me to signin using my private key'
 shell = 'powershell -Command'
 run = '''
 Write-Host "Setting up ssh"
-$PUBLIC_KEYS_SOURCE = Join-Path $env:USERPROFILE ".config\win\ssh\public_keys"
+$PUBLIC_KEYS_SOURCE = Join-Path "{{ .chezmoi.sourceDir }}" "ssh\public_keys"
 $SSH_COMPUTER_DIR = "C:\ProgramData\ssh"
 $SSHD_CONFIG_PATH = "C:\ProgramData\ssh\sshd_config"
 
