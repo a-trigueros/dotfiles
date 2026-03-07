@@ -367,11 +367,15 @@ hide = true
 run = '''
 winget upgrade --all 
 '''
+
 [tasks.enable-winget-configure]
 description = "Enable winget configure feature"
 hide = true
+shell = 'powershell -Command'
 run = '''
+$env:WINGET_CLI_NO_INTERACTIVE=1
 winget configure --enable
+Remove-Item Env:WINGET_CLI_NO_INTERACTIVE
 '''
 
 [tasks.install-core-winget]

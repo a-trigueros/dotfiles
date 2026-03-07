@@ -1,9 +1,9 @@
 # Podman dependency
-tap "slp/krunkit"
 brew "krunkit"
 
 brew "btop"
 brew "chezmoi"
+brew "container"
 brew "curl"
 brew "ffmpeg"
 brew "htop"
@@ -11,4 +11,3 @@ brew "nushell"
 brew "mise"
 
 cask "1password-cli"
-cask "container"

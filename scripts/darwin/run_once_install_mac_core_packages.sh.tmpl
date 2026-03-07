@@ -1,4 +1,5 @@
 {{- if eq .chezmoi.os "darwin" }}#! /bin/sh
+brew tap slp/krunkit
 
 brew bundle install --file="~/.config/packages/darwin/core.brew"
 {{- end }}
