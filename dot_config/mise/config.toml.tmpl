@@ -368,19 +368,8 @@ run = '''
 winget upgrade --all 
 '''
 
-[tasks.enable-winget-configure]
-description = "Enable winget configure feature"
-hide = true
-shell = 'powershell -Command'
-run = '''
-$env:WINGET_CLI_NO_INTERACTIVE=1
-winget configure --enable
-Remove-Item Env:WINGET_CLI_NO_INTERACTIVE
-'''
-
 [tasks.install-core-winget]
 description = 'Install core CLI packages using winget'
-depends = [ "enable-winget-configure" ]
 shell = 'powershell -Command'
 run = '''
 $file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/core.winget"
@@ -389,7 +378,6 @@ winget configure -f $file --accept-configuration-agreements --disable-interactiv
 
 [tasks.install-gui-winget]
 description = 'Install core CLI packages using winget'
-depends = [ "enable-winget-configure" ]
 shell = 'powershell -Command'
 run = '''
 $file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/gui.winget"

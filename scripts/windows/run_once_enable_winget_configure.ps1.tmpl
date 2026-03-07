@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "windows" }}
+# winget non interactive mode
+$env:WINGET_CLI_NO_INTERACTIVE=1
+
+try {
+    # Hide potential errors
+    winget configure --enable *>$null 2>&1
+} catch {
+    # Don't throw
+}
+{{ end }}
