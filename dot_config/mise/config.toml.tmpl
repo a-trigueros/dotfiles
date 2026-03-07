@@ -15,7 +15,7 @@ eza = "latest"
 fd = "latest"
 {{ if eq .chezmoi.os "darwin" }}
 fnox = "latest"
-{{ end }}
+{{- end }}
 fzf = "latest"
 helm = "latest"
 hugo = "latest"
@@ -91,9 +91,12 @@ cd = 'z'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
 
-{{ if eq .chezmoi.os "darwin" }}
 [hooks]
+{{ if eq .chezmoi.os "darwin" }}
 preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
+postinstall = [
+  { task = "build-all-nushell-autoloads" }
+]
 
 [tasks.install-gui]
 description = "Install GUI apps"
@@ -123,6 +126,36 @@ run = '''
 mas upgrade
 '''
 {{ end }}
+
+[tasks.build-all-nushell-autoloads]
+description = "Used to build nushell autoload files"
+run = [
+"mise run build-nushell-autoload \"mise activate nu\" \"mise.nu\"",
+"mise run build-nushell-autoload \"atuin init nu\" \"atuin.nu\"",
+"mise run build-nushell-autoload \"carapace _carapace nushell\" \"carapace.nu\"",
+"mise run build-nushell-autoload \"starship init nu\" \"starship.nu\"",
+"mise run build-nushell-autoload \"zoxide init nushell\" \"zoxide.nu\"",
+]
+
+[tasks.build-nushell-autoload]
+description = "Used to generate autoload files in nushell autoload directory"
+hide = true
+usage = '''
+arg "<command>" help="The command which generates the autoload file"
+arg "<filename>" help="The filename where to write the result"
+'''
+run = '''
+{{ if eq .chezmoi.os "windows" }}
+where nu >nul 2>nul
+if %errorlevel%==0 (
+    nu -c "{{ "{{" }}usage.command {{ "}}" }}" > %USERPROFILE%\AppData\Roaming\nushell\autoload\{{ "{{" }}usage.filename{{ "}}" }}
+) 
+{{ else }}
+if command -v nu >/dev/null 2>&1; then
+    nu -c "{{ "{{" }} usage.command {{ "}}" }}" > "$HOME/Library/Application Support/nushell/autoload/{{ "{{" }} usage.filename {{ "}}" }}"
+fi
+{{- end }}
+'''
 
 {{ if eq .chezmoi.os "windows" }}
 [tasks.set-hostname]
