@@ -9,5 +9,6 @@ brew "ffmpeg"
 brew "htop"
 brew "nushell"
 brew "mise"
+brew "podman"
 
 cask "1password-cli"
