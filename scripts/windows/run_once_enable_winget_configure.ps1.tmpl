@@ -1,11 +1,68 @@
 {{ if eq .chezmoi.os "windows" }}
-# winget non interactive mode
-$env:WINGET_CLI_NO_INTERACTIVE=1
+$packageManagerEnvVar = "MISE_PACKAGE_MANAGER"
+$validPackageManagers = @("winget", "scoop", "chocolatey")
+$choiceMap = @{
+    "1" = "winget"
+    "2" = "scoop"
+    "3" = "chocolatey"
+}
 
-try {
-    # Hide potential errors
-    winget configure --enable *>$null 2>&1
-} catch {
-    # Don't throw
+$packageManager = [Environment]::GetEnvironmentVariable($packageManagerEnvVar, "User")
+if ($null -ne $packageManager) {
+    $packageManager = $packageManager.Trim().ToLowerInvariant()
+    if ($choiceMap.ContainsKey($packageManager)) {
+        $packageManager = $choiceMap[$packageManager]
+    }
+}
+
+if (-not ($validPackageManagers -contains $packageManager)) {
+    do {
+        $inputChoice = Read-Host "Quel package manager utilisez-vous ? 1) winget 2) scoop 3) chocolatey"
+        if ($null -ne $inputChoice) {
+            $inputChoice = $inputChoice.Trim().ToLowerInvariant()
+            if ($choiceMap.ContainsKey($inputChoice)) {
+                $packageManager = $choiceMap[$inputChoice]
+            }
+        }
+    } while (-not ($validPackageManagers -contains $packageManager))
+
+    [Environment]::SetEnvironmentVariable($packageManagerEnvVar, $packageManager, "User")
+}
+
+switch ($packageManager) {
+    "winget" {
+        if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+            try {
+                Add-AppxPackage -RegisterByFamilyName "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe" -ErrorAction Stop
+            } catch {
+                Write-Warning "Impossible d'installer winget automatiquement."
+            }
+        }
+
+        if (Get-Command winget -ErrorAction SilentlyContinue) {
+            # winget non interactive mode
+            $env:WINGET_CLI_NO_INTERACTIVE = 1
+
+            try {
+                # Hide potential errors
+                winget configure --enable *>$null 2>&1
+            } catch {
+                # Don't throw
+            }
+        }
+    }
+
+    "scoop" {
+        if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
+        }
+    }
+
+    "chocolatey" {
+        if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+            Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://community.chocolatey.org/install.ps1"))
+        }
+    }
 }
 {{ end }}

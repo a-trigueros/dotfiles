@@ -394,6 +394,7 @@ mise upgrade
 [tasks.update]
 description = "Update all mise & system applications"
 run = [
+  { task = "update-mise" },
 {{ if eq .chezmoi.os "darwin" }}
   { task = "update-homebrew" },
   { task = "update-mas" },
@@ -401,5 +402,4 @@ run = [
 {{ if eq .chezmoi.os "windows" }}
   { task = "update-winget" },
 {{ end }}
-  { task = "update-mise" },
 ]
