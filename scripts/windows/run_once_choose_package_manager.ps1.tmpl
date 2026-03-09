@@ -1,10 +1,9 @@
 {{ if eq .chezmoi.os "windows" }}
 $packageManagerEnvVar = "MISE_PACKAGE_MANAGER"
-$validPackageManagers = @("winget", "scoop", "chocolatey")
+$validPackageManagers = @("winget", "scoop")
 $choiceMap = @{
     "1" = "winget"
     "2" = "scoop"
-    "3" = "chocolatey"
 }
 
 $packageManager = [Environment]::GetEnvironmentVariable($packageManagerEnvVar, "User")
@@ -17,7 +16,7 @@ if ($null -ne $packageManager) {
 
 if (-not ($validPackageManagers -contains $packageManager)) {
     do {
-        $inputChoice = Read-Host "Quel package manager utilisez-vous ? 1) winget 2) scoop 3) chocolatey"
+        $inputChoice = Read-Host "Quel package manager utilisez-vous ? 1) winget 2) scoop"
         if ($null -ne $inputChoice) {
             $inputChoice = $inputChoice.Trim().ToLowerInvariant()
             if ($choiceMap.ContainsKey($inputChoice)) {

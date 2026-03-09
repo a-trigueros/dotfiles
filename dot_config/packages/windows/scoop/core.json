@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "Name": "btop",
+      "Source": "main"
+    },
+    {
+      "Name": "curl",
+      "Source": "main"
+    },
+    {
+      "Name": "ntop",
+      "Source": "main"
+    },
+    {
+      "Name": "nu",
+      "Source": "main"
+    },
+    {
+      "Name": "pwsh",
+      "Source": "main"
+    }
+  ],
+  "buckets": [
+    {
+      "Name": "main",
+      "Source": "https://github.com/ScoopInstaller/Main.git"
+    }
+  ]
+}

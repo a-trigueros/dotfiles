@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "Name": "beyondcompare",
+      "Source": "extras"
+    },
+    {
+      "Name": "JetBrainsMono-NF-Mono",
+      "Source": "nerd-fonts"
+    },
+    {
+      "Name": "sysinternals",
+      "Source": "extras"
+    },
+    {
+      "Name": "wezterm",
+      "Source": "extras"
+    }
+  ],
+  "buckets": [
+    {
+      "Name": "extras",
+      "Source": "https://github.com/ScoopInstaller/Extras.git"
+    },
+    {
+      "Name": "nerd-fonts",
+      "Source": "https://github.com/matthewjberger/scoop-nerd-fonts.git"
+    }
+  ]
+}

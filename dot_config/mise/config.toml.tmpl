@@ -12,7 +12,7 @@ deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
 eza = "latest"
-"cargo:fd-find" = "latest"
+fd = "latest"
 {{ if eq .chezmoi.os "darwin" }}
 fnox = "latest"
 {{- end }}
@@ -91,11 +91,11 @@ cd = 'z'
 "...." = 'cd ../../..'
 
 [hooks]
-{{ if eq .chezmoi.os "darwin" }}
-preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 postinstall = [
   { task = "build-all-nushell-autoloads" }
 ]
+{{ if eq .chezmoi.os "darwin" }}
+preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 
 [tasks.install-gui]
 description = "Install GUI apps"
@@ -126,48 +126,40 @@ mas upgrade
 '''
 {{ end }}
 
-[tasks.build-all-nushell-autoloads]
-description = "Used to build nushell autoload files"
-run = [
-"mise run build-nushell-autoload \"mise activate nu\" \"mise.nu\"",
-"mise run build-nushell-autoload \"atuin init nu\" \"atuin.nu\"",
-"mise run build-nushell-autoload \"carapace _carapace nushell\" \"carapace.nu\"",
-"mise run build-nushell-autoload \"starship init nu\" \"starship.nu\"",
-"mise run build-nushell-autoload \"zoxide init nushell\" \"zoxide.nu\"",
-]
-
 [tasks.build-nushell-autoload]
-description = "Used to generate autoload files in nushell autoload directory"
+description = 'Run the command and store the content in the filename in the nushell autoload path'
 hide = true
 usage = '''
-arg "<command>" help="The command which generates the autoload file"
-arg "<filename>" help="The filename where to write the result"
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
 '''
-run = '''
 {{ if eq .chezmoi.os "windows" }}
-where nu >nul 2>nul
-if %errorlevel%==0 (
-    nu -c "{{ "{{" }}usage.command {{ "}}" }}" > %USERPROFILE%\AppData\Roaming\nushell\autoload\{{ "{{" }}usage.filename{{ "}}" }}
-) 
-{{ else }}
-if command -v nu >/dev/null 2>&1; then
-    nu -c "{{ "{{" }} usage.command {{ "}}" }}" > "$HOME/Library/Application Support/nushell/autoload/{{ "{{" }} usage.filename {{ "}}" }}"
-fi
-{{- end }}
+shell = 'powershell -Command'
+run = '''
+New-Item -ItemType Directory -Path "$env:APPDATA\nushell\autoload" -Force | Out-Null
+{{ "{{" }} usage.command {{ "}}" }} | Out-File "$env:APPDATA\nushell\autoload\{{ "{{" }}usage.filename{{ "}}" }}" -Encoding utf8
 '''
+{{ else }}
+run = '''
+mkdir -p $HOME/Library/Application\ Support/nushell/autoload/
+{{ "{{" }} usage.command {{ "}}" }} > $HOME/Library/Application\ Support/nushell/autoload/{{ "{{" }}usage.filename{{ "}}" }}
+'''
+{{ end }}
+
+
+[tasks.build-all-nushell-autoloads]
+description = "Used to build nushell autoload files"
+depends = [
+  { task = "build-nushell-autoload", args = ["atuin init nu", "atuin.nu"] },
+  { task = "build-nushell-autoload", args = ["carapace _carapace nushell", "carapace.nu"] },
+  { task = "build-nushell-autoload", args = ["mise activate nu", "mise.nu"] },
+  { task = "build-nushell-autoload", args = ["starship init nu", "starship.nu"] },
+  { task = "build-nushell-autoload", args = ["zoxide init nushell", "zoxide.nu"] },
+]
+run = ":"
+run_windows = "rem noop"
 
 {{ if eq .chezmoi.os "windows" }}
-[tasks.set-hostname]
-description = "Set host name"
-shell = 'powershell -Command'
-usage = '''
-arg "<hostname>" help="New hostname"
-'''
-run = '''
-Write-Host "Setting hostname"
-Rename-Computer -NewName "{{ "{{" }}  usage.hostname {{ "}}" }}" -Force
-Write-Host "Machine name set to {{ "{{" }} usage.hostname }} (restart required to apply changes)"
-'''
 
 [tasks.set-autologin]
 description = "Login automatically as a given user"
@@ -367,8 +359,32 @@ run = '''
 winget upgrade --all 
 '''
 
+[tasks.update-scoop]
+description = "Update scoop packages"
+hide = true
+run = '''
+scoop update *
+'''
+
+[tasks.update-packages]
+description = "Update packages with selected Windows package manager"
+hide = true
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run update-scoop }
+  default { mise run update-winget }
+}
+'''
+
 [tasks.install-core-winget]
 description = 'Install core CLI packages using winget'
+hide = true
 shell = 'powershell -Command'
 run = '''
 $file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/core.winget"
@@ -377,10 +393,59 @@ winget configure -f $file --accept-configuration-agreements --disable-interactiv
 
 [tasks.install-gui-winget]
 description = 'Install core CLI packages using winget'
+hide = true
 shell = 'powershell -Command'
 run = '''
 $file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/gui.winget"
 winget configure -f $file --accept-configuration-agreements --disable-interactivity --suppress-initial-details
+'''
+
+[tasks.install-core-scoop]
+description = 'Install core CLI packages using scoop'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/scoop/core.json"
+scoop import $file
+'''
+
+[tasks.install-gui-scoop]
+description = 'Install GUI packages using scoop'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/scoop/gui.json"
+scoop import $file
+'''
+
+[tasks.install-core]
+description = 'Install core packages with selected Windows package manager'
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run install-core-scoop }
+  default { mise run install-core-winget }
+}
+'''
+
+[tasks.install-gui]
+description = 'Install GUI packages with selected Windows package manager'
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run install-gui-scoop }
+  default { mise run install-gui-winget }
+}
 '''
 
 {{ end }}
@@ -400,6 +465,6 @@ run = [
   { task = "update-mas" },
 {{ end }}
 {{ if eq .chezmoi.os "windows" }}
-  { task = "update-winget" },
+  { task = "update-packages" },
 {{ end }}
 ]
