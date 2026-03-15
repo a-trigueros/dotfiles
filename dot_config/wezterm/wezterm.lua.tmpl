@@ -1,8 +1,12 @@
 local wezterm = require("wezterm")
 
 return {
+  {{ if eq .chezmoi.os "windows"}}
+  front_end = "WebGpu",
+  -- Alternative: front_end = "Software",
+  {{- end }}
 	adjust_window_size_when_changing_font_size = false,
-	color_scheme = "Catppuccin Macciato",
+	color_scheme = "Catppuccin Macchiato",
 	enable_tab_bar = false,
 	font_size = 16.0,
 	font = wezterm.font("JetBrains Mono"),
