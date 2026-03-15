@@ -336,7 +336,7 @@ $wingetIds = @(
 
 foreach ($pkg in $wingetIds) {
   Write-Host "Ensuring removal of: $pkg" -ForegroundColor Gray
-  winget uninstall --id $pkg --silent --accept-source-agreements 2>$null
+  winget uninstall --id $pkg --silent --accept-source-agreements | Out-Null; $global:LASTEXITCODE = 0
 }
 '''
 
