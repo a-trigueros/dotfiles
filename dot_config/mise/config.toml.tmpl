@@ -139,12 +139,15 @@ arg "<filename>" help = "The filename where to write the command output"
 shell = 'powershell -Command'
 run = '''
 New-Item -ItemType Directory -Path "$env:APPDATA\nushell\autoload" -Force | Out-Null
-{{ "{{" }} usage.command {{ "}}" }} | Out-File "$env:APPDATA\nushell\autoload\{{ "{{" }}usage.filename{{ "}}" }}" -Encoding utf8
-'''
+if (Get-Command nu -ErrorAction SilentlyContinue) {
+  nu -c '{{ "{{" }} usage.command {{ "}}" }} | save -f  ($nu.user-autoload-dirs | first | path join "{{ "{{" }} usage.filename {{ "}}" }}")'
+} '''
 {{ else }}
 run = '''
-mkdir -p $HOME/Library/Application\ Support/nushell/autoload/
-{{ "{{" }} usage.command {{ "}}" }} > $HOME/Library/Application\ Support/nushell/autoload/{{ "{{" }}usage.filename{{ "}}" }}
+mkdir -p "$HOME/Library/Application Support/nushell/autoload/"
+if command -v nu >/dev/null 2>&1; then
+  nu -c '{{ "{{" }} usage.command {{ "}}" }} | save -f  ($nu.user-autoload-dirs | first | path join "{{ "{{" }} usage.filename {{ "}}" }}")'
+fi
 '''
 {{ end }}
 
