@@ -32,7 +32,8 @@ nnoremap <leader>rR :action RebuildSolutionAction<CR>
 let g:WhichKeyDesc_run_test = "<leader>rt Run closest test" 
 nnoremap <leader>rt :action Rider.UnitTesting.RunContext<CR>
 let g:WhichKeyDesc_run_query = "<leader>rq Run query"
-nmap <leader>rq :action Console.Jdbc.Execute<CR>
+nnoremap <leader>rq :action Console.Jdbc.Execute<CR>
+xnoremap <leader>rq :action Console.Jdbc.Execute<CR>
 
 " Move
 let g:WhichKeyDesc_reference_next = "]] Next"
@@ -56,4 +57,3 @@ nnoremap <leader>dc :action CIDR.Debugger.ResumeAll<CR>
 nnoremap <leader>dt :action CIDR.Debugger.StopAll<CR>
 nmap <leader>dg :action JumpToStatement<CR>
 nnoremap <leader>cf :action ReformatCode<CR>
-nmap 
