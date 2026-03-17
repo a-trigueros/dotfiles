@@ -12,8 +12,7 @@ deno = "latest"
 docker-cli = { version = "latest", os = ["macos", "linux"] }
 dotnet = "latest"
 eza = "latest"
-fd = "latest"
-{{ if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.os "darwin" }}
 fnox = "latest"
 {{- end }}
 fzf = "latest"
@@ -46,9 +45,14 @@ yazi = "latest"
 yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
+"aqua:sharkdp/fd" = "latest"
 "pipx:sqlit-tui" = "latest"
 "github:murex/TCR" = "latest"
 "github:remotemobprogramming/mob" = { version = "latest", os = [
+  "macos",
+  "linux",
+]}
+"github:rtk-ai/rtk" = { version = "latest", os = [
   "macos",
   "linux",
 ]}
