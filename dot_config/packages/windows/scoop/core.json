@@ -11,14 +11,6 @@
     {
       "Name": "ntop",
       "Source": "main"
-    },
-    {
-      "Name": "nu",
-      "Source": "main"
-    },
-    {
-      "Name": "pwsh",
-      "Source": "main"
     }
   ],
   "buckets": [

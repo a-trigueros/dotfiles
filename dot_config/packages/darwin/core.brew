@@ -7,7 +7,6 @@ brew "container"
 brew "curl"
 brew "ffmpeg"
 brew "htop"
-brew "nushell"
 brew "mise"
 brew "podman"
 

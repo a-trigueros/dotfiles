@@ -25,17 +25,3 @@ properties:
       settings:
         id: gsass1.NTop 
         source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Nushell 
-        allowPrerelease: true
-      settings:
-        id: Nushell.Nushell
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: PowerShell 
-        allowPrerelease: true
-      settings:
-        id: Microsoft.PowerShell
-        source: winget

@@ -31,10 +31,12 @@ neovim = "latest"
 node = "lts"
 opencode = "latest"
 pnpm = "latest"
+{{- if eq .chezmoi.os "windows" }}
+powershell-core = "latest"
+{{- end }}
 python = "latest"
 ripgrep = "latest"
 rust = "latest"
-"cargo:sheldon" = { version = "latest", os = ["macos", "linux"] }
 sqlite = "latest"
 starship = "latest"
 tlrc = "latest"
@@ -46,8 +48,9 @@ yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
 "aqua:sharkdp/fd" = "latest"
-"pipx:sqlit-tui" = "latest"
+"cargo:sheldon" = { version = "latest", os = ["macos", "linux"] }
 "github:murex/TCR" = "latest"
+"github:nushell/nushell" = "latest"
 "github:remotemobprogramming/mob" = { version = "latest", os = [
   "macos",
   "linux",
