@@ -1,0 +1,212 @@
+#!/bin/bash
+
+# ╔══════════════════════════════════════════════════════════╗
+# ║           sketchybar — Catppuccin Macchiato              ║
+# ║   Widgets : workspaces · front_app · clock · wifi        ║
+# ║             now_playing · amphetamine                     ║
+# ╚══════════════════════════════════════════════════════════╝
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
+
+sketchybar --add event aerospace_workspace_change
+
+# ─── Fonte principale ─────────────────────────────────────
+FONT="Hack Nerd Font:style=Regular"
+FONT_BOLD="Hack Nerd Font:style=Bold"
+ICON_FONT="Hack Nerd Font:style=Regular"
+
+# ═══════════════════════════════════════════════════════════
+# BAR — Apparence globale
+# ═══════════════════════════════════════════════════════════
+sketchybar --bar \
+  position=top \
+  height=36 \
+  margin=0 \
+  y_offset=0 \
+  corner_radius=0 \
+  border_width=0 \
+  border_color=$BAR_BORDER \
+  blur_radius=20 \
+  color=$BASE \
+  shadow=off \
+  padding_left=8 \
+  padding_right=8 \
+  notch_width=0 \
+  topmost=window
+
+# ═══════════════════════════════════════════════════════════
+# DEFAULTS — Valeurs par défaut pour tous les items
+# ═══════════════════════════════════════════════════════════
+sketchybar --default \
+  updates=when_shown \
+  icon.font="$ICON_FONT:18.0" \
+  icon.color=$SUBTEXT1 \
+  icon.padding_left=6 \
+  icon.padding_right=3 \
+  label.font="$FONT:14.0" \
+  label.color=$TEXT \
+  label.padding_left=3 \
+  label.padding_right=6 \
+  background.color=$TRANSPARENT \
+  background.corner_radius=8 \
+  background.height=28 \
+  background.border_width=0 \
+  background.border_color=$SURFACE1 \
+  padding_left=3 \
+  padding_right=3
+
+# ═══════════════════════════════════════════════════════════
+# ESPACE GAUCHE — Workspaces AeroSpace
+# ═══════════════════════════════════════════════════════════
+
+# On génère dynamiquement les espaces 1 à 9
+# On récupère dynamiquement les workspaces depuis AeroSpace
+for sid in $(aerospace list-workspaces --all); do
+  sketchybar --add item space.$sid left \
+    --set space.$sid \
+    icon=$sid \
+    icon.font="$FONT_BOLD:15.0" \
+    icon.color=$OVERLAY1 \
+    icon.padding_left=9 \
+    icon.padding_right=9 \
+    label.drawing=off \
+    background.color=$TRANSPARENT \
+    background.corner_radius=6 \
+    background.height=28 \
+    background.border_width=1 \
+    background.border_color=$SURFACE0 \
+    script="$PLUGIN_DIR/aerospace_focus.sh $sid" \
+    --subscribe space.$sid aerospace_workspace_change front_app_switched
+done
+
+# Séparateur gauche
+sketchybar --add item separator_left left \
+  --set separator_left \
+  icon="" \
+  icon.color=$SURFACE1 \
+  icon.font="$ICON_FONT:12.0" \
+  label.drawing=off \
+  padding_left=4 \
+  padding_right=4
+
+# ─── App active ────────────────────────────────────────────
+sketchybar --add item front_app left \
+  --set front_app \
+  icon.font="$ICON_FONT:15.0" \
+  icon.color=$MAUVE \
+  icon=$ICON_APP_DEFAULT \
+  label.font="$FONT_BOLD:14.0" \
+  label.color=$TEXT \
+  background.color=$SURFACE0 \
+  script="$PLUGIN_DIR/front_app.sh" \
+  --subscribe front_app front_app_switched
+
+# ═══════════════════════════════════════════════════════════
+# CENTRE — Now Playing
+# ═══════════════════════════════════════════════════════════
+sketchybar --add item now_playing center \
+  --set now_playing \
+  icon=$ICON_MUSIC_NOTE \
+  icon.color=$PINK \
+  icon.font="$ICON_FONT:14.0" \
+  label.font="$FONT:12.0" \
+  label.color=$SUBTEXT1 \
+  label.max_chars=35 \
+  background.color=$SURFACE0 \
+  padding_left=6 \
+  padding_right=6 \
+  update_freq=5 \
+  script="$PLUGIN_DIR/now_playing.sh" \
+  --subscribe now_playing media_change
+
+# ═══════════════════════════════════════════════════════════
+# ESPACE DROIT — Amphetamine · WiFi · Horloge
+# ═══════════════════════════════════════════════════════════
+
+# ─── Amphetamine ───────────────────────────────────────────
+sketchybar --add item amphetamine right \
+  --set amphetamine \
+  icon=$ICON_COFFEE_OFF \
+  icon.color=$OVERLAY1 \
+  icon.font="$ICON_FONT:16.0" \
+  label.drawing=off \
+  update_freq=5 \
+  script="$PLUGIN_DIR/amphetamine.sh"
+
+# ─── Séparateur ────────────────────────────────────────────
+sketchybar --add item sep_right right \
+  --set sep_right \
+  icon="·" \
+  icon.color=$OVERLAY0 \
+  icon.font="$FONT:14.0" \
+  label.drawing=off
+
+# ─── WiFi ──────────────────────────────────────────────────
+sketchybar --add item wifi right \
+  --set wifi \
+  icon=$ICON_WIFI_FULL \
+  icon.color=$SAPPHIRE \
+  icon.font="$ICON_FONT:16.0" \
+  label.font="$FONT:12.0" \
+  label.color=$SUBTEXT1 \
+  update_freq=10 \
+  script="$PLUGIN_DIR/wifi.sh" \
+  --subscribe wifi wifi_change
+
+# ─── Séparateur ────────────────────────────────────────────
+sketchybar --add item sep_right2 right \
+  --set sep_right2 \
+  icon="·" \
+  icon.color=$OVERLAY0 \
+  icon.font="$FONT:14.0" \
+  label.drawing=off
+
+# ─── Horloge ───────────────────────────────────────────────
+sketchybar --add item clock right \
+  --set clock \
+  icon=$ICON_CLOCK \
+  icon.color=$YELLOW \
+  icon.font="$ICON_FONT:14.0" \
+  label.font="$FONT_BOLD:14.0" \
+  label.color=$TEXT \
+  update_freq=10 \
+  script="$PLUGIN_DIR/clock.sh"
+
+# Forcer le refresh des workspaces une fois AeroSpace prêt
+# Refresh initial de tous les workspaces
+FOCUSED=$(aerospace list-workspaces --focused 2>/dev/null | tr -d '[:space:]')
+for sid in $(aerospace list-workspaces --all 2>/dev/null); do
+  WINDOWS=$(aerospace list-windows --workspace "$sid" 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$sid" = "$FOCUSED" ]; then
+    sketchybar --set "space.$sid" \
+      drawing=on icon.color=$MAUVE \
+      background.color=$SURFACE0 \
+      background.border_color=$MAUVE background.border_width=1
+  elif [ "$WINDOWS" -gt 0 ]; then
+    sketchybar --set "space.$sid" \
+      drawing=on icon.color=$SUBTEXT0 \
+      background.color=$TRANSPARENT \
+      background.border_color=$SURFACE1 background.border_width=1
+  else
+    sketchybar --set "space.$sid" drawing=off
+  fi
+done
+
+# ─── Workspace poller ──────────────────────────────────────
+sketchybar --add item workspace_poller left \
+  --set workspace_poller \
+  icon=" " \
+  icon.color=0x00000000 \
+  label.drawing=off \
+  background.drawing=off \
+  width=0 \
+  update_freq=5 \
+  script="$PLUGIN_DIR/aerospace_focus.sh poll"
+
+# ═══════════════════════════════════════════════════════════
+# FINALISATION
+# ═══════════════════════════════════════════════════════════
+sketchybar --update
+echo "sketchybar chargé ✓"

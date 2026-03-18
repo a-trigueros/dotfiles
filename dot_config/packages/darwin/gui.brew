@@ -1,4 +1,7 @@
 tap "dail8859/notepadnext"
+
+brew "sketchybar"
+
 cask "1password"
 cask "alfred"
 cask "alienator88-sentinel"
@@ -9,6 +12,7 @@ cask "chatgpt"
 cask "crossover"
 cask "displaylink"
 cask "firefox"
+cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 cask "jetbrains-toolbox"

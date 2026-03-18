@@ -1,5 +1,6 @@
 {{- if eq .chezmoi.os "darwin" }}#! /bin/sh
 brew tap slp/krunkit
+brew tap FelixKratz/formulae
 
 brew bundle install --file="~/.config/packages/darwin/core.brew"
 {{- end }}

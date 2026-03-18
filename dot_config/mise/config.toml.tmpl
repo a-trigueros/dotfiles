@@ -110,6 +110,7 @@ preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 description = "Install GUI apps"
 run = '''
 brew bundle install --file="~/.config/packages/darwin/gui.brew"
+brew services start sketchybar
 '''
 
 [tasks.install-gaming]
