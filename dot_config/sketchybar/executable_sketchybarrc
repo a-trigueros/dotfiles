@@ -21,6 +21,7 @@ ICON_FONT="Hack Nerd Font:style=Regular"
 # BAR — Apparence globale
 # ═══════════════════════════════════════════════════════════
 sketchybar --bar \
+  display=main \
   position=top \
   height=36 \
   margin=0 \
