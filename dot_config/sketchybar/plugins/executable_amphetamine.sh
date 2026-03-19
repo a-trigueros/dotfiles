@@ -4,29 +4,22 @@
 # Détecte si Amphetamine est actif (session en cours) et adapte l'icône
 
 source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
 
-# On vérifie si le process "Amphetamine" tourne ET si une session est active.
-# Amphetamine expose un helper CLI via osascript.
-IS_ACTIVE=$(osascript -e '
-  tell application "System Events"
-    if exists process "Amphetamine" then
-      tell application "Amphetamine"
-        return appIsActive()
-      end tell
-    else
-      return false
-    end if
-  end tell
-' 2>/dev/null)
+# Use the item name provided by sketchybar, or default to "amphetamine"
+ITEM_NAME="${NAME:-amphetamine}"
 
-if [ "$IS_ACTIVE" = "true" ]; then
-  sketchybar --set "$NAME" \
-    icon="󰅶" \
-    icon.color=$YELLOW \
-    label.drawing=off
+# Check if Amphetamine has an active assertion (session)
+if pmset -g assertions | grep -q "Amphetamine"; then
+	# Amphetamine has an active assertion - show ON state
+	sketchybar --set "$ITEM_NAME" \
+		icon="$ICON_COFFEE_ON" \
+		icon.color=$YELLOW \
+		label.drawing=off
 else
-  sketchybar --set "$NAME" \
-    icon="󰅶" \
-    icon.color=$OVERLAY0 \
-    label.drawing=off
+	# No active assertion by Amphetamine - show OFF state
+	sketchybar --set "$ITEM_NAME" \
+		icon="$ICON_COFFEE_OFF" \
+		icon.color=$OVERLAY0 \
+		label.drawing=off
 fi

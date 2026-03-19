@@ -133,7 +133,7 @@ sketchybar --add item amphetamine right \
   icon.color=$OVERLAY1 \
   icon.font="$ICON_FONT:16.0" \
   label.drawing=off \
-  update_freq=5 \
+  update_freq=3 \
   script="$PLUGIN_DIR/amphetamine.sh"
 
 # ─── Séparateur ────────────────────────────────────────────

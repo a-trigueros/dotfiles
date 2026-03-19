@@ -28,5 +28,5 @@ export ICON_MUSIC_PAUSE="󰏤"
 export ICON_MUSIC_NOTE="󰝚"
 
 # Amphetamine
-export ICON_COFFEE_ON="󰅶"
+export ICON_COFFEE_ON="󰅵"
 export ICON_COFFEE_OFF="󰅶"
