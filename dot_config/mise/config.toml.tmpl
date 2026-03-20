@@ -101,7 +101,10 @@ cd = 'z'
 
 [hooks]
 postinstall = [
-  { task = "build-all-nushell-autoloads" }
+ { task = "build-all-nushell-autoloads" },
+{{- if eq .chezmoi.os "darwin" }}
+ { task = "build-all-zsh-autoloads" }
+{{ end }}
 ]
 {{ if eq .chezmoi.os "darwin" }}
 preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
@@ -134,6 +137,29 @@ description = "Update AppStore applications"
 run = '''
 mas upgrade
 '''
+
+[tasks.build-zsh-autoload]
+description = 'Run the command and store the content in the filename in the nushell autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+run = '''
+mkdir -p $HOME/.zshrc.d
+{{ "{{" }} usage.command {{ "}}" }} > $HOME/.zshrc.d/{{ "{{" }} usage.filename {{ "}}" }}
+'''
+
+[tasks.build-all-zsh-autoloads]
+description = "Used to build zshell autoload files"
+depends = [
+  { task = "build-zsh-autoload", args = ["atuin init zsh", "atuin.zsh"] },
+  { task = "build-zsh-autoload", args = ["carapace _carapace zsh", "carapace.zsh"] },
+  { task = "build-zsh-autoload", args = ["mise activate zsh", "mise.zsh"] },
+  { task = "build-zsh-autoload", args = ["starship init zsh", "starship.zsh"] },
+  { task = "build-zsh-autoload", args = ["zoxide init zsh", "zoxide.zsh"] },
+]
+run= ":"
 {{ end }}
 
 [tasks.build-nushell-autoload]
@@ -158,7 +184,6 @@ if command -v nu >/dev/null 2>&1; then
 fi
 '''
 {{ end }}
-
 
 [tasks.build-all-nushell-autoloads]
 description = "Used to build nushell autoload files"

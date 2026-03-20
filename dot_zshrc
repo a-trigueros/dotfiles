@@ -13,29 +13,17 @@ else
   compinit
 fi
 
-# ----- Mise en place ----
-eval "$(mise activate zsh)"
+if [[ $- == *i* ]]; then
+  for file in ~/.zshrc.d/*.zsh(N); do
+    source "$file"
+  done
+fi
 
 eval "$(sheldon source)"
 
 fpath+=('/opt/homebrew/share/zsh/site-functions')
 # fzf
 ZF_CTRL_R_COMMAND= FZF_ALT_C_COMMAND= source <(fzf --zsh)
-
-# ----- Prompt -----
-eval "$(starship init zsh)"
-
-# ----- Completion (Carapace) -----
-eval "$(carapace _carapace)"
-
-# ----- History (Atuin) -----
-# Chargé uniquement en mode interactif
-if [[ $- == *i* ]]; then
-  eval "$(atuin init zsh)"
-fi
-
-# ----- Fast cd (zoxide) -----
-eval "$(zoxide init zsh)"
 
 source <(COMPLETE=zsh jj)
 
