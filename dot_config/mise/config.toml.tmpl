@@ -103,10 +103,13 @@ cd = 'z'
 [hooks]
 postinstall = [
  { task = "build-all-nushell-autoloads" },
-{{- if eq .chezmoi.os "darwin" }}
- { task = "build-all-zsh-autoloads" }
+{{- if eq .chezmoi.os "windows" }}
+ { task = "build-all-powershell-autoloads" },
+{{ else }}
+ { task = "build-all-zsh-autoloads" },
 {{ end }}
 ]
+
 {{ if eq .chezmoi.os "darwin" }}
 preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
 
@@ -222,6 +225,46 @@ depends = [
   { task = "build-zsh-autoload", args = ["zoxide init zsh", "zoxide.zsh"] },
 ]
 run= ":"
+{{ end }}
+
+{{ if eq .chezmoi.os "windows" }}
+[tasks.build-powershell-autoload]
+description = 'Run the command and store the content in the powershell startup autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+shell = 'powershell -Command'
+run = '''
+$autoloadDirs = @(
+  (Join-Path $HOME "Documents\PowerShell\autoload"),
+  (Join-Path $HOME "Documents\WindowsPowerShell\autoload")
+)
+
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+
+foreach ($autoloadDir in $autoloadDirs) {
+  New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+  $target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+  [System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+}
+'''
+
+[tasks.build-all-powershell-autoloads]
+description = "Used to build powershell startup autoload files"
+depends = [
+  { task = "build-powershell-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
+  { task = "build-powershell-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
+  { task = "build-powershell-autoload", args = ["mise activate pwsh", "mise.ps1"] },
+  { task = "build-powershell-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
+  { task = "build-powershell-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+]
+run = ":"
+run_windows = "rem noop"
 {{ end }}
 
 [tasks.build-nushell-autoload]

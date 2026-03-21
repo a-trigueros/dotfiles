@@ -1,9 +1,12 @@
 $env:path += ";$env:LOCALAPPDATA\mise\shims"
 
+$script:AutoloadDirectory = Join-Path (Split-Path -Parent $PROFILE) "autoload"
+
 $env:CARAPACE_BRIDGES = 'pwsh,zsh,fish,bash,inshellisense' # optional
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-carapace _carapace | Out-String | Invoke-Expression
-starship init powershell | Out-String | Invoke-Expression
-zoxide init powershell | Out-String | Invoke-Expression
 
-atuin init powershell | Out-String | Invoke-Expression
+Get-ChildItem -Path $script:AutoloadDirectory -Filter "*.ps1" -File -ErrorAction SilentlyContinue |
+    Sort-Object Name |
+    ForEach-Object {
+        . $_.FullName
+    }
