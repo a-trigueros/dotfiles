@@ -8,6 +8,19 @@ source "$CONFIG_DIR/icons.sh"
 
 # Use the item name provided by sketchybar, or default to "amphetamine"
 ITEM_NAME="${NAME:-amphetamine}"
+ACTION="$1"
+
+toggle_amphetamine_session() {
+	if osascript -e 'tell application "Amphetamine" to session is active' 2>/dev/null | grep -q "true"; then
+		osascript -e 'tell application "Amphetamine" to end session' >/dev/null 2>&1
+	else
+		osascript -e 'tell application "Amphetamine" to start new session' >/dev/null 2>&1
+	fi
+}
+
+if [ "$ACTION" = "toggle" ] || [ "$SENDER" = "mouse.clicked" ]; then
+	toggle_amphetamine_session
+fi
 
 # Check if Amphetamine has an active assertion (session)
 if pmset -g assertions | grep -q "Amphetamine"; then
