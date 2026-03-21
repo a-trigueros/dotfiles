@@ -247,7 +247,31 @@ if ($content -is [System.Array]) {
 
 New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
 $target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
-[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+$content = [string]$content
+
+if (Test-Path -LiteralPath $target) {
+  try {
+    $existing = [System.IO.File]::ReadAllText($target)
+    if ($existing -eq $content) {
+      return
+    }
+  } catch {
+    # Ignore read failures and continue with write retries.
+  }
+}
+
+$maxAttempts = 20
+for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+  try {
+    [System.IO.File]::WriteAllText($target, $content, [System.Text.UTF8Encoding]::new($false))
+    return
+  } catch [System.IO.IOException] {
+    if ($attempt -eq $maxAttempts) {
+      throw "Unable to write '$target' after $maxAttempts attempts because the file is in use. Close Windows PowerShell sessions using this file and retry."
+    }
+    Start-Sleep -Milliseconds 250
+  }
+}
 '''
 
 [tasks.build-powershell-core-autoload]
@@ -268,7 +292,31 @@ if ($content -is [System.Array]) {
 
 New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
 $target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
-[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+$content = [string]$content
+
+if (Test-Path -LiteralPath $target) {
+  try {
+    $existing = [System.IO.File]::ReadAllText($target)
+    if ($existing -eq $content) {
+      return
+    }
+  } catch {
+    # Ignore read failures and continue with write retries.
+  }
+}
+
+$maxAttempts = 20
+for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+  try {
+    [System.IO.File]::WriteAllText($target, $content, [System.Text.UTF8Encoding]::new($false))
+    return
+  } catch [System.IO.IOException] {
+    if ($attempt -eq $maxAttempts) {
+      throw "Unable to write '$target' after $maxAttempts attempts because the file is in use. Close PowerShell sessions using this file and retry."
+    }
+    Start-Sleep -Milliseconds 250
+  }
+}
 '''
 
 [tasks.build-all-windows-powershell-autoloads]
