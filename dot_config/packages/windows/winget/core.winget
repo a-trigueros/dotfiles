@@ -6,7 +6,7 @@ properties:
   resources:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Btop 
+        description: Btop
         allowPrerelease: true
       settings:
         id: aristocratos.btop4win
@@ -23,5 +23,12 @@ properties:
         description: nTop
         allowPrerelease: true
       settings:
-        id: gsass1.NTop 
+        id: gsass1.NTop
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Podman
+        allowPrerelease: true
+      settings:
+        id: RedHat.Podman
         source: winget

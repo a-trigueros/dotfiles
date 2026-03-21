@@ -9,6 +9,10 @@
       "Source": "nerd-fonts"
     },
     {
+      "Name": "podman-desktop",
+      "Source": "extras"
+    },
+    {
       "Name": "sysinternals",
       "Source": "extras"
     },
