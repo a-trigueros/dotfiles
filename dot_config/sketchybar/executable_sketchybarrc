@@ -62,6 +62,20 @@ sketchybar --default \
 # ESPACE GAUCHE — Workspaces AeroSpace
 # ═══════════════════════════════════════════════════════════
 
+# ─── Meteo ─────────────────────────────────────────────────
+sketchybar --add item weather left \
+  --set weather \
+  icon="󰖔" \
+  icon.color=$SKY \
+  icon.font="$ICON_FONT:16.0" \
+  label.drawing=on \
+  label.font="$FONT:12.0" \
+  label.color=$SUBTEXT1 \
+  background.color=$TRANSPARENT \
+  update_freq=900 \
+  script="$PLUGIN_DIR/weather.sh" \
+  --subscribe weather system_woke
+
 # On génère dynamiquement les espaces 1 à 9
 # On récupère dynamiquement les workspaces depuis AeroSpace
 for sid in $(aerospace list-workspaces --all); do
