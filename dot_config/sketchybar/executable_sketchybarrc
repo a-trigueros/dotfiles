@@ -62,18 +62,6 @@ sketchybar --default \
 # ESPACE GAUCHE — Workspaces AeroSpace
 # ═══════════════════════════════════════════════════════════
 
-# ─── Phase journee ─────────────────────────────────────────
-sketchybar --add item day_phase left \
-  --set day_phase \
-  icon="󰖨" \
-  icon.color=$YELLOW \
-  icon.font="$ICON_FONT:16.0" \
-  label.drawing=off \
-  background.color=$TRANSPARENT \
-  update_freq=120 \
-  script="$PLUGIN_DIR/day_phase.sh" \
-  --subscribe day_phase system_woke
-
 # ─── Meteo ─────────────────────────────────────────────────
 sketchybar --add item weather left \
   --set weather \
@@ -84,7 +72,7 @@ sketchybar --add item weather left \
   label.font="$FONT:12.0" \
   label.color=$SUBTEXT1 \
   background.color=$TRANSPARENT \
-  update_freq=900 \
+  update_freq=300 \
   script="$PLUGIN_DIR/weather.sh" \
   --subscribe weather system_woke
 
