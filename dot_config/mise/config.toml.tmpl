@@ -154,7 +154,7 @@ mkdir -p $HOME/.zshrc.d
 [tasks.build-all-zsh-autoloads]
 description = "Used to build zshell autoload files"
 depends = [
-  { task = "build-zsh-autoload", args = ["atuin init zsh", "atuin.zsh"] },
+  { task = "build-zsh-autoload", args = ["atuin init zsh", "z_atuin.zsh"] },
   { task = "build-zsh-autoload", args = ["carapace _carapace zsh", "carapace.zsh"] },
   { task = "build-zsh-autoload", args = ["mise activate zsh", "mise.zsh"] },
   { task = "build-zsh-autoload", args = ["starship init zsh", "starship.zsh"] },
@@ -189,7 +189,7 @@ fi
 [tasks.build-all-nushell-autoloads]
 description = "Used to build nushell autoload files"
 depends = [
-  { task = "build-nushell-autoload", args = ["atuin init nu", "atuin.nu"] },
+  { task = "build-nushell-autoload", args = ["atuin init nu", "z_atuin.nu"] },
   { task = "build-nushell-autoload", args = ["carapace _carapace nushell", "carapace.nu"] },
   { task = "build-nushell-autoload", args = ["mise activate nu", "mise.nu"] },
   { task = "build-nushell-autoload", args = ["starship init nu", "starship.nu"] },
