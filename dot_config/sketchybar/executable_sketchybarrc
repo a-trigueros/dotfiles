@@ -76,26 +76,9 @@ sketchybar --add item weather left \
   script="$PLUGIN_DIR/weather.sh" \
   --subscribe weather system_woke
 
-# On génère dynamiquement les espaces 1 à 9
-# On récupère dynamiquement les workspaces depuis AeroSpace
-for sid in $(aerospace list-workspaces --all); do
-  sketchybar --add item space.$sid left \
-    --set space.$sid \
-    icon=$sid \
-    icon.font="$FONT_BOLD:15.0" \
-    icon.color=$OVERLAY1 \
-    icon.padding_left=9 \
-    icon.padding_right=9 \
-    label.drawing=off \
-    background.color=$TRANSPARENT \
-    background.corner_radius=6 \
-    background.height=28 \
-     background.border_width=1 \
-     background.border_color=$SURFACE0 \
-     click_script="aerospace workspace $sid" \
-     script="$PLUGIN_DIR/aerospace.sh $sid" \
-     --subscribe space.$sid aerospace_workspace_change front_app_switched
-done
+# Les workspaces sont entièrement gérés par le plugin aerospace.sh
+# (création + style + sync)
+"$PLUGIN_DIR/aerospace.sh" poll
 
 # Séparateur gauche
 sketchybar --add item separator_left left \
@@ -199,26 +182,6 @@ sketchybar --add item clock right \
   label.color=$TEXT \
   update_freq=10 \
   script="$PLUGIN_DIR/clock.sh"
-
-# Forcer le refresh des workspaces une fois AeroSpace prêt
-# Refresh initial de tous les workspaces
-FOCUSED=$(aerospace list-workspaces --focused 2>/dev/null | tr -d '[:space:]')
-for sid in $(aerospace list-workspaces --all 2>/dev/null); do
-  WINDOWS=$(aerospace list-windows --workspace "$sid" 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$sid" = "$FOCUSED" ]; then
-    sketchybar --set "space.$sid" \
-      drawing=on icon.color=$MAUVE \
-      background.color=$SURFACE0 \
-      background.border_color=$MAUVE background.border_width=1
-  elif [ "$WINDOWS" -gt 0 ]; then
-    sketchybar --set "space.$sid" \
-      drawing=on icon.color=$SUBTEXT0 \
-      background.color=$TRANSPARENT \
-      background.border_color=$SURFACE1 background.border_width=1
-  else
-    sketchybar --set "space.$sid" drawing=off
-  fi
-done
 
 # ─── Workspace sync (event-driven) ─────────────────────────
 sketchybar --add item workspace_poller left \
