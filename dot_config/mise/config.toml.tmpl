@@ -228,8 +228,8 @@ run= ":"
 {{ end }}
 
 {{ if eq .chezmoi.os "windows" }}
-[tasks.build-powershell-autoload]
-description = 'Run the command and store the content in the powershell startup autoload path'
+[tasks.build-windows-powershell-autoload]
+description = 'Run the command and store the content in the Windows PowerShell autoload path'
 hide = true
 usage = '''
 arg "<command>" help = "The command that produces an output"
@@ -237,31 +237,68 @@ arg "<filename>" help = "The filename where to write the command output"
 '''
 shell = 'powershell -Command'
 run = '''
-$autoloadDirs = @(
-  (Join-Path $HOME "Documents\PowerShell\autoload"),
-  (Join-Path $HOME "Documents\WindowsPowerShell\autoload")
-)
+$autoloadDir = Join-Path $HOME "Documents\WindowsPowerShell\autoload"
 
 $content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
 if ($content -is [System.Array]) {
   $content = $content -join "`n"
 }
 
-foreach ($autoloadDir in $autoloadDirs) {
-  New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
-  $target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
-  [System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
-}
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
 '''
 
-[tasks.build-all-powershell-autoloads]
-description = "Used to build powershell startup autoload files"
+[tasks.build-powershell-core-autoload]
+description = 'Run the command and store the content in the PowerShell Core autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+shell = 'powershell -Command'
+run = '''
+$autoloadDir = Join-Path $HOME "Documents\PowerShell\autoload"
+
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+'''
+
+[tasks.build-all-windows-powershell-autoloads]
+description = "Used to build Windows PowerShell autoload files"
 depends = [
-  { task = "build-powershell-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
-  { task = "build-powershell-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
-  { task = "build-powershell-autoload", args = ["mise activate pwsh", "mise.ps1"] },
-  { task = "build-powershell-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
-  { task = "build-powershell-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+  { task = "build-windows-powershell-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
+  { task = "build-windows-powershell-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
+  #{ task = "build-windows-powershell-autoload", args = ["mise activate powershell", "mise.ps1"] },
+  #{ task = "build-windows-powershell-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
+  { task = "build-windows-powershell-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+]
+run = ":"
+run_windows = "rem noop"
+
+[tasks.build-all-powershell-core-autoloads]
+description = "Used to build PowerShell Core autoload files"
+depends = [
+  { task = "build-powershell-core-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["mise activate pwsh", "mise.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+]
+run = ":"
+run_windows = "rem noop"
+
+[tasks.build-all-powershell-autoloads]
+description = "Used to build all PowerShell autoload files"
+depends = [
+  { task = "build-all-windows-powershell-autoloads" },
+  { task = "build-all-powershell-core-autoloads" },
 ]
 run = ":"
 run_windows = "rem noop"
