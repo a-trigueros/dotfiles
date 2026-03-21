@@ -78,7 +78,7 @@ for sid in $(aerospace list-workspaces --all); do
     background.height=28 \
     background.border_width=1 \
     background.border_color=$SURFACE0 \
-    script="$PLUGIN_DIR/aerospace_focus.sh $sid" \
+    script="$PLUGIN_DIR/aerospace.sh $sid" \
     --subscribe space.$sid aerospace_workspace_change front_app_switched
 done
 
@@ -118,7 +118,6 @@ sketchybar --add item now_playing center \
   background.color=$SURFACE0 \
   padding_left=6 \
   padding_right=6 \
-  update_freq=5 \
   script="$PLUGIN_DIR/now_playing.sh" \
   --subscribe now_playing media_change
 
@@ -133,8 +132,9 @@ sketchybar --add item amphetamine right \
   icon.color=$OVERLAY1 \
   icon.font="$ICON_FONT:16.0" \
   label.drawing=off \
-  update_freq=3 \
-  script="$PLUGIN_DIR/amphetamine.sh"
+  update_freq=5 \
+  script="$PLUGIN_DIR/amphetamine.sh" \
+  --subscribe amphetamine front_app_switched system_woke
 
 # ─── Séparateur ────────────────────────────────────────────
 sketchybar --add item sep_right right \
@@ -152,9 +152,8 @@ sketchybar --add item wifi right \
   icon.font="$ICON_FONT:16.0" \
   label.font="$FONT:12.0" \
   label.color=$SUBTEXT1 \
-  update_freq=10 \
   script="$PLUGIN_DIR/wifi.sh" \
-  --subscribe wifi wifi_change
+  --subscribe wifi wifi_change system_woke
 
 # ─── Batterie ──────────────────────────────────────────────
 sketchybar --add item battery right \
@@ -164,8 +163,8 @@ sketchybar --add item battery right \
   icon.font="$ICON_FONT:15.0" \
   label.font="$FONT:12.0" \
   label.color=$SUBTEXT1 \
-  update_freq=20 \
-  script="$PLUGIN_DIR/battery.sh"
+  script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery power_source_change system_woke
 
 # ─── Séparateur ────────────────────────────────────────────
 sketchybar --add item sep_right2 right \
@@ -206,7 +205,7 @@ for sid in $(aerospace list-workspaces --all 2>/dev/null); do
   fi
 done
 
-# ─── Workspace poller ──────────────────────────────────────
+# ─── Workspace sync (event-driven) ─────────────────────────
 sketchybar --add item workspace_poller left \
   --set workspace_poller \
   icon=" " \
@@ -215,7 +214,9 @@ sketchybar --add item workspace_poller left \
   background.drawing=off \
   width=0 \
   update_freq=5 \
-  script="$PLUGIN_DIR/aerospace_focus.sh poll"
+  script="$PLUGIN_DIR/aerospace.sh poll"
+
+sketchybar --subscribe workspace_poller aerospace_workspace_change front_app_switched
 
 # ═══════════════════════════════════════════════════════════
 # FINALISATION
