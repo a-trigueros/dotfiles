@@ -13,6 +13,9 @@ export ICON_APP_DEFAULT="󰣆"
 # Date & Heure
 export ICON_CLOCK="󰥔"
 export ICON_CALENDAR="󰃭"
+export ICON_LOCK="󰌾"
+export ICON_LOCK_CLOSED=""
+export ICON_LOCK_OPEN=""
 
 # Réseau
 export ICON_WIFI_FULL="󰤨"

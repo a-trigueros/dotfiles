@@ -188,6 +188,18 @@ sketchybar --add item clock right \
   update_freq=10 \
   script="$PLUGIN_DIR/clock.sh"
 
+# ─── BLEUnlock ──────────────────────────────────────────────
+sketchybar --add item bleunlock right \
+  --set bleunlock \
+  icon=$ICON_LOCK_CLOSED \
+  icon.color=$RED \
+  icon.font="$ICON_FONT:14.0" \
+  label.drawing=off \
+  update_freq=5 \
+  click_script="$PLUGIN_DIR/bleunlock.sh toggle" \
+  script="$PLUGIN_DIR/bleunlock.sh" \
+  --subscribe bleunlock system_woke front_app_switched
+
 # ─── Workspace sync (event-driven) ─────────────────────────
 sketchybar --add item workspace_poller left \
   --set workspace_poller \
