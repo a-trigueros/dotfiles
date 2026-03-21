@@ -19,6 +19,10 @@
     {
       "Name": "wezterm",
       "Source": "extras"
+    },
+    {
+      "Name": "autohotkey",
+      "Source": "extras"
     }
   ],
   "buckets": [

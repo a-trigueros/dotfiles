@@ -39,3 +39,10 @@ properties:
       settings:
         id: wez.wezterm
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: AutoHotkey
+        allowPrerelease: true
+      settings:
+        id: AutoHotkey.AutoHotkey
+        source: winget

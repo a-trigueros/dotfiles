@@ -712,6 +712,99 @@ switch ($manager) {
 }
 '''
 
+[tasks.setup-mac-keyboard-bindings]
+description = 'Configure macOS-like keybindings on Windows'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+if (-not (Test-Path -LiteralPath $scriptPath)) {
+  throw "AutoHotkey script not found: $scriptPath"
+}
+
+$candidates = @(
+  "AutoHotkey64.exe",
+  "AutoHotkey.exe",
+  (Join-Path $env:ProgramFiles "AutoHotkey\AutoHotkey64.exe"),
+  (Join-Path $env:ProgramFiles "AutoHotkey\AutoHotkey.exe"),
+  (Join-Path ${env:ProgramFiles(x86)} "AutoHotkey\AutoHotkey64.exe"),
+  (Join-Path ${env:ProgramFiles(x86)} "AutoHotkey\AutoHotkey.exe"),
+  (Join-Path $env:LOCALAPPDATA "Programs\AutoHotkey\v2\AutoHotkey64.exe"),
+  (Join-Path $env:LOCALAPPDATA "Programs\AutoHotkey\v2\AutoHotkey.exe")
+)
+
+$autoHotkeyExe = $null
+foreach ($candidate in $candidates) {
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    continue
+  }
+
+  $command = Get-Command $candidate -ErrorAction SilentlyContinue
+  if ($null -ne $command) {
+    $autoHotkeyExe = $command.Source
+    break
+  }
+
+  if (Test-Path -LiteralPath $candidate) {
+    $autoHotkeyExe = $candidate
+    break
+  }
+}
+
+if ($null -eq $autoHotkeyExe) {
+  throw "AutoHotkey executable not found. Install GUI packages first (mise run install-gui)."
+}
+
+$taskName = "MacKeyboardBindings"
+$taskAction = New-ScheduledTaskAction -Execute $autoHotkeyExe -Argument ('"{0}"' -f $scriptPath)
+$taskTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+Register-ScheduledTask -TaskName $taskName -Action $taskAction -Trigger $taskTrigger -Description "macOS-style keyboard bindings (Mac AZERTY)" -Force | Out-Null
+
+$escaped = [regex]::Escape($scriptPath)
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Start-Process -FilePath $autoHotkeyExe -ArgumentList ('"{0}"' -f $scriptPath) -WindowStyle Hidden
+Write-Host "Configured mac keyboard bindings with AutoHotkey."
+'''
+
+[tasks.restart-mac-keyboard-bindings]
+description = 'Restart macOS-like keybindings process'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+$escaped = [regex]::Escape($scriptPath)
+
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Start-ScheduledTask -TaskName "MacKeyboardBindings" -ErrorAction Stop
+'''
+
+[tasks.disable-mac-keyboard-bindings]
+description = 'Disable macOS-like keybindings on Windows'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+$escaped = [regex]::Escape($scriptPath)
+
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Unregister-ScheduledTask -TaskName "MacKeyboardBindings" -Confirm:$false -ErrorAction SilentlyContinue
+'''
+
 {{ end }}
 [tasks.update-mise]
 description = "Update mise en place tools"
