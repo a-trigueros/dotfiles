@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# Plugin : clock.sh
-# Affiche l'heure et la date
+CLOCK_FORMAT="%a %d %b  %H:%M"
+TARGET_ITEM="$NAME"
 
-sketchybar --set "$NAME" label="$(date '+%a %d %b  %H:%M')"
+get_clock_label() {
+  date "+$CLOCK_FORMAT"
+}
+
+set_clock_item() {
+  local label
+  label="$(get_clock_label)"
+  sketchybar --set "$TARGET_ITEM" label="$label"
+}
+
+set_clock_item

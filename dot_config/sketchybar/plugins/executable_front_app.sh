@@ -1,47 +1,60 @@
 #!/bin/bash
 
-# Plugin : front_app.sh
-# Affiche l'icône + nom de l'application au premier plan
-
 source "$CONFIG_DIR/colors.sh"
 
-# Mapping app → icône Nerd Font
-case "$INFO" in
-  "Finder")        ICON="󰀶" ;;
-  "Safari")        ICON="󰖟" ;;
-  "Firefox")       ICON="󰈹" ;;
-  "Arc")           ICON="󰌷" ;;
-  "Terminal")      ICON="" ;;
-  "iTerm2")        ICON="" ;;
-  "Ghostty")       ICON="󰊠" ;;
-  "Alacritty")     ICON="" ;;
-  "kitty")         ICON="󰄛" ;;
-  "Warp")          ICON="󱃖" ;;
-  "Visual Studio Code") ICON="󰨞" ;;
-  "Code")          ICON="󰨞" ;;
-  "Cursor")        ICON="󰨞" ;;
-  "Neovide")       ICON="" ;;
-  "Xcode")         ICON="󰀵" ;;
-  "Slack")         ICON="󰒱" ;;
-  "Discord")       ICON="󰙯" ;;
-  "Telegram")      ICON="" ;;
-  "WhatsApp")      ICON="󰖣" ;;
-  "Mail")          ICON="󰇮" ;;
-  "Spark")         ICON="󰇮" ;;
-  "Spotify")       ICON="󰓇" ;;
-  "Music")         ICON="󰝚" ;;
-  "Figma")         ICON="󰙏" ;;
-  "Sketch")        ICON="󰿦" ;;
-  "Notion")        ICON="󱄑" ;;
-  "Obsidian")      ICON="󰉻" ;;
-  "Raycast")       ICON="󱒄" ;;
-  "1Password 7 - Password Manager") ICON="󰌋" ;;
-  "1Password")     ICON="󰌋" ;;
-  "Amphetamine")   ICON="󰅶" ;;
-  "System Preferences") ICON="󰒓" ;;
-  "System Settings")    ICON="󰒓" ;;
-  "Activity Monitor")   ICON="󰺁" ;;
-  *)               ICON="󰣆" ;;
-esac
+TARGET_ITEM="$NAME"
+TARGET_APP="$INFO"
+DEFAULT_APP_ICON="󰣆"
 
-sketchybar --set "$NAME" icon="$ICON" label="$INFO"
+get_front_app_icon() {
+  local app_name="$1"
+
+  case "$app_name" in
+    "Finder")        printf "󰀶" ;;
+    "Safari")        printf "󰖟" ;;
+    "Firefox")       printf "󰈹" ;;
+    "Arc")           printf "󰌷" ;;
+    "Terminal")      printf "" ;;
+    "iTerm2")        printf "" ;;
+    "Ghostty")       printf "󰊠" ;;
+    "Alacritty")     printf "" ;;
+    "kitty")         printf "󰄛" ;;
+    "Warp")          printf "󱃖" ;;
+    "Visual Studio Code") printf "󰨞" ;;
+    "Code")          printf "󰨞" ;;
+    "Cursor")        printf "󰨞" ;;
+    "Neovide")       printf "" ;;
+    "Xcode")         printf "󰀵" ;;
+    "Slack")         printf "󰒱" ;;
+    "Discord")       printf "󰙯" ;;
+    "Telegram")      printf "" ;;
+    "WhatsApp")      printf "󰖣" ;;
+    "Mail")          printf "󰇮" ;;
+    "Spark")         printf "󰇮" ;;
+    "Spotify")       printf "󰓇" ;;
+    "Music")         printf "󰝚" ;;
+    "Figma")         printf "󰙏" ;;
+    "Sketch")        printf "󰿦" ;;
+    "Notion")        printf "󱄑" ;;
+    "Obsidian")      printf "󰉻" ;;
+    "Raycast")       printf "󱒄" ;;
+    "1Password 7 - Password Manager") printf "󰌋" ;;
+    "1Password")     printf "󰌋" ;;
+    "Amphetamine")   printf "󰅶" ;;
+    "System Preferences") printf "󰒓" ;;
+    "System Settings")    printf "󰒓" ;;
+    "Activity Monitor")   printf "󰺁" ;;
+    *)               printf "%s" "$DEFAULT_APP_ICON" ;;
+  esac
+}
+
+set_front_app_item() {
+  local icon
+  icon="$(get_front_app_icon "$TARGET_APP")"
+
+  sketchybar --set "$TARGET_ITEM" \
+    icon="$icon" \
+    label="$TARGET_APP"
+}
+
+set_front_app_item
