@@ -165,13 +165,17 @@ sketchybar --add item battery right \
   script="$PLUGIN_DIR/battery.sh" \
   --subscribe battery power_source_change system_woke
 
-# ─── Séparateur ────────────────────────────────────────────
-sketchybar --add item sep_right2 right \
-  --set sep_right2 \
-  icon="·" \
-  icon.color=$OVERLAY0 \
-  icon.font="$FONT:14.0" \
-  label.drawing=off
+# ─── Calendar 366 II ───────────────────────────────────────
+sketchybar --add item calendar_366 right \
+  --set calendar_366 \
+  icon=$ICON_CALENDAR \
+  icon.color=$BLUE \
+  icon.font="$ICON_FONT:15.0" \
+  label.drawing=off \
+  update_freq=5 \
+  click_script="$PLUGIN_DIR/calendar_366_ii.sh open" \
+  script="$PLUGIN_DIR/calendar_366_ii.sh" \
+  --subscribe calendar_366 front_app_switched system_woke
 
 # ─── Horloge ───────────────────────────────────────────────
 sketchybar --add item clock right \
