@@ -234,10 +234,15 @@ arg "<filename>" help = "The filename where to write the command output"
 {{ if eq .chezmoi.os "windows" }}
 shell = 'powershell -Command'
 run = '''
-New-Item -ItemType Directory -Path "$env:APPDATA\nushell\autoload" -Force | Out-Null
-if (Get-Command nu -ErrorAction SilentlyContinue) {
-  nu -c '{{ "{{" }} usage.command {{ "}}" }} | save -f  ($nu.user-autoload-dirs | first | path join "{{ "{{" }} usage.filename {{ "}}" }}")'
-} '''
+$autoloadDir = Join-Path $env:APPDATA "nushell\autoload"
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+'''
 {{ else }}
 run = '''
 mkdir -p "$HOME/Library/Application Support/nushell/autoload/"
