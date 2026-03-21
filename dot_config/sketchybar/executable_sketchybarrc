@@ -90,17 +90,20 @@ sketchybar --add item separator_left left \
   padding_left=4 \
   padding_right=4
 
-# ─── App active ────────────────────────────────────────────
-sketchybar --add item front_app left \
-  --set front_app \
-  icon.font="$ICON_FONT:15.0" \
-  icon.color=$MAUVE \
-  icon=$ICON_APP_DEFAULT \
-  label.font="$FONT_BOLD:14.0" \
-  label.color=$TEXT \
-  background.color=$SURFACE0 \
-  script="$PLUGIN_DIR/front_app.sh" \
-  --subscribe front_app front_app_switched
+# ─── Apps du workspace AeroSpace ───────────────────────────
+sketchybar --remove front_app >/dev/null 2>&1
+"$PLUGIN_DIR/workspace_apps.sh" render
+
+sketchybar --add item workspace_apps_poller left \
+  --set workspace_apps_poller \
+  icon.drawing=off \
+  label.drawing=off \
+  background.drawing=off \
+  width=0 \
+  update_freq=5 \
+  script="$PLUGIN_DIR/workspace_apps.sh render"
+
+sketchybar --subscribe workspace_apps_poller aerospace_workspace_change front_app_switched system_woke
 
 # ═══════════════════════════════════════════════════════════
 # CENTRE — Now Playing
