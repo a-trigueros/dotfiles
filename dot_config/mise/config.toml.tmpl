@@ -123,6 +123,67 @@ run = '''
 brew bundle install --file="~/.config/packages/darwin/gaming.brew"
 '''
 
+[tasks.setup-alfred]
+description = "Configure Alfred theme and workflows"
+run = '''
+if [ "$(uname -s)" != "Darwin" ]; then
+  echo "This task only supports macOS"
+  exit 0
+fi
+
+target_dir="$HOME/.local/share/alfred/bootstrap"
+mkdir -p "$target_dir"
+
+curl --fail --location --silent --show-error \
+  "https://raw.githubusercontent.com/catppuccin/alfred/main/dist/Catppuccin-modern-macchiato.alfredappearance" \
+  --output "$target_dir/Catppuccin-modern-macchiato.alfredappearance"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/alfredapp/1password/download/" \
+  --output "$target_dir/1password.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/vanstrouble/amphetamine-dose/download/" \
+  --output "$target_dir/amphetamine-dose.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/zeitlings/color-picker/download/" \
+  --output "$target_dir/color-picker.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/chrisgrieser/search-all-the-docs/download/" \
+  --output "$target_dir/search-all-the-docs.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://cloudup.com/items/iXnjZSyRSOY/download" \
+  --output "$target_dir/pliim.alfredworkflow"
+
+files=(
+  "$target_dir/Catppuccin-modern-macchiato.alfredappearance"
+  "$target_dir/1password.alfredworkflow"
+  "$target_dir/amphetamine-dose.alfredworkflow"
+  "$target_dir/color-picker.alfredworkflow"
+  "$target_dir/search-all-the-docs.alfredworkflow"
+  "$target_dir/pliim.alfredworkflow"
+)
+
+echo "Files downloaded to: $target_dir"
+echo ""
+echo "Alfred import will run step by step."
+echo "After each Alfred confirmation, come back here and press Enter."
+
+for file in "${files[@]}"; do
+  echo ""
+  echo "Importing: $file"
+  open "$file"
+  printf "Press Enter when import is done... "
+  read -r _
+done
+
+echo ""
+echo "Alfred setup completed."
+'''
+
 [tasks.update-homebrew]
 description = "Install homebrew apps"
 usage = '''
