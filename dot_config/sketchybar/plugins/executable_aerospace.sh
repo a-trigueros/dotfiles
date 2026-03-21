@@ -62,10 +62,11 @@ ensure_space_item_exists() {
     label.drawing=off \
     background.color=$TRANSPARENT \
     background.corner_radius=$SPACE_BG_CORNER_RADIUS \
-    background.height=$SPACE_BG_HEIGHT \
-    background.border_width=$SPACE_BG_BORDER_WIDTH \
-    background.border_color=$SURFACE0 \
-    script="$CONFIG_DIR/plugins/aerospace.sh $workspace_id"
+     background.height=$SPACE_BG_HEIGHT \
+     background.border_width=$SPACE_BG_BORDER_WIDTH \
+     background.border_color=$SURFACE0 \
+     click_script="aerospace workspace $workspace_id" \
+     script="$CONFIG_DIR/plugins/aerospace.sh $workspace_id"
 
   sketchybar --subscribe "$item_name" $SPACE_EVENTS
 }
