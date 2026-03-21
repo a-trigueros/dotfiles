@@ -105,6 +105,7 @@ postinstall = [
  { task = "build-all-nushell-autoloads" },
 {{- if eq .chezmoi.os "windows" }}
  { task = "build-all-powershell-autoloads" },
+ { task = "sync-mise-env-user" },
 {{ else }}
  { task = "build-all-zsh-autoloads" },
 {{ end }}
@@ -275,8 +276,6 @@ description = "Used to build Windows PowerShell autoload files"
 depends = [
   { task = "build-windows-powershell-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
   { task = "build-windows-powershell-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
-  #{ task = "build-windows-powershell-autoload", args = ["mise activate powershell", "mise.ps1"] },
-  #{ task = "build-windows-powershell-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
   { task = "build-windows-powershell-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
 ]
 run = ":"
@@ -302,6 +301,34 @@ depends = [
 ]
 run = ":"
 run_windows = "rem noop"
+
+[tasks.sync-mise-env-user]
+description = "Persist mise environment variables into user-level Windows env vars"
+hide = true
+shell = 'powershell -Command'
+run = '''
+$miseEnv = mise env --json | ConvertFrom-Json
+
+if ($null -eq $miseEnv) {
+  throw "Unable to parse output from 'mise env --json'."
+}
+
+$updated = 0
+foreach ($property in $miseEnv.PSObject.Properties) {
+  $name = [string]$property.Name
+
+  if ($name -ieq "PATH") {
+    continue
+  }
+
+  $value = [string]$property.Value
+  [Environment]::SetEnvironmentVariable($name, $value, [EnvironmentVariableTarget]::User)
+  Set-Item -Path "Env:$name" -Value $value
+  $updated++
+}
+
+Write-Host "Updated $updated user environment variable(s) from mise env (excluding PATH)."
+'''
 {{ end }}
 
 [tasks.build-nushell-autoload]
