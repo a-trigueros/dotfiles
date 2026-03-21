@@ -245,10 +245,14 @@ if ($content -is [System.Array]) {
 '''
 {{ else }}
 run = '''
-mkdir -p "$HOME/Library/Application Support/nushell/autoload/"
-if command -v nu >/dev/null 2>&1; then
-  nu -c '{{ "{{" }} usage.command {{ "}}" }} | save -f  ($nu.user-autoload-dirs | first | path join "{{ "{{" }} usage.filename {{ "}}" }}")'
+if [ "$(uname -s)" = "Darwin" ]; then
+  autoload_dir="$HOME/Library/Application Support/nushell/autoload"
+else
+  autoload_dir="${XDG_CONFIG_HOME:-$HOME/.config}/nushell/autoload"
 fi
+
+mkdir -p "$autoload_dir"
+sh -c '{{ "{{" }} usage.command {{ "}}" }}' > "$autoload_dir/{{ "{{" }} usage.filename {{ "}}" }}"
 '''
 {{ end }}
 
