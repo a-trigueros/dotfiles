@@ -36,7 +36,8 @@ powershell-core = "latest"
 {{- end }}
 python = "latest"
 ripgrep = "latest"
-rust = "latest"
+rust = { version = "latest", os = ["macos", "linux"] }
+rust-analyzer = { version = "latest", os = ["macos", "linux"] }
 sqlite = "latest"
 starship = "latest"
 television = "latest"
