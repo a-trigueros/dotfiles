@@ -34,6 +34,7 @@ pnpm = "latest"
 {{- if eq .chezmoi.os "windows" }}
 powershell-core = "latest"
 {{- end }}
+pi = "latest"
 python = "latest"
 ripgrep = "latest"
 rust = { version = "latest", os = ["macos", "linux"] }
@@ -64,6 +65,10 @@ zoxide = "latest"
   "linux",
 ]}
 "github:joshmedeski/sesh" = { version = "latest", os = [
+  "macos",
+  "linux",
+]}
+"pipx:graphifyy" = { version = "latest" , os = [
   "macos",
   "linux",
 ]}
@@ -106,6 +111,7 @@ cd = 'z'
 ".." = 'cd ..'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
+cdobs = '~/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Reboot/'
 
 [hooks]
 postinstall = [
