@@ -128,9 +128,6 @@ postinstall = [
 {{ end }}
 ]
 
-{{ if eq .chezmoi.os "darwin" }}
-preinstall = "export GITHUB_TOKEN=$(fnox get GITHUB_TOKEN)"
-
 [tasks.install-gui]
 description = "Install GUI apps"
 run = '''
