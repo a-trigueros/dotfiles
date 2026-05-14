@@ -1,0 +1,7 @@
+[[plugin.deps]]
+use = "imsi32/yatline-catppuccin"
+rev = "6c3f166"
+hash = "e1d5b1c34c53c4c4661d910eb3a6fd95"
+
+[flavor]
+deps = []
