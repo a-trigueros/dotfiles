@@ -5,6 +5,8 @@ description: Create one or many notes in Obsidian vault
 - Crée une nouvelle note dans le vault Obsidian de l'utilisateur.
 - La vault est `notes`.
 - Utilise le skill `graphify` pour établir les corrélations et liens pertinents à réaliser.
+  - Le graphe est situé dans le dossier relatif à la vault des notes, sous `../graphify/{vault_name}`
+  - Quand tu dois faire une requete sur le path, suffixe _toujours_ la commande avec le chemin vers le graphe
 - Utilise le skill `obsidian-cli` pour interagir avec le vault.
 - Utilise le skill `obsidian-markdown` pour savoir comment le formater.
 - Demande à l'utilisateur s'il manque des informations avant de commencer.

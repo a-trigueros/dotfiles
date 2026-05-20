@@ -95,3 +95,19 @@ After plugin/theme changes:
 
 Dangerous commands (`eval`, `dev:cdp`, `dev:debug`, `restart`) should only be run
 when explicitly requested by user.
+
+## Création de notes
+
+When creating a note having a long or multiline content, write in a temporary file, then pipe this file to the obsidian command.
+
+Reasons :
+
+- Le contenu passé en argument shell peut déclencher d'autres binaires présents dans le `PATH` (ex : si `frida` est installé, `obsidian create` peut invoquer ses outils CLI en cascade).
+- Les caractères spéciaux, backticks et dollars dans `content=` sont interprétés par le shell.
+
+Procédure sûre pour créer ou mettre à jour une note :
+
+1. Écrire le contenu dans un fichier temporaire avec l'outil `Write`
+2. Donner à la CLI le contenu de ce fichier avec un pipe
+   Exemple:
+   `NOTE_CONTENT=$(cat {path to temp note}) && obsidian vault="notes" create path="path to the note" content="$NOTE_CONTENT" overwrite 2>&1`
