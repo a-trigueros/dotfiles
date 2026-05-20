@@ -6,8 +6,10 @@ description: Interact with Obsidian vaults using Obsidian CLI to read, create, s
 # Obsidian CLI
 
 Use the shell command `obsidian ...`.
-
 Requires Obsidian desktop app to be running.
+If it's not the case, you can ask the user to start it yourself.
+
+if you cannot write directly, use a temporary file.
 
 ## Command reference
 

@@ -21,6 +21,7 @@ description: Create one or many notes in Obsidian vault
 - Présenter d'abord la valeur / le problème résolu (1-2 phrases max), puis les détails.
 - Exclure les informations éphémères : nombre d'étoiles GitHub, statut alpha/beta, version courante, roadmap.
 - Les attributs stables (licence, langage, site) vont dans le frontmatter, pas dans le corps.
+- Si une note existe déjà, propose moi de l'enrichir de manière pertinente
 
 ## Frontmatter
 
