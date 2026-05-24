@@ -1,14 +1,9 @@
 ---
 description: Create one or many notes in Obsidian vault
+agent: libraire
 ---
 
 - Crée une nouvelle note dans le vault Obsidian de l'utilisateur.
-- La vault est `notes`.
-- Utilise le skill `graphify` pour établir les corrélations et liens pertinents à réaliser.
-  - Le graphe est situé dans le dossier relatif à la vault des notes, sous `../graphify/{vault_name}`
-  - Quand tu dois faire une requete sur le path, suffixe _toujours_ la commande avec le chemin vers le graphe
-- Utilise le skill `obsidian-cli` pour interagir avec le vault.
-- Utilise le skill `obsidian-markdown` pour savoir comment le formater.
 - Demande à l'utilisateur s'il manque des informations avant de commencer.
 - Source les informations (URL, date).
 
@@ -23,7 +18,6 @@ description: Create one or many notes in Obsidian vault
 - Présenter d'abord la valeur / le problème résolu (1-2 phrases max), puis les détails.
 - Exclure les informations éphémères : nombre d'étoiles GitHub, statut alpha/beta, version courante, roadmap.
 - Les attributs stables (licence, langage, site) vont dans le frontmatter, pas dans le corps.
-- Si une note existe déjà, propose moi de l'enrichir de manière pertinente
 
 ## Frontmatter
 
@@ -34,7 +28,6 @@ description: Create one or many notes in Obsidian vault
 
 - Créer des wikilinks `[[Nom]]` vers des notes existantes ET vers des notes qui n'existent pas encore, dès qu'un concept mérite une note propre.
 - Créer des wikilinks `[[Nom]]` vers des notes existantes ET vers des notes qui n'existent pas encore, dès qu'un outil est cité.
-- Lier les informations pertinentes pour établir un graphe pertinent.
 - Ajouter une section "Voir aussi" avec les liens les plus pertinents.
 
 La note concerne $ARGUMENTS

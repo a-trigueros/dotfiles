@@ -30,8 +30,11 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 /graphify query "<question>"                          # BFS traversal - broad context
 /graphify query "<question>" --dfs                    # DFS - trace a specific path
 /graphify query "<question>" --budget 1500            # cap answer at N tokens
+/graphify query "<question>" --graph <path>           # specify graph.json location (default: graphify-out/graph.json)
 /graphify path "AuthModule" "Database"                # shortest path between two concepts
+/graphify path "AuthModule" "Database" --graph <path> # shortest path with explicit graph location
 /graphify explain "SwinTransformer"                   # plain-language explanation of a node
+/graphify explain "SwinTransformer" --graph <path>    # explain with explicit graph location
 ```
 
 ## What graphify is for
@@ -982,6 +985,10 @@ Two traversal modes - choose based on the question:
 | BFS (default) | _(none)_ | "What is X connected to?" - broad context, nearest neighbors first |
 | DFS | `--dfs` | "How does X reach Y?" - trace a specific chain or dependency path |
 
+**Important:** When using the `graphify query` CLI directly, always pass `--graph <path>/graph.json` to specify the graph file. The default path is `graphify-out/graph.json` relative to the current working directory, which is rarely correct when the agent runs outside the graph's output directory.
+
+The Python script below uses `$GRAPHIFY_OUTPUT_DIR/graph.json` instead of the CLI's default.
+
 First check the graph exists:
 ```bash
 $(cat $GRAPHIFY_OUTPUT_DIR/.graphify_python) -c "
@@ -1104,6 +1111,8 @@ Replace `QUESTION` with the question, `ANSWER` with your full answer text, `SOUR
 
 Find the shortest path between two named concepts in the graph.
 
+**Important:** When using the `graphify path` CLI directly, always pass `--graph <path>/graph.json` to specify the graph file. The Python script below uses `$GRAPHIFY_OUTPUT_DIR/graph.json`.
+
 First check the graph exists:
 ```bash
 $(cat $GRAPHIFY_OUTPUT_DIR/.graphify_python) -c "
@@ -1176,6 +1185,8 @@ $(cat $GRAPHIFY_OUTPUT_DIR/.graphify_python) -m graphify save-result --question 
 ## For /graphify explain
 
 Give a plain-language explanation of a single node - everything connected to it.
+
+**Important:** When using the `graphify explain` CLI directly, always pass `--graph <path>/graph.json` to specify the graph file. The Python script below uses `$GRAPHIFY_OUTPUT_DIR/graph.json`.
 
 First check the graph exists:
 ```bash
