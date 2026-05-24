@@ -1,1 +1,0 @@
-eval "$(fnox activate zsh)"
