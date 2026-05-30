@@ -1,0 +1,26 @@
+[tasks.update-mise]
+description = "Update mise en place tools"
+hide = true
+run = '''
+mise upgrade
+'''
+
+{{- if eq .chezmoi.os "darwin" }}
+{{ template "system-mise-darwin.tmpl" . }}
+{{- end }}
+{{- if eq .chezmoi.os "windows" }}
+{{ template "system-mise-windows.tmpl" . }}
+{{- end }}
+
+
+[tasks.build-all-nushell-autoloads]
+description = "Used to build nushell autoload files"
+depends = [
+  { task = "build-nushell-autoload", args = ["atuin init nu", "z_atuin.nu"] },
+  { task = "build-nushell-autoload", args = ["carapace _carapace nushell", "carapace.nu"] },
+  { task = "build-nushell-autoload", args = ["mise activate nu", "mise.nu"] },
+  { task = "build-nushell-autoload", args = ["starship init nu", "starship.nu"] },
+  { task = "build-nushell-autoload", args = ["zoxide init nushell", "zoxide.nu"] },
+]
+run = ":"
+run_windows = "rem noop"

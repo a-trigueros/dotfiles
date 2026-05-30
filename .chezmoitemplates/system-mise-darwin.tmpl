@@ -1,0 +1,135 @@
+[hooks]
+postinstall = [
+ { task = "build-all-nushell-autoloads" },
+ { task = "build-all-zsh-autoloads" },
+]
+
+[tasks.update]
+description = "Update all mise & system applications"
+run = [
+  { task = "update-mise" },
+  { task = "update-homebrew" },
+  { task = "update-mas" },
+]
+
+[tasks.install-gui]
+description = "Install GUI apps"
+run = '''
+brew bundle install --file="~/.config/packages/darwin/gui.brew"
+brew services start sketchybar
+'''
+
+[tasks.install-gaming]
+description = "Install Gaming apps"
+run = '''
+brew bundle install --file="~/.config/packages/darwin/gaming.brew"
+'''
+
+[tasks.setup-alfred]
+description = "Configure Alfred theme and workflows"
+run = '''
+target_dir="$HOME/.local/share/alfred/bootstrap"
+mkdir -p "$target_dir"
+
+curl --fail --location --silent --show-error \
+  "https://raw.githubusercontent.com/catppuccin/alfred/main/dist/Catppuccin-modern-macchiato.alfredappearance" \
+  --output "$target_dir/Catppuccin-modern-macchiato.alfredappearance"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/alfredapp/1password/download/" \
+  --output "$target_dir/1password.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/vanstrouble/amphetamine-dose/download/" \
+  --output "$target_dir/amphetamine-dose.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/zeitlings/color-picker/download/" \
+  --output "$target_dir/color-picker.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://alfred.app/workflows/chrisgrieser/search-all-the-docs/download/" \
+  --output "$target_dir/search-all-the-docs.alfredworkflow"
+
+curl --fail --location --silent --show-error \
+  "https://cloudup.com/items/iXnjZSyRSOY/download" \
+  --output "$target_dir/pliim.alfredworkflow"
+
+files=(
+  "$target_dir/Catppuccin-modern-macchiato.alfredappearance"
+  "$target_dir/1password.alfredworkflow"
+  "$target_dir/amphetamine-dose.alfredworkflow"
+  "$target_dir/color-picker.alfredworkflow"
+  "$target_dir/search-all-the-docs.alfredworkflow"
+  "$target_dir/pliim.alfredworkflow"
+)
+
+echo "Files downloaded to: $target_dir"
+echo ""
+echo "Alfred import will run step by step."
+echo "After each Alfred confirmation, come back here and press Enter."
+
+for file in "${files[@]}"; do
+  echo ""
+  echo "Importing: $file"
+  open "$file"
+  printf "Press Enter when import is done... "
+  read -r _
+done
+
+echo ""
+echo "Alfred setup completed."
+'''
+
+[tasks.update-homebrew]
+description = "Install homebrew apps"
+usage = '''
+flag "-g --greedy" help="Also include casks with auto_updates true or version :latest."
+'''
+run = '''
+brew update 
+brew upgrade {% if usage.greedy %} -g {% endif %}
+'''
+
+[tasks.update-mas]
+description = "Update AppStore applications"
+run = '''
+mas upgrade
+'''
+
+[tasks.build-zsh-autoload]
+description = 'Run the command and store the content in the filename in the nushell autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+run = '''
+mkdir -p $HOME/.zshrc.d
+{{ "{{" }} usage.command {{ "}}" }} > $HOME/.zshrc.d/{{ "{{" }} usage.filename {{ "}}" }}
+'''
+
+[tasks.build-all-zsh-autoloads]
+description = "Used to build zshell autoload files"
+depends = [
+  { task = "build-zsh-autoload", args = ["atuin init zsh", "z_atuin.zsh"] },
+  { task = "build-zsh-autoload", args = ["carapace _carapace zsh", "carapace.zsh"] },
+  { task = "build-zsh-autoload", args = ["fnox activate zsh", "z_fnox.zsh"] },
+  { task = "build-zsh-autoload", args = ["mise activate zsh", "mise.zsh"] },
+  { task = "build-zsh-autoload", args = ["starship init zsh", "starship.zsh"] },
+  { task = "build-zsh-autoload", args = ["zoxide init zsh", "zoxide.zsh"] },
+]
+run= ":"
+
+[tasks.build-nushell-autoload]
+description = 'Run the command and store the content in the filename in the nushell autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+run = '''
+autoload_dir="$HOME/Library/Application Support/nushell/autoload"
+mkdir -p "$autoload_dir"
+sh -c '{{ "{{" }} usage.command {{ "}}" }}' > "$autoload_dir/{{ "{{" }} usage.filename {{ "}}" }}"
+'''

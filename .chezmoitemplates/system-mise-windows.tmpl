@@ -1,0 +1,562 @@
+[hooks]
+postinstall = [
+ { task = "build-all-nushell-autoloads" },
+ { task = "build-all-powershell-autoloads" },
+ { task = "sync-mise-env-user" },
+]
+
+[tasks.update]
+description = "Update all mise & system applications"
+run = [
+  { task = "update-mise" },
+  { task = "update-packages" },
+]
+
+[tasks.build-windows-powershell-autoload]
+description = 'Run the command and store the content in the Windows PowerShell autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+shell = 'powershell -Command'
+run = '''
+$autoloadDir = Join-Path $HOME "Documents\WindowsPowerShell\autoload"
+
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+$content = [string]$content
+
+if (Test-Path -LiteralPath $target) {
+  try {
+    $existing = [System.IO.File]::ReadAllText($target)
+    if ($existing -eq $content) {
+      return
+    }
+  } catch {
+    # Ignore read failures and continue with write retries.
+  }
+}
+
+$maxAttempts = 20
+for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+  try {
+    [System.IO.File]::WriteAllText($target, $content, [System.Text.UTF8Encoding]::new($false))
+    return
+  } catch [System.IO.IOException] {
+    if ($attempt -eq $maxAttempts) {
+      throw "Unable to write '$target' after $maxAttempts attempts because the file is in use. Close Windows PowerShell sessions using this file and retry."
+    }
+    Start-Sleep -Milliseconds 250
+  }
+}
+'''
+
+[tasks.build-powershell-core-autoload]
+description = 'Run the command and store the content in the PowerShell Core autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+shell = 'powershell -Command'
+run = '''
+$autoloadDir = Join-Path $HOME "Documents\PowerShell\autoload"
+
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+$content = [string]$content
+
+if (Test-Path -LiteralPath $target) {
+  try {
+    $existing = [System.IO.File]::ReadAllText($target)
+    if ($existing -eq $content) {
+      return
+    }
+  } catch {
+    # Ignore read failures and continue with write retries.
+  }
+}
+
+$maxAttempts = 20
+for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+  try {
+    [System.IO.File]::WriteAllText($target, $content, [System.Text.UTF8Encoding]::new($false))
+    return
+  } catch [System.IO.IOException] {
+    if ($attempt -eq $maxAttempts) {
+      throw "Unable to write '$target' after $maxAttempts attempts because the file is in use. Close PowerShell sessions using this file and retry."
+    }
+    Start-Sleep -Milliseconds 250
+  }
+}
+'''
+
+[tasks.build-all-windows-powershell-autoloads]
+description = "Used to build Windows PowerShell autoload files"
+depends = [
+  { task = "build-windows-powershell-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
+  { task = "build-windows-powershell-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
+  { task = "build-windows-powershell-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+]
+run = ":"
+run_windows = "rem noop"
+
+[tasks.build-all-powershell-core-autoloads]
+description = "Used to build PowerShell Core autoload files"
+depends = [
+  { task = "build-powershell-core-autoload", args = ["atuin init powershell", "z_atuin.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["carapace _carapace powershell", "carapace.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["mise activate pwsh", "mise.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["starship init powershell --print-full-init", "starship.ps1"] },
+  { task = "build-powershell-core-autoload", args = ["zoxide init powershell", "zoxide.ps1"] },
+]
+run = ":"
+run_windows = "rem noop"
+
+[tasks.build-all-powershell-autoloads]
+description = "Used to build all PowerShell autoload files"
+depends = [
+  { task = "build-all-windows-powershell-autoloads" },
+  { task = "build-all-powershell-core-autoloads" },
+]
+run = ":"
+run_windows = "rem noop"
+
+[tasks.sync-mise-env-user]
+description = "Persist mise environment variables into user-level Windows env vars"
+hide = true
+shell = 'powershell -Command'
+run = '''
+$miseEnv = mise env --json | ConvertFrom-Json
+
+if ($null -eq $miseEnv) {
+  throw "Unable to parse output from 'mise env --json'."
+}
+
+$updated = 0
+foreach ($property in $miseEnv.PSObject.Properties) {
+  $name = [string]$property.Name
+
+  if ($name -ieq "PATH") {
+    continue
+  }
+
+  $value = [string]$property.Value
+  [Environment]::SetEnvironmentVariable($name, $value, [EnvironmentVariableTarget]::User)
+  Set-Item -Path "Env:$name" -Value $value
+  $updated++
+}
+
+Write-Host "Updated $updated user environment variable(s) from mise env (excluding PATH)."
+'''
+
+
+[tasks.build-nushell-autoload]
+description = 'Run the command and store the content in the filename in the nushell autoload path'
+hide = true
+usage = '''
+arg "<command>" help = "The command that produces an output"
+arg "<filename>" help = "The filename where to write the command output"
+'''
+shell = 'powershell -Command'
+run = '''
+$autoloadDir = Join-Path $env:APPDATA "nushell\autoload"
+New-Item -ItemType Directory -Force -Path $autoloadDir | Out-Null
+$target = Join-Path $autoloadDir "{{ "{{" }} usage.filename {{ "}}" }}"
+$content = & ([ScriptBlock]::Create('{{ "{{" }} usage.command {{ "}}" }}'))
+if ($content -is [System.Array]) {
+  $content = $content -join "`n"
+}
+[System.IO.File]::WriteAllText($target, [string]$content, [System.Text.UTF8Encoding]::new($false))
+'''
+
+[tasks.set-autologin]
+description = "Login automatically as a given user"
+hide = true
+shell = 'powershell -Command'
+usage = '''
+arg "<password>" help = "The password of the user"
+'''
+run = '''
+Write-Host "Setting autologin"
+$currentUser = $env:USERNAME
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "AutoAdminLogon" /t REG_SZ /d "1" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultUserName" /t REG_SZ /d "$currentUser" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword" /t REG_SZ /d "{{ "{{" }} usage.password {{ "}}" }}" /f
+
+Clear-History
+Remove-Item (Get-PSReadLineOption).HistorySavePath -Force
+'''
+
+[tasks.disable-lockscreen]
+description = "Disabling lock screen"
+hide = true
+shell = 'powershell -Command'
+run = '''
+Write-Host "Disabling lock screen"
+powercfg /change monitor-timeout-ac 0
+powercfg /change monitor-timeout-dc 0
+powercfg /change standby-timeout-ac 0
+powercfg /change standby-timeout-dc 0
+
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_SZ /d "1" /f
+'''
+
+[tasks.enable-ssh]
+description = 'Allow me to signin using my private key'
+shell = 'powershell -Command'
+run = '''
+Write-Host "Setting up ssh"
+$PUBLIC_KEYS_SOURCE = Join-Path "{{ .chezmoi.sourceDir }}" "ssh\public_keys"
+$SSH_COMPUTER_DIR = "C:\ProgramData\ssh"
+$SSHD_CONFIG_PATH = "C:\ProgramData\ssh\sshd_config"
+
+function Set-SSHDConfigLine
+{
+  <#
+    .SYNOPSIS
+        Updates or adds a configuration line in the SSH daemon config
+    .PARAMETER Config
+        The configuration content array
+    .PARAMETER Key
+        The configuration key to set
+    .PARAMETER Value
+        The value to assign to the key
+    #>
+  param(
+    [Parameter(Mandatory)]
+    [Object[]]$Config,
+        
+    [Parameter(Mandatory)]
+    [string]$Key,
+        
+    [Parameter(Mandatory)]
+    [string]$Value
+  )
+    
+  $pattern = "^\s*#?\s*$Key\s+.*$"
+    
+  if ($Config -match $pattern)
+  {
+    return $Config -replace $pattern, "$Key $Value"
+  } else
+  {
+    return $Config + "$Key $Value"
+  }
+}
+
+# Install sshd
+Add-WindowsCapability -Online -Name OpenSSH.Server -ErrorAction Stop
+
+# Open port 22
+if (-not (Get-NetFirewallRule -Name 'sshd' -ErrorAction SilentlyContinue)) {
+  New-NetFirewallRule `
+    -Name 'sshd' `
+    -DisplayName 'OpenSSH Server (sshd)' `
+    -Enabled True `
+    -Direction Inbound `
+    -Protocol TCP `
+    -Action Allow `
+    -LocalPort 22 | Out-Null
+}
+
+# Create new basic sshd config file
+Remove-Item -LiteralPath $SSHD_CONFIG_PATH -Force -ErrorAction SilentlyContinue
+Start-Service sshd -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 2
+Stop-Service sshd -ErrorAction SilentlyContinue
+
+# Fine tune ssh configuration
+$config = Get-Content -LiteralPath $SSHD_CONFIG_PATH -ErrorAction Stop
+
+# Disable password authentication, enable key-based only
+$config = Set-SSHDConfigLine -Config $config -Key "PasswordAuthentication" -Value "no"
+$config = Set-SSHDConfigLine -Config $config -Key "ChallengeResponseAuthentication" -Value "no"
+$config = Set-SSHDConfigLine -Config $config -Key "PubkeyAuthentication" -Value "yes"
+$config = Set-SSHDConfigLine -Config $config -Key "AuthorizedKeysFile" -Value ".ssh/authorized_keys"
+  
+# Configure keepalive to prevent disconnections
+$config = Set-SSHDConfigLine -Config $config -Key "ClientAliveInterval" -Value "60"
+$config = Set-SSHDConfigLine -Config $config -Key "ClientAliveCountMax" -Value "3"
+$config = Set-SSHDConfigLine -Config $config -Key "TCPKeepAlive" -Value "yes"
+  
+$config | Set-Content -Encoding ascii -LiteralPath $SSHD_CONFIG_PATH
+
+# Install ssh public key
+
+$userSshDir = Join-Path $env:USERPROFILE ".ssh"
+New-Item -ItemType Directory -Path $userSshDir -Force | Out-Null
+
+$userAuthorizedKeysPath = Join-Path $userSshDir "authorized_keys"
+Copy-Item $PUBLIC_KEYS_SOURCE $userAuthorizedKeysPath -Force
+
+# Install admin ssh key
+$adminKeysPath = Join-Path $SSH_COMPUTER_DIR "administrators_authorized_keys"
+Copy-Item $PUBLIC_KEYS_SOURCE $adminKeysPath -Force
+
+# Configure ssh service as automatic
+Set-Service -Name sshd -StartupType 'Automatic'
+
+Write-Host "Finished configuring ssh (restart required to apply changes)"
+'''
+
+[tasks.remove-bloatware]
+description = 'Uninstall windows embedded bloatware'
+shell = 'powershell -Command'
+run = '''
+Write-Host "Uninstalling bloatware"
+$toCleanFilter = @(
+    'Microsoft.Paint',
+    'Microsoft.Xbox.',
+    'Microsoft.XboxGaming',
+    'Microsoft.XboxIdentityProvider',
+    'Microsoft.XboxSpeechToTextOverlay',
+    'Microsoft.ZuneMusic',
+    'Microsoft.WindowsAlarms',
+    'Microsoft.Todos',
+    'Microsoft.YourPhone',
+    'Microsoft.WindowsSoundRecorder',
+    'Microsoft.WindowsCamera',
+    'Microsoft.WindowsCalculator',
+    'Microsoft.Windows.Photos',
+    'Microsoft.MicrosoftStickyNotes',
+    'Microsoft.MicrosoftSolitaireCollection',
+    'Microsoft.MicrosoftOfficeHub',
+    'Microsoft.Bing',
+    'Clipchamp.Clipchamp',
+    'Microsoft.OutlookForWindows',
+    'Microsoft.WindowsNotepad',
+    'Microsoft.ScreenSketch',
+    'Microsoft.Edge.GameAssist',
+    'Microsoft.Copilot'
+)
+foreach ($filter in $toCleanFilter) {
+    Get-AppxPackage -Name "$filter*" | ForEach-Object {
+        Write-Host "Removing: $($_.Name)" -ForegroundColor Gray
+        Remove-AppxPackage -Package $_.PackageFullName -ErrorAction Stop
+    }
+}
+
+# Uninstall Teams & OneDrive
+$wingetIds = @(
+  'Microsoft.Teams',
+  'Microsoft.OneDrive'
+)
+
+foreach ($pkg in $wingetIds) {
+  Write-Host "Ensuring removal of: $pkg" -ForegroundColor Gray
+  winget uninstall --id $pkg --silent --accept-source-agreements | Out-Null; $global:LASTEXITCODE = 0
+}
+'''
+
+[tasks.setup-vm]
+description = "Everything to do on a hosted VM"
+usage = '''
+arg "<password>" help = "The password of the user for autologin"
+'''
+run = [
+  "mise run set-autologin {{ "{{" }} usage.password {{ "}}" }}",
+  { task = "disable-lockscreen" },
+  { task = "remove-bloatware" },
+  { task = "enable-ssh" },
+]
+
+[tasks.update-winget]
+description = "Update winget packages"
+hide = true
+run = '''
+winget upgrade --all 
+'''
+
+[tasks.update-scoop]
+description = "Update scoop packages"
+hide = true
+run = '''
+scoop update *
+'''
+
+[tasks.update-packages]
+description = "Update packages with selected Windows package manager"
+hide = true
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run update-scoop }
+  default { mise run update-winget }
+}
+'''
+
+[tasks.install-core-winget]
+description = 'Install core CLI packages using winget'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/core.winget"
+winget configure -f $file --accept-configuration-agreements --disable-interactivity --suppress-initial-details
+'''
+
+[tasks.install-gui-winget]
+description = 'Install core CLI packages using winget'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/winget/gui.winget"
+winget configure -f $file --accept-configuration-agreements --disable-interactivity --suppress-initial-details
+'''
+
+[tasks.install-core-scoop]
+description = 'Install core CLI packages using scoop'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/scoop/core.json"
+scoop import $file
+'''
+
+[tasks.install-gui-scoop]
+description = 'Install GUI packages using scoop'
+hide = true
+shell = 'powershell -Command'
+run = '''
+$file = Join-Path $env:USERPROFILE ".config/packages/windows/scoop/gui.json"
+scoop import $file
+'''
+
+[tasks.install-core]
+description = 'Install core packages with selected Windows package manager'
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run install-core-scoop }
+  default { mise run install-core-winget }
+}
+'''
+
+[tasks.install-gui]
+description = 'Install GUI packages with selected Windows package manager'
+shell = 'powershell -Command'
+run = '''
+$manager = [Environment]::GetEnvironmentVariable("MISE_PACKAGE_MANAGER", "User")
+if ($null -ne $manager) {
+  $manager = $manager.Trim().ToLowerInvariant()
+}
+
+switch ($manager) {
+  "scoop" { mise run install-gui-scoop }
+  default { mise run install-gui-winget }
+}
+'''
+
+[tasks.setup-mac-keyboard-bindings]
+description = 'Configure macOS-like keybindings on Windows'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+if (-not (Test-Path -LiteralPath $scriptPath)) {
+  throw "AutoHotkey script not found: $scriptPath"
+}
+
+$candidates = @(
+  "AutoHotkey64.exe",
+  "AutoHotkey.exe",
+  (Join-Path $env:ProgramFiles "AutoHotkey\AutoHotkey64.exe"),
+  (Join-Path $env:ProgramFiles "AutoHotkey\AutoHotkey.exe"),
+  (Join-Path ${env:ProgramFiles(x86)} "AutoHotkey\AutoHotkey64.exe"),
+  (Join-Path ${env:ProgramFiles(x86)} "AutoHotkey\AutoHotkey.exe"),
+  (Join-Path $env:LOCALAPPDATA "Programs\AutoHotkey\v2\AutoHotkey64.exe"),
+  (Join-Path $env:LOCALAPPDATA "Programs\AutoHotkey\v2\AutoHotkey.exe")
+)
+
+$autoHotkeyExe = $null
+foreach ($candidate in $candidates) {
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    continue
+  }
+
+  $command = Get-Command $candidate -ErrorAction SilentlyContinue
+  if ($null -ne $command) {
+    $autoHotkeyExe = $command.Source
+    break
+  }
+
+  if (Test-Path -LiteralPath $candidate) {
+    $autoHotkeyExe = $candidate
+    break
+  }
+}
+
+if ($null -eq $autoHotkeyExe) {
+  throw "AutoHotkey executable not found. Install GUI packages first (mise run install-gui)."
+}
+
+$taskName = "MacKeyboardBindings"
+$taskAction = New-ScheduledTaskAction -Execute $autoHotkeyExe -Argument ('"{0}"' -f $scriptPath)
+$taskTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+Register-ScheduledTask -TaskName $taskName -Action $taskAction -Trigger $taskTrigger -Description "macOS-style keyboard bindings (Mac AZERTY)" -Force | Out-Null
+
+$escaped = [regex]::Escape($scriptPath)
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Start-Process -FilePath $autoHotkeyExe -ArgumentList ('"{0}"' -f $scriptPath) -WindowStyle Hidden
+Write-Host "Configured mac keyboard bindings with AutoHotkey."
+'''
+
+[tasks.restart-mac-keyboard-bindings]
+description = 'Restart macOS-like keybindings process'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+$escaped = [regex]::Escape($scriptPath)
+
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Start-ScheduledTask -TaskName "MacKeyboardBindings" -ErrorAction Stop
+'''
+
+[tasks.disable-mac-keyboard-bindings]
+description = 'Disable macOS-like keybindings on Windows'
+shell = 'powershell -Command'
+run = '''
+$scriptPath = Join-Path $env:USERPROFILE ".config/autohotkey/mac_azerty.ahk"
+$escaped = [regex]::Escape($scriptPath)
+
+$processes = Get-CimInstance Win32_Process -Filter "Name = 'AutoHotkey64.exe' OR Name = 'AutoHotkey.exe'"
+foreach ($process in $processes) {
+  if ($null -ne $process.CommandLine -and $process.CommandLine -match $escaped) {
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
+Unregister-ScheduledTask -TaskName "MacKeyboardBindings" -Confirm:$false -ErrorAction SilentlyContinue
+'''
