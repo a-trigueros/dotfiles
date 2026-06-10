@@ -4,6 +4,12 @@ postinstall = [
  { task = "build-all-zsh-autoloads" },
 ]
 
+[tasks.setup-taps]
+description = "Setup taps used by homebrew"
+run = '''
+brew bundle install --file="~/.config/packages/darwin/taps.brew"
+'''
+
 [tasks.update]
 description = "Update all mise & system applications"
 run = [
@@ -11,6 +17,12 @@ run = [
   { task = "update-homebrew" },
   { task = "update-mas" },
 ]
+
+[tasks.install-core]
+description = "Setup taps used by homebrew"
+run = '''
+brew bundle install --file="~/.config/packages/darwin/core.brew"
+'''
 
 [tasks.install-gui]
 description = "Install GUI apps"
