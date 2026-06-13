@@ -9,18 +9,24 @@ permission:
   write: allow
   question: allow
   bash:
-    "*": deny
+    "*": ask
     "obsidian *": allow
-    "graphify *": allow
     "cat *": allow
   skill: allow
   websearch: allow
-  question: allow
-  read: deny
-  glob: deny
-  grep: deny
-  list: deny
-  external_directory: deny
+  read: 
+    "*": ask
+    "*/.agents/skills/**": allow
+  glob: 
+    "*": ask
+  grep: 
+    "*": ask
+  list: 
+    "*": ask
+  external_directory: 
+    "*": ask
+    "/tmp*": allow
+    "*/.agents/skills/**": allow
 ---
 
 # Cortex
