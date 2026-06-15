@@ -43,8 +43,10 @@ permission:
     "*": allow
   external_directory: 
     "*": ask
+    "/tmp/*": allow
     "/tmp/**": allow
     "*/.agents/skills/**": allow
+    "/var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/*": allow
     "/var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
 ---
 

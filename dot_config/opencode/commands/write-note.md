@@ -7,6 +7,7 @@ Topic: $ARGUMENTS
 
 ## Vault location
 
+- The vault used is named "brain"
 - If the conversation context already indicates the vault path, propose it to the user
   for confirmation before doing anything else.
 - Otherwise, ask the user for the vault path. The vault is accessed exclusively via the CLI;
@@ -49,6 +50,7 @@ Ask the user for:
 - confirmation of the namespace/project if ambiguous.
 
 Do not invent dates, sources, or attributions.
+Each information that you put have to either be approved explicitly by the user or requires a source.
 
 ## Connection discovery
 
