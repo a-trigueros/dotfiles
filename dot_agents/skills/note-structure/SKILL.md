@@ -34,7 +34,6 @@ vault/
   projects/        ← knowledge anchored to a specific project
     project-name/
     ...
-  _agent/          ← agent skills and configuration, never reasoned over
 ```
 
 ### Namespace rules
@@ -267,7 +266,7 @@ Use the path that matches the note's scope (global or project).
 Type-specific fields and body structure are defined in:
 
 ```
-_agent/skills/types/<type>.md
+~/.agents/skills/types/<type>.md
 ```
 
 Load the relevant file after this one before creating or editing a note of that type.

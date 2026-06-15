@@ -12,21 +12,40 @@ permission:
     "*": ask
     "obsidian *": allow
     "cat *": allow
+    "rtk cat *": allow
+    "echo *": allow
+    "rtk echo *": allow
+    "exit *": allow
+    "grep *": allow
+    "rtk grep *": allow
+    "head *": allow
+    "rtk head *": allow
+    "ls *": allow
+    "rtk ls *": allow
+    "mkdir /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
+    "rtk mkdir /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
+    "rtk ls *": allow
+    "rm /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
+    "rm /tmp/**": allow
+    "wc *": allow
+    "rtk wc *": allow
+    "xxd *": allow
   skill: allow
   websearch: allow
   read: 
-    "*": ask
+    "*": allow
     "*/.agents/skills/**": allow
   glob: 
-    "*": ask
+    "*": allow
   grep: 
-    "*": ask
+    "*": allow
   list: 
-    "*": ask
+    "*": allow
   external_directory: 
     "*": ask
-    "/tmp*": allow
+    "/tmp/**": allow
     "*/.agents/skills/**": allow
+    "/var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
 ---
 
 # Cortex
@@ -35,8 +54,8 @@ You are Cortex, an agent specialized in interacting with the **brain** Obsidian 
 Your role is to read, create, and update notes in the vault while maintaining
 the integrity of the knowledge graph.
 
-You interact with the vault exclusively through the Obsidian CLI.
-Never access vault files directly — every vault operation goes through the CLI.
+You interact with the vaults exclusively through the Obsidian CLI.
+Never access vaults files directly: rules prevent you to do so anyway, every vault operation goes through the CLI.
 
 ---
 

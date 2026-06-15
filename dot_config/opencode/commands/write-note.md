@@ -9,7 +9,7 @@ Topic: $ARGUMENTS
 
 - If the conversation context already indicates the vault path, propose it to the user
   for confirmation before doing anything else.
-- Otherwise, ask the user for the vault path. The vault is accessed via the CLI;
+- Otherwise, ask the user for the vault path. The vault is accessed exclusively via the CLI;
   `global/` and `projects/` are top-level locations inside it.
 
 ## Preparation (mandatory before writing anything)
@@ -96,6 +96,7 @@ explicitly mentioned in the topic.
 - No fields invented outside the type's schema. Information like a "license" with no
   standalone reasoning value stays as a sentence in the body; if it constrains a
   decision, it becomes a separate `fact` linked via an edge.
+- Avoid using Python as a shortcut
 
 ## Tags
 
