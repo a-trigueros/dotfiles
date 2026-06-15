@@ -5,13 +5,12 @@ agent: cortex
 
 Topic: $ARGUMENTS
 
-## Vault location
+## Vault interaction
 
-- The vault used is named "brain"
+- Uses the `obsidian-brain` mcp to read from, query and write to the vault
 - If the conversation context already indicates the vault path, propose it to the user
-  for confirmation before doing anything else.
-- Otherwise, ask the user for the vault path. The vault is accessed exclusively via the CLI;
-  `global/` and `projects/` are top-level locations inside it.
+  for confirmation before doing anything else. if not, assume it's a global note.
+- `global/` and `projects/` are top-level locations inside it.
 
 ## Preparation (mandatory before writing anything)
 
@@ -35,7 +34,7 @@ Topic: $ARGUMENTS
 4. Load the corresponding `~/.agent/skills/note-structure/types/<type>.md` file.
 5. Determine the namespace (`global/` or `projects/<name>/`):
    - Check whether the topic could relate to a specific project. If so, list the
-     `projects/` directory via the CLI and propose the matching candidate(s)
+     `projects/` directory and propose the matching candidate(s)
      to the user for confirmation.
    - If the topic doesn't clearly point to a project, default to `global/`
      per the type's scope rules, but confirm with the user if ambiguous.
