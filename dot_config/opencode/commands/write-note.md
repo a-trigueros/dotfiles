@@ -8,8 +8,7 @@ Topic: $ARGUMENTS
 ## Vault interaction
 
 - Uses the `obsidian-brain` mcp to read from, query and write to the vault
-- If the conversation context already indicates the vault path, propose it to the user
-  for confirmation before doing anything else. if not, assume it's a global note.
+- If the conversation context already indicates the vault path, propose it to the user for confirmation before doing anything else. if not, assume it's a global note.
 - `global/` and `projects/` are top-level locations inside it.
 
 ## Preparation (mandatory before writing anything)
@@ -70,9 +69,9 @@ explicitly mentioned in the topic.
      Stay conservative: at most 2-3 candidates, the most relevant ones.
 4. Never create two edges of the same type toward the same target. Respect the
    single direction for `preceded_by`/`followed_by`.
-5. Relevant but non-existent target → create a minimal stub (`type`, `created`,
-   one-sentence body) before creating the edge.
-6. For existing stub poorly filled, update them
+5. Relevant but non-existent target → create a minimal note before creating the edge.
+6. Try to make relevant connection with the already existing notes.
+   Eg: A playbook describing authentication in .NET should be linked to `concept--.net` and `concept--authentication`.
 
 ## Edge ↔ Obsidian wikilink synchronization
 

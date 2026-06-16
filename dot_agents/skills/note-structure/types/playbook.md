@@ -114,6 +114,9 @@ Example: "client has received welcome materials and first milestone is scheduled
 Steps must be written so the agent can execute or delegate them without ambiguity.
 If a step requires a full procedure of its own, extract it into a separate playbook
 and reference it via a `depends_on` edge.
+If a playbook target a technical aspect, it has the value of basic knowledge.
+As such, it is intended that the user only have to copy-paste and adapt some examples.
+If the target of the playbook is about code, some code samples must be there.
 
 ---
 
