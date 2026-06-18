@@ -29,6 +29,7 @@ cask "utm"
 cask "visual-studio-code"
 cask "vlc"
 cask "wezterm"
+cask "zettlr"
 
 mas "1Password for Safari", id: 1569813296
 mas "Amphetamine", id: 937984704
