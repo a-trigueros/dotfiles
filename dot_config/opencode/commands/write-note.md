@@ -3,6 +3,8 @@ description: Create or enrich one or more notes in the vault, surfacing relevant
 agent: cortex
 ---
 
+Add more context to the vault about the topic provided by the user.
+
 Topic: $ARGUMENTS
 
 ## Vault interaction
