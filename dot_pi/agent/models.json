@@ -1,0 +1,28 @@
+{
+  "providers": {
+    "omlx": {
+      "baseUrl": "http://127.0.0.1:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "authHeader": true,
+      "models": [
+        {
+          "id": "Qwen2.5-Coder-3B-Instruct-MLX-4bit",
+          "name": "Qwen2.5-Coder-3B-Instruct-MLX-4bit",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 32768,
+          "maxTokens": 32768
+        }
+      ]
+    }
+  }
+}
