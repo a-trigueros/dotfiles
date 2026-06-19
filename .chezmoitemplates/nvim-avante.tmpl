@@ -1,0 +1,32 @@
+return {
+  {
+    "yetone/avante.nvim",
+    opts = {
+      provider = "openrouter",
+      providers = {
+        openrouter = {
+          __inherited_from = "openai",
+          endpoint = "https://openrouter.ai/api/v1",
+          api_key_name = "SHELL_OPENROUTER_API_KEY",
+          model = "deepseek/deepseek-v4-flash",
+          timeout = 60000,
+          extra_request_body = {
+            temperature = 0,
+            max_completion_tokens = 8192,
+          },
+        },
+        omlx = {
+          __inherited_from = "openai",
+          endpoint = "http://127.0.0.1:8000/v1",
+          api_key_name = "SHELL_OMLX_API_KEY",
+          model = "Qwen2.5-Coder-3B-Instruct-MLX-4bit",
+          timeout = 60000,
+          extra_request_body = {
+            temperature = 0,
+            max_completion_tokens = 8192,
+          },
+        },
+      },
+    },
+  },
+}
