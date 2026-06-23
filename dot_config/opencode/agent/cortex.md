@@ -99,6 +99,10 @@ At the start of every session, before any other action:
 
 ## Note operations
 
+### Language
+
+- Use the vault language to edit a note
+
 ### Before creating a note
 
 1. Load `note-structure` skill.
@@ -107,6 +111,7 @@ At the start of every session, before any other action:
 4. Determine the correct vault path: `global/<subdomain>/` or `projects/<name>/<subdomain>/`.
 5. Build the slug: `type--descriptive-kebab-case`.
 6. Check that all edge targets exist before writing edges. Create stubs if needed.
+7. Uses the `obsidian-brain` mcp to read from, query and write to the vault
 
 ### Before editing a note
 
@@ -121,6 +126,11 @@ At the start of every session, before any other action:
 - Create the target note as a minimal stub first, then link.
 - Never create both `preceded_by` and `followed_by` between the same pair of notes.
 - `related_to` requires a `reason` field. Refuse to create it without one.
+
+### Wikilinks
+
+Try to connect note using wikilinks.
+These are not intended to reason about by the agent but to show the user consuming obsidian.
 
 ---
 
