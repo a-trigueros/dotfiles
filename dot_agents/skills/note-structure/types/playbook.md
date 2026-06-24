@@ -27,6 +27,12 @@ playbook--onboarding-client (generic procedure)
 
 ---
 
+## Precision
+
+A playbook describe a list of step. As such it must be used as-is by a user and it's natural for it to contains code to copy-paste, configuration files, or commands to execute.
+
+---
+
 ## Word limit
 
 Playbooks are exempt from the 50–300 word limit.
