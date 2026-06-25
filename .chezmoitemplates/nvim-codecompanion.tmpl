@@ -1,0 +1,15 @@
+vim.keymap.set({ "n", "v" }, "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "CodeCompanion Chat" })
+vim.keymap.set({ "n", "v" }, "<leader>ac", "<cmd>CodeCompanionActions<cr>", { desc = "CodeCompanion Actions" })
+vim.keymap.set("v", "<leader>as", "<cmd>CodeCompanionChat Add<cr>", { desc = "Add selection to chat" })
+
+return {
+  "olimorris/codecompanion.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  opts = {
+    interactions = {
+      chat = {
+        adapter = "opencode",
+      },
+    },
+  },
+}
