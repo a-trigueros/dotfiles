@@ -56,23 +56,23 @@ A reversible decision (true) may be surfaced as a candidate for reconsideration.
 
 ### Outgoing edges from a Decision
 
-| edge           | target type    | use when                                             |
-| -------------- | -------------- | ---------------------------------------------------- |
-| `depends_on`   | `pillar`       | this decision is grounded in a Pillar conviction     |
-| `depends_on`   | `fact`         | this decision relies on a verified fact being true   |
-| `depends_on`   | `concept`      | this decision requires understanding a concept first |
-| `contradicts`  | `pillar`       | this decision deliberately overrides a global Pillar |
-| `contradicts`  | `decision`     | this decision supersedes a previous decision         |
-| `derived_from` | `decision`     | this decision was made based on a prior decision     |
-| `followed_by`  | `event` `task` | consequence or action triggered by this decision     |
+| edge              | target type    | use when                                             |
+| ----------------- | -------------- | ---------------------------------------------------- |
+| `depends_on`      | `pillar`       | this decision is grounded in a Pillar conviction     |
+| `depends_on`      | `fact`         | this decision relies on a verified fact being true   |
+| `depends_on`      | `concept`      | this decision requires understanding a concept first |
+| `contradicted_by` | `pillar`       | this decision deliberately overrides a global Pillar |
+| `contradicted_by` | `decision`     | this decision supersedes a previous decision         |
+| `derived_from`    | `decision`     | this decision was made based on a prior decision     |
+| `followed_by`     | `event` `task` | consequence or action triggered by this decision     |
 
 ### Incoming edges toward a Decision
 
-| edge           | from type       | use when                                            |
-| -------------- | --------------- | --------------------------------------------------- |
-| `derived_from` | `decision`      | a later decision traces its lineage here            |
-| `contradicts`  | `decision`      | a later decision overrides this one                 |
-| `supports`     | `fact` `source` | evidence that validates this decision in retrospect |
+| edge              | from type                                                                                                   | use when                                            |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `derived_from`    | `decision`                                                                                                  | a former decision traces its lineage here           |
+| `contradicted_by` | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | a former decision overrides this one                |
+| `supported_by`    | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | evidence that validates this decision in retrospect |
 
 ---
 
@@ -112,7 +112,7 @@ edges:
     type: depends_on
     weight: 0.8
   - target: projects/client-x/pillars/pillar--performance-is-non-negotiable
-    type: contradicts
+    type: contradicted_by
     weight: 1.0
 ---
 ```

@@ -34,7 +34,7 @@ You point the agent to it so it can consult it directly when needed.
 
 What distinguishes a Reference from a Note: a `reference` is **operational** — it is
 consulted to do something (use a tool, apply a pattern, follow a canonical example).
-If the content is knowledge *about* a tool without operational value (history, context,
+If the content is knowledge _about_ a tool without operational value (history, context,
 comparison, trivia), it is a `note`, not a `reference`. A recommended usage pattern or
 a canonical snippet qualifies as `reference` even without an external `ref` URL.
 
@@ -100,22 +100,23 @@ as context when relevant.
 
 If the reference's body exceeds a strict conciseness limit, reclassify:
 
-| Condition                                                | Correct type       |
-| -------------------------------------------------------- | ------------------ |
-| More than 3 sentences                                    | `concept` or `source` |
-| Contains feature tables, history, or comparisons         | `concept`          |
-| Contains synthesized knowledge extracted from the doc    | `source`           |
-| Contains context, history, or trivia with no operational value | `note`             |
+| Condition                                                      | Correct type          |
+| -------------------------------------------------------------- | --------------------- |
+| More than 3 sentences                                          | `concept` or `source` |
+| Contains feature tables, history, or comparisons               | `concept`             |
+| Contains synthesized knowledge extracted from the doc          | `source`              |
+| Contains context, history, or trivia with no operational value | `note`                |
 
 A reference is a pointer to a resource, not a summary of it.
 
 ### Incoming edges toward a Reference
 
-| edge           | from type             | use when                                           |
-| -------------- | --------------------- | -------------------------------------------------- |
-| `depends_on`   | `playbook` `decision` | a playbook or decision relies on this reference    |
-| `depends_on`   | `reference`           | another tool depends on this one                   |
-| `derived_from` | `fact` `concept`      | a note whose content is grounded in this reference |
+| edge           | from type             | use when                                                          |
+| -------------- | --------------------- | ----------------------------------------------------------------- |
+| `supported_by` | `decision` `playbook` | a decision or procedure is validated or grounded bythis reference |
+| `depends_on`   | `playbook` `decision` | a playbook or decision relies on this reference                   |
+| `depends_on`   | `reference`           | another tool depends on this one                                  |
+| `derived_from` | `fact` `concept`      | a note whose content is grounded in this reference                |
 
 ---
 

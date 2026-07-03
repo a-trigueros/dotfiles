@@ -88,21 +88,21 @@ Once set, `hyp_status` should be `validated` or `rejected`.
 
 ### Outgoing edges from a Hypothesis
 
-| edge           | target type      | use when                                                |
-| -------------- | ---------------- | ------------------------------------------------------- |
-| `derived_from` | `pattern`        | this hypothesis was formalized from an observed pattern |
-| `derived_from` | `source`         | this hypothesis was motivated by an external reference  |
-| `derived_from` | `question`       | this hypothesis resolves an open question               |
-| `depends_on`   | `concept` `fact` | this hypothesis requires another note to be understood  |
-| `followed_by`  | `fact`           | the fact produced by testing this hypothesis            |
+| edge              | target type               | use when                                                |
+| ----------------- | ------------------------- | ------------------------------------------------------- |
+| `supported_by`    | `pattern` `fact` `source` | evidence reinforcing this hypothesis                    |
+| `contradicted_by` | `fact` `pattern`          | evidence refuting this hypothesis                       |
+| `derived_from`    | `pattern`                 | this hypothesis was formalized from an observed pattern |
+| `derived_from`    | `source`                  | this hypothesis was motivated by an external reference  |
+| `derived_from`    | `question`                | this hypothesis resolves an open question               |
+| `depends_on`      | `concept` `fact`          | this hypothesis requires another note to be understood  |
+| `followed_by`     | `fact`                    | the fact produced by testing this hypothesis            |
 
 ### Incoming edges toward a Hypothesis
 
-| edge           | from type                 | use when                                                 |
-| -------------- | ------------------------- | -------------------------------------------------------- |
-| `supports`     | `pattern` `fact` `source` | evidence reinforcing this hypothesis                     |
-| `contradicts`  | `fact` `pattern`          | evidence refuting this hypothesis                        |
-| `derived_from` | `fact`                    | a fact that traces its origin to testing this hypothesis |
+| edge           | from type | use when                                                 |
+| -------------- | --------- | -------------------------------------------------------- |
+| `derived_from` | `fact`    | a fact that traces its origin to testing this hypothesis |
 
 ---
 

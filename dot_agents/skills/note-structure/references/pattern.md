@@ -66,22 +66,20 @@ At least one entry is expected — a pattern with no observations is a speculati
 
 ### Outgoing edges from a Pattern
 
-| edge           | target type            | use when                                               |
-| -------------- | ---------------------- | ------------------------------------------------------ |
-| `supports`     | `hypothesis`           | this pattern motivated or reinforces a hypothesis      |
-| `supports`     | `concept`              | this pattern provides empirical evidence for a concept |
-| `supports`     | `decision`             | this pattern informed a decision                       |
-| `contradicts`  | `pattern` `hypothesis` | this pattern conflicts with another observation        |
-| `derived_from` | `event` `fact`         | this pattern was identified from a specific source     |
-| `related_to`   | any                    | topical connection — requires `reason`                 |
+| edge              | target type                   | use when                                           |
+| ----------------- | ----------------------------- | -------------------------------------------------- |
+| `supported_by`    | `fact` `pattern` `hypothesis` | this pattern is motivated or reinforced by target  |
+| `contradicted_by` | `fact` `pattern`              | a fact or pattern that challenges this observation |
+| `derived_from`    | `event` `fact`                | this pattern was identified from a specific source |
+| `related_to`      | any                           | topical connection — requires `reason`             |
 
 ### Incoming edges toward a Pattern
 
-| edge           | from type        | use when                                             |
-| -------------- | ---------------- | ---------------------------------------------------- |
-| `supports`     | `fact`           | a verified fact retroactively validates this pattern |
-| `contradicts`  | `fact` `pattern` | a fact or pattern that challenges this observation   |
-| `derived_from` | `hypothesis`     | a hypothesis that traces its origin to this pattern  |
+| edge               | from type              | use when                                            |
+| ------------------ | ---------------------- | --------------------------------------------------- |
+| `supported_by`     | `concept` `decision`   | this pattern provides empirical evidence for source |
+| `contracticted_by` | `pattern` `hypothesis` | this pattern conflicts with another observation     |
+| `derived_from`     | `hypothesis`           | a hypothesis that traces its origin to this pattern |
 
 ---
 

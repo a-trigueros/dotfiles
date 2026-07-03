@@ -29,7 +29,9 @@ playbook--onboarding-client (generic procedure)
 
 ## Precision
 
-A playbook describe a list of step. As such it must be used as-is by a user and it's natural for it to contains code to copy-paste, configuration files, or commands to execute.
+A playbook describe a list of step.
+It is intended to be used as is then adapted.
+If code or shell commands or decision diagrams are part of a step, it must be here.
 
 ---
 
@@ -87,11 +89,10 @@ Example: "client has received welcome materials and first milestone is scheduled
 
 ### Incoming edges toward a Playbook
 
-| edge           | from type        | use when                                                  |
-| -------------- | ---------------- | --------------------------------------------------------- |
-| `depends_on`   | `playbook`       | another playbook delegates a step here                    |
-| `derived_from` | `playbook`       | a later version traces its lineage here                   |
-| `supports`     | `pattern` `fact` | evidence that this playbook produces the expected outcome |
+| edge           | from type  | use when                                |
+| -------------- | ---------- | --------------------------------------- |
+| `depends_on`   | `playbook` | another playbook delegates a step here  |
+| `derived_from` | `playbook` | a later version traces its lineage here |
 
 ---
 

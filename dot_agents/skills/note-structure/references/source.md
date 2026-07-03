@@ -63,18 +63,19 @@ The agent will not attempt to fetch non-public resources.
 
 ### Outgoing edges from a Source
 
-| edge          | target type            | use when                                |
-| ------------- | ---------------------- | --------------------------------------- |
-| `supports`    | `hypothesis` `concept` | the source provides evidence for a note |
-| `contradicts` | `fact` `hypothesis`    | the source challenges an existing note  |
-| `related_to`  | any                    | topical connection — requires `reason`  |
+| edge          | target type | use when                               |
+| ------------- | ----------- | -------------------------------------- |
+| `related_to`  | any         | topical connection — requires `reason` |
+| `authored_by` | `contact`   | The author of the source               |
 
 ### Incoming edges toward a Source
 
-| edge           | from type | use when                                           |
-| -------------- | --------- | -------------------------------------------------- |
-| `derived_from` | `fact`    | a fact extracted from this source                  |
-| `authored_by`  | any       | a note whose author is this source's author (rare) |
+| edge              | from type | use when                                           |
+| ----------------- | --------- | -------------------------------------------------- |
+| `supported_by`    | any       | the source provides evidence for a note            |
+| `contradicted_by` | any       | the source challenges an existing note             |
+| `derived_from`    | `fact`    | a fact extracted from this source                  |
+| `authored_by`     | any       | a note whose author is this source's author (rare) |
 
 ---
 

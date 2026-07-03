@@ -63,21 +63,21 @@ edges: []
 
 ### Outgoing edges from a Pillar
 
-| edge          | use when                                                                         |
-| ------------- | -------------------------------------------------------------------------------- |
-| `supports`    | this Pillar reinforces another Pillar                                            |
-| `contradicts` | this Pillar conflicts with another Pillar (typically global → project direction) |
-| `related_to`  | topical connection to another Pillar or Concept — requires `reason`              |
+| edge              | use when                                                                         |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `supported_by`    | this Pillar is reinforced by another Pillar                                      |
+| `contradicted_by` | this Pillar conflicts with another Pillar (typically project → global direction) |
+| `related_to`      | topical connection to another Pillar or Concept — requires `reason`              |
 
 A Pillar does not point to Decisions. The direction is always Decision → Pillar.
 
 ### Incoming edges toward a Pillar
 
-| edge          | from type  | use when                                                             |
-| ------------- | ---------- | -------------------------------------------------------------------- |
-| `depends_on`  | `decision` | the decision is grounded in this Pillar                              |
-| `contradicts` | `decision` | the decision deliberately overrides this Pillar in a project context |
-| `supports`    | `pillar`   | a project Pillar reinforces this global Pillar                       |
+| edge              | from type                                                                                                   | use when                                                             |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `depends_on`      | `decision`                                                                                                  | the decision is grounded in this Pillar                              |
+| `contradicted_by` | `decision`                                                                                                  | the decision deliberately overrides this Pillar in a project context |
+| `supported_by`    | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | a project Pillar reinforces this global Pillar                       |
 
 ---
 

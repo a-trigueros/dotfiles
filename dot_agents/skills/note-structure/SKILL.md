@@ -102,7 +102,7 @@ Targets are identified by their full vault path, without the `.md` extension.
 
 ```yaml
 edges:
-  - target: global/learning/fact--cosine-similarity-is-normalized
+  - target: global/fact/fact--cosine-similarity-is-normalized
     type: supports
     weight: 0.7
 
@@ -130,30 +130,34 @@ Wikilinks in the note body may mirror edges for human navigation in Obsidian.
 They must use the **full vault path** of the target, with an alias for readability:
 
 ```markdown
-This fact is supported by [[global/facts/fact--cosine-similarity-is-normalized|Cosine Similarity]].
+This decision is supported by [[global/facts/fact--cosine-similarity-is-normalized|Cosine Similarity]].
 ```
 
-Wrong:  `[[fact--cosine-similarity-is-normalized]]`
-Right:  `[[global/facts/fact--cosine-similarity-is-normalized|Cosine Similarity]]`
+Wrong: `[[fact--cosine-similarity-is-normalized]]`
+Right: `[[global/facts/fact--cosine-similarity-is-normalized|Cosine Similarity]]`
 
 They are not parsed by the agent. Do not rely on them for reasoning.
 
 ### Edge types and weights
 
-| type           | weight | use when                                                           |
-| -------------- | ------ | ------------------------------------------------------------------ |
-| `supports`     | 0.7    | source provides evidence for target                                |
-| `contradicts`  | 1.0    | source disagrees with or invalidates target                        |
-| `depends_on`   | 0.8    | target must be true before source makes sense                      |
-| `derived_from` | 0.9    | source was created based on target                                 |
-| `related_to`   | 0.3    | topical connection, no stronger relation known — requires `reason` |
-| `part_of`      | 0.8    | source is a component of target                                    |
-| `preceded_by`  | 0.7    | source comes after target in time                                  |
-| `followed_by`  | 0.7    | source comes before target in time                                 |
-| `authored_by`  | 1.0    | target is the author or originator of source                       |
-| `tagged_with`  | 0.5    | source carries a topic tag that is itself a note                   |
+| type              | weight | use when                                                           |
+| ----------------- | ------ | ------------------------------------------------------------------ |
+| `supported_by`    | 0.7    | target provides evidence for source                                |
+| `contradicted_by` | 1.0    | target disagrees with or invalidates source                        |
+| `depends_on`      | 0.8    | target must be true before source makes sense                      |
+| `derived_from`    | 0.9    | source was created based on target                                 |
+| `related_to`      | 0.3    | topical connection, no stronger relation known — requires `reason` |
+| `part_of`         | 0.8    | source is a component of target                                    |
+| `preceded_by`     | 0.7    | source comes after target in time                                  |
+| `followed_by`     | 0.7    | source comes before target in time                                 |
+| `authored_by`     | 1.0    | target is the author or originator of source                       |
+| `tagged_with`     | 0.5    | source carries a topic tag that is itself a note                   |
+| `supports`        | 0.7    | **obsolete** source provides evidence for target                   |
+| `contradicts`     | 1.0    | **obsolete** source disagrees with or invalidates target           |
 
 ### Edge rules
+
+An edge only targets what birthed or is related to the note.
 
 **`related_to`** — use only if no other edge type applies. Weight is 0.3 (intentionally low).
 The `reason` field is mandatory. Reject the edge if reason is absent or vague.
@@ -211,9 +215,9 @@ extension. Aliases are still used for display:
 [[global/concepts/concept--vector-space|Vector Space]]
 ```
 
-Wrong:  `[[concept--vector-space]]`
-Wrong:  `[[vector-space]]`
-Right:  `[[global/concepts/concept--vector-space|Vector Space]]`
+Wrong: `[[concept--vector-space]]`
+Wrong: `[[vector-space]]`
+Right: `[[global/concepts/concept--vector-space|Vector Space]]`
 
 The full vault path is the note's unique identity in the graph.
 
@@ -263,11 +267,24 @@ Use the path that matches the note's scope (global or project).
 
 ### Type skills
 
-Type-specific fields and body structure are defined in:
+Type-specific fields and body structure are defined in related files:
 
-```
-~/.agents/skills/types/<type>.md
-```
+- [pillar](references/pillar.md)
+- [decision](references/decision.md)
+- [concept](references/concept.md)
+- [question](references/question.md)
+- [playbook](references/playbook.md)
+- [task](references/task.md)
+- [event](references/event.md)
+- [pattern](references/pattern.md)
+- [hypothesis](references/hypothesis.md)
+- [fact](references/fact.md)
+- [source](references/source.md)
+- [bookmark](references/bookmark.md)
+- [contact](references/contact.md)
+- [reference](references/reference.md)
+- [note](references/note.md)
+- [custom](references/custom.md)
 
 Load the relevant file after this one before creating or editing a note of that type.
 

@@ -85,7 +85,7 @@ the agent cannot read. The agent will not attempt to fetch non-public resources.
 
 ### Incoming edges toward a Bookmark
 
-None — a Bookmark is a terminal note. Nothing points to it.
+Anything can reference a bookmark. Since anything can emerge from a bookmark.
 
 ---
 
@@ -113,11 +113,8 @@ ref: https://arxiv.org/abs/1706.03762
 ref_type: url
 public: true
 tags: []
-edges:
-  - target: global/concepts/concept--vector-embeddings
-    type: related_to
-    weight: 0.3
-    reason: "foundational paper for understanding transformer-based embedding models"
+edges: []
+
 ---
 ```
 
@@ -139,11 +136,7 @@ ref: "The Pragmatic Programmer — Hunt & Thomas (2nd edition)"
 ref_type: physical
 public: false
 tags: []
-edges:
-  - target: global/pillars/pillar--simplicity-over-cleverness
-    type: related_to
-    weight: 0.3
-    reason: "recommended as a reference for pragmatic software craftsmanship aligned with this pillar"
+edges: []
 ---
 ```
 
@@ -164,12 +157,7 @@ ref: https://internal.client-x.com/pgvector/dashboard
 ref_type: url
 public: false
 tags: []
-edges:
-  - target: projects/client-x/decisions/decision--use-cosine-for-search
-    type: related_to
-    weight: 0.3
-    reason: "monitoring dashboard for the search implementation — requires client auth"
----
+edges: []
 ```
 
 ```markdown

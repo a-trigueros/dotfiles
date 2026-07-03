@@ -58,19 +58,21 @@ A Concept has no type-specific frontmatter fields. Its identity is entirely in i
 
 ### Outgoing edges from a Concept
 
-| edge           | target type | use when                                                           |
-| -------------- | ----------- | ------------------------------------------------------------------ |
-| `depends_on`   | `concept`   | this concept requires another concept to be understood first       |
-| `part_of`      | `concept`   | this concept is a component of a larger concept                    |
-| `derived_from` | `concept`   | this concept was defined based on another                          |
-| `related_to`   | `concept`   | topical connection, no stronger relation known — requires `reason` |
+| edge              | target type                                                                                                 | use when                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `depends_on`      | `concept`                                                                                                   | this concept requires another concept to be understood first       |
+| `part_of`         | `concept`                                                                                                   | this concept is a component of a larger concept                    |
+| `derived_from`    | `concept`                                                                                                   | this concept was defined based on another                          |
+| `related_to`      | `concept` `note` `event` `contact`                                                                          | topical connection, no stronger relation known — requires `reason` |
+| `supported_by`    | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | evidence about when or why this concept applies                    |
+| `contradicted_by` | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | evidence about when or why this concept is irrelevant              |
 
 ### Incoming edges toward a Concept
 
 | edge           | from type                       | use when                                                  |
 | -------------- | ------------------------------- | --------------------------------------------------------- |
 | `depends_on`   | `decision` `playbook` `concept` | the source requires this concept to make sense            |
-| `supports`     | `pattern` `fact` `source`       | empirical evidence about when or why this concept applies |
+| `supported_by` | `concept`                       | empirical evidence about when or why this concept applies |
 | `derived_from` | `concept`                       | a concept that traces its definition here                 |
 | `part_of`      | `concept`                       | a sub-concept that belongs to this one                    |
 

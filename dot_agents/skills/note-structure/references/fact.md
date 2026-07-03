@@ -91,22 +91,22 @@ For facts produced by experiment, this is the date the experiment was run.
 
 ### Outgoing edges from a Fact
 
-| edge           | target type                       | use when                                                |
-| -------------- | --------------------------------- | ------------------------------------------------------- |
-| `derived_from` | `source`                          | the fact was extracted from a source                    |
-| `derived_from` | `hypothesis`                      | the fact was produced by testing a hypothesis           |
-| `derived_from` | `event`                           | the fact was observed during an event                   |
-| `supports`     | `hypothesis` `concept` `decision` | this fact provides evidence for another note            |
-| `contradicts`  | `fact` `hypothesis`               | this fact challenges another note                       |
-| `part_of`      | `fact`                            | this fact is a component of a broader factual statement |
+| edge              | target type                                                                                                 | use when                                                |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `derived_from`    | `source`                                                                                                    | the fact was extracted from a source                    |
+| `derived_from`    | `hypothesis`                                                                                                | the fact was produced by testing a hypothesis           |
+| `derived_from`    | `event`                                                                                                     | the fact was observed during an event                   |
+| `supported_by`    | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | this fact provides evidence for another note            |
+| `contradicted_by` | `pillar` `concept` `bookmark` `source` `reference` `custom` `decision` `fact` `hypothesis` `note` `pattern` | this fact challenges another note                       |
+| `part_of`         | `fact`                                                                                                      | this fact is a component of a broader factual statement |
 
 ### Incoming edges toward a Fact
 
-| edge           | from type          | use when                                              |
-| -------------- | ------------------ | ----------------------------------------------------- |
-| `supports`     | `source` `pattern` | evidence reinforcing this fact                        |
-| `contradicts`  | `fact` `source`    | a note challenging this fact — rare, signals an error |
-| `derived_from` | `hypothesis`       | a hypothesis whose test produced this fact            |
+| edge              | from type              | use when                                              |
+| ----------------- | ---------------------- | ----------------------------------------------------- |
+| `supported_by`    | `concept` `hypothesis` | evidence reinforcing this fact                        |
+| `contradicted_by` | `concept` `hypthesis`  | a note challenging this fact — rare, signals an error |
+| `derived_from`    | `hypothesis`           | a hypothesis whose test produced this fact            |
 
 ---
 
