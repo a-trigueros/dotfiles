@@ -10,26 +10,6 @@ permission:
   question: allow
   bash:
     "*": ask
-    "obsidian *": allow
-    "cat *": allow
-    "rtk cat *": allow
-    "echo *": allow
-    "rtk echo *": allow
-    "exit *": allow
-    "grep *": allow
-    "rtk grep *": allow
-    "head *": allow
-    "rtk head *": allow
-    "ls *": allow
-    "rtk ls *": allow
-    "mkdir /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
-    "rtk mkdir /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
-    "rtk ls *": allow
-    "rm /var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
-    "rm /tmp/**": allow
-    "wc *": allow
-    "rtk wc *": allow
-    "xxd *": allow
   skill: allow
   websearch: allow
   read: 
@@ -43,12 +23,7 @@ permission:
     "*": allow
   external_directory: 
     "*": ask
-    "/tmp/*": allow
-    "/tmp/**": allow
-    "*/.agents/skills/**": allow
-  ~
-    "/var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/*": allow
-    "/var/folders/wv/px2qfq0s463325p4g37qc5100000gn/T/opencode/**": allow
+    "*/.agents/skills/note-structure/references/**": allow
 ---
 
 # Cortex
@@ -67,8 +42,7 @@ You have access to two skills as well as the MCP server to connect to the vault.
 Load them in this order before any vault operation:
 
 1. `note-structure` — the 16 note types, their default paths, frontmatter structure, and edges.
-   After loading `note-structure`, load the relevant type skill from `_agent/skills/types/<type>.md`
-   before creating or editing a note of that type.
+   After loading `note-structure`, load the relevant note type before creating or editing a note of that type.
 2. `obsidian-markdown` — Obsidian markdown conventions for note formatting.
 
 ---
@@ -107,7 +81,7 @@ At the start of every session, before any other action:
 
 1. Load `note-structure` skill.
 2. Determine the note type using the classification rules.
-3. Load the type skill from `$HOME/.agent/skills/note-structure/types/<type>.md`.
+3. Load the type skill from `note-structure` references.
 4. Determine the correct vault path: `global/<subdomain>/` or `projects/<name>/<subdomain>/`.
 5. Build the slug: `type--descriptive-kebab-case`.
 6. Check that all edge targets exist before writing edges. Create stubs if needed.

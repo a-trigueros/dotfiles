@@ -15,10 +15,10 @@ Topic: $ARGUMENTS
 
 ## Preparation (mandatory before writing anything)
 
-1. Read `~/.agent/skills/note-structure/SKILL.md` for the general rules (frontmatter,
+1. Load the skill `note-structure` for the general rules (frontmatter,
    edges, namespace, naming).
 2. Identify the concept(s)/fact(s)/decision(s)/etc. present in the topic above.
-   - For each of the 16 note types, explicitly ask: "does the source content
+   - For each note type, explicitly ask: "does the source content
      contain at least one instance of this type?" List every candidate found,
      even minor ones, before deciding which to keep.
    - Never group two distinct subjects into one note on the grounds that they
@@ -28,11 +28,10 @@ Topic: $ARGUMENTS
    - Apply the atomic principle: if the content covers several distinct subjects,
      plan one note per subject.
 3. For each note to create, determine the `type` using the decision trees
-   ("A X answers the question...") in each
-   `~/.agent/skills/note-structure/types/<type>.md` file.
+   ("A X answers the question...") in each type of the `note-structure` skill.
    - If no type clearly fits → `type: note`.
    - `custom` only after explicitly ruling out the other 15 types.
-4. Load the corresponding `~/.agent/skills/note-structure/types/<type>.md` file.
+4. Load the corresponding `type` file.
 5. Determine the namespace (`global/` or `projects/<name>/`):
    - Check whether the topic could relate to a specific project. If so, list the
      `projects/` directory and propose the matching candidate(s)
