@@ -7,18 +7,14 @@ Add more context to the vault about the topic provided by the user.
 
 Topic: $ARGUMENTS
 
-## Vault interaction
-
-- Uses the `obsidian-brain` mcp to read from, query and write to the vault
-- If the conversation context already indicates the vault path, propose it to the user for confirmation before doing anything else. if not, assume it's a global note.
-- `global/` and `projects/` are top-level locations inside it.
+If the conversation context already indicates the vault path, propose it to the user for confirmation before doing anything else. if not, assume it's a global note.
 
 ## Preparation (mandatory before writing anything)
 
 1. Load the skill `note-structure` for the general rules (frontmatter,
    edges, namespace, naming).
 2. Identify the concept(s)/fact(s)/decision(s)/etc. present in the topic above.
-   - For each note type, explicitly ask: "does the source content
+   - For each note type in `note-structure` skill, explicitly ask: "does the source content
      contain at least one instance of this type?" List every candidate found,
      even minor ones, before deciding which to keep.
    - Never group two distinct subjects into one note on the grounds that they
@@ -31,10 +27,9 @@ Topic: $ARGUMENTS
    ("A X answers the question...") in each type of the `note-structure` skill.
    - If no type clearly fits → `type: note`.
    - `custom` only after explicitly ruling out the other 15 types.
-4. Load the corresponding `type` file.
-5. Determine the namespace (`global/` or `projects/<name>/`):
+4. Determine the namespace (`global/` or `projects/<name>/`):
    - Check whether the topic could relate to a specific project. If so, list the
-     `projects/` directory and propose the matching candidate(s)
+     `projects/` directory using `obsidian-brain` and propose the matching candidate(s)
      to the user for confirmation.
    - If the topic doesn't clearly point to a project, default to `global/`
      per the type's scope rules, but confirm with the user if ambiguous.
@@ -48,7 +43,7 @@ Ask the user for:
 - the source/origin if required by the type.
 - confirmation of the namespace/project if ambiguous.
 
-Do not invent dates, sources, or attributions.
+Do not invent dates, sources, or attributions. But you can suggest the user some based upon other notes in the vault or a web search.
 Each information that you put have to either be approved explicitly by the user or requires a source.
 
 ## Connection discovery
@@ -72,7 +67,7 @@ explicitly mentioned in the topic.
    single direction for `preceded_by`/`followed_by`.
 5. Relevant but non-existent target → create a minimal note before creating the edge.
 6. Try to make relevant connection with the already existing notes.
-   Eg: A playbook describing authentication in .NET should be linked to `concept--.net` and `concept--authentication`.
+   Eg: A playbook describing authentication in .NET should be linked to `concept--dotnet` and `concept--authentication`.
 
 ## Edge ↔ Obsidian wikilink synchronization
 
@@ -92,17 +87,12 @@ explicitly mentioned in the topic.
 
 - Frontmatter: common fields (`type`, `created`, `tags`, `edges`) + type-specific fields.
 - Body: structure defined by the type (with/without headers, 50-300 words except
-  `playbook`), enriched with wikilinks derived from the edges.
+  `playbook` or `note`), enriched with wikilinks derived from the edges.
 - Factual tone, no narrative framing — the note is a reference, not an explanatory text.
 - No fields invented outside the type's schema. Information like a "license" with no
   standalone reasoning value stays as a sentence in the body; if it constrains a
   decision, it becomes a separate `fact` linked via an edge.
-- Avoid using Python as a shortcut
-
-## Tags
-
-- Each entry in `tags` must be the full path of an existing tag-note.
-- If the relevant tag doesn't exist yet, create the tag-note stub and flag the creation.
+- Avoid using Python or other shell scripts as a shortcut
 
 ## Naming and path
 

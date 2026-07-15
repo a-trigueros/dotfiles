@@ -29,6 +29,13 @@ If it never does, it stays a note indefinitely.
 
 ---
 
+## Word limit
+
+Playbooks are exempt from the 50–300 word limit.
+Steps must be complete enough to be executed without additional context.
+
+---
+
 ## What belongs here
 
 - Trivia and historical context (history of .NET, origin of a programming language)

@@ -15,7 +15,7 @@ For type-specific fields and body structure, load the corresponding file in `typ
 
 One note = one concept, one fact, one decision, one event — never more.
 If a note covers a concept, when to use it, and how to use it in a context: that is three notes.
-50 to 300 words per note body. Exception: `type: playbook` is word-limit exempt.
+50 to 300 words per note body. Exception: `type: playbook` and `type:note` is word-limit exempt.
 
 ---
 
@@ -274,7 +274,6 @@ Type-specific fields and body structure are defined in related files:
 - [concept](references/concept.md)
 - [question](references/question.md)
 - [playbook](references/playbook.md)
-- [task](references/task.md)
 - [event](references/event.md)
 - [pattern](references/pattern.md)
 - [hypothesis](references/hypothesis.md)
