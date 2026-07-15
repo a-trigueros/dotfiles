@@ -36,7 +36,6 @@ pnpm = "latest"
 {{- if eq .chezmoi.os "windows" }}
 powershell-core = "latest"
 {{- end }}
-pi = "latest"
 python = "latest"
 ripgrep = "latest"
 rust = { version = "latest", os = ["macos", "linux"] }
@@ -73,6 +72,7 @@ zoxide = "latest"
   "linux",
 ]}
 "pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
+"npm:@earendil-works/pi-coding-agent" = "latest"
 
 [env]
 EDITOR = "nvim"
