@@ -233,6 +233,22 @@ projects/project-x/playbook--weekly-review.md
 Once set, a path must not change — it would break all incoming edges.
 If a note must be moved, update all edges pointing to it before moving.
 
+If the note is related to a date, the final part of the slug will look like:
+
+`{note_type}--{yyyy-MM-dd}-{content}`
+
+Examples:
+
+```
+decision--2021-03-12-dont-use-properties-for-injection.md
+event--2021-04-22-convention-du-cercle.md
+event--2021-04-22-convention-du-cercle.md
+```
+
+
+Every note type can have a date.
+If there is a start date and a end date, like for extended events, use the start date in the slug.
+
 ---
 
 ## Types
