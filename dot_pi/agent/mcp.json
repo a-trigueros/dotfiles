@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "directTools": true
+    }, 
+    "deepwiki": {
+      "url": "https://mcp.deepwiki.com/mcp",
+      "directTools": true
+    },
+    "obsidian-brain": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "obsidian-brain@latest",
+        "server"
+      ],
+      "directTools": true
+    },
+    "serena": {
+      "command": "serena",
+      "args": [
+        "start-mcp-server",
+        "--project-from-cwd"
+      ],
+      "directTools": true
+    },
+    "web-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@zhafron/mcp-web-search"
+      ],
+      "directTools": true
+    }
+  }
+}

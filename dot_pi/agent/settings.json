@@ -1,0 +1,12 @@
+{
+  "lastChangelogVersion": "0.80.10",
+  "theme": "catppuccin-tui-macchiato",
+  "packages": [
+    "npm:pi-catppuccin-tui",
+    "npm:omniroute-pi-ext-integration",
+    "npm:pi-mcp-adapter"
+  ],
+  "defaultProvider": "omni",
+  "defaultModel": "pickle-rick",
+  "defaultThinkingLevel": "medium"
+}

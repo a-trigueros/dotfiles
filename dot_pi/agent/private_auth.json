@@ -1,6 +1,0 @@
-{
-  "openrouter": {
-    "type": "api_key",
-    "key": "$SHELL_OPENROUTER_API_KEY"
-  }
-}

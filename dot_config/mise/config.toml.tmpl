@@ -71,8 +71,11 @@ zoxide = "latest"
   "macos",
   "linux",
 ]}
+"github:GreyhavenHQ/greywall" = "latest"
+"github:GreyhavenHQ/greyproxy" = "latest"
 "pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
 "npm:@earendil-works/pi-coding-agent" = "latest"
+"npm:omniroute" = "latest"
 
 [env]
 EDITOR = "nvim"
@@ -119,4 +122,5 @@ cd = 'z'
 ".." = 'cd ..'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
+p = 'greywall -- pi'
 
