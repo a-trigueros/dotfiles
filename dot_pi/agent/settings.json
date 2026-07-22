@@ -3,10 +3,10 @@
   "theme": "catppuccin-tui-macchiato",
   "packages": [
     "npm:pi-catppuccin-tui",
-    "npm:omniroute-pi-ext-integration",
     "npm:pi-mcp-adapter"
   ],
-  "defaultProvider": "omni",
-  "defaultModel": "pickle-rick",
-  "defaultThinkingLevel": "medium"
+  "defaultProvider": "agentgateway",
+  "defaultModel": "glm-5.2",
+  "defaultThinkingLevel": "medium",
+  "enabledModels": []
 }

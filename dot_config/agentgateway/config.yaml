@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+config:
+  database:
+    url: sqlite:///Users/atrigueros/.config/agentgateway/data.db
+  modelCatalog:
+    - file: /Users/atrigueros/.config/agentgateway/base-costs.json
+gateways:
+  default:
+    port: 4000
+ui:
+  gateways: default
+llm:
+  gateways: default
+  models:
+    - name: "*"
+      provider:
+        custom:
+          formats:
+            - type: completions
+      params:
+        baseUrl: "https://api.z.ai/api/coding/paas/v4"
+        apiKey: "$ZAI_APIKEY"
+  virtualModels: []
+frontendPolicies:
+  http:
+    maxBufferSize: 33554432
+mcp:
+  gateways: default
+  targets:
+    - name: context7
+      stdio:
+        cmd: npx
+        args:
+          - -y
+          - "@upstash/context7-mcp"
+        env: {}
+        clear_env: false
+    - name: deepwiki
+      mcp:
+        host: https://mcp.deepwiki.com/mcp
+    - name: obsidian-brain
+      stdio:
+        cmd: npx
+        args:
+          - -y
+          - obsidian-brain@latest
+          - server
+        env: {}
+        clear_env: false
+    - name: web-search
+      stdio:
+        cmd: npx
+        args:
+          - -y
+          - "@zhafron/mcp-web-search"
+        env: {}
+        clear_env: false
+  port: null
+  statefulMode: stateful
+  prefixMode: always
+  failureMode: failOpen
