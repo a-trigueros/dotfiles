@@ -1,8 +1,11 @@
 {
   "mcpServers": {
-    "agentgateway": {
-      "url": "http://localhost:4000/mcp",
-      "directTools": true
+    "bifrost": {
+      "url": "http://localhost:8080/mcp",
+      "lifecycle": "eager",
+      "directTools": true,
+      "auth": "bearer",
+      "bearerToken": "sk-bf-e281fae7-252a-4542-979e-2c51895f4434"
     },
     "serena": {
       "command": "serena",

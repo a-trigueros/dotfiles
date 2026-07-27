@@ -1,12 +1,12 @@
 {
-  "lastChangelogVersion": "0.80.10",
+  "lastChangelogVersion": "0.82.1",
   "theme": "catppuccin-tui-macchiato",
   "packages": [
     "npm:pi-catppuccin-tui",
     "npm:pi-mcp-adapter"
   ],
-  "defaultProvider": "agentgateway",
-  "defaultModel": "glm-5.2",
+  "defaultProvider": "bifrost",
   "defaultThinkingLevel": "medium",
-  "enabledModels": []
+  "enabledModels": [],
+  "defaultModel": "zai/glm-5.2"
 }

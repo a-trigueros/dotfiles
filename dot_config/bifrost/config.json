@@ -1,0 +1,113 @@
+{
+  "$schema": "https://www.getbifrost.ai/schema",
+  "encryption_key": "U5KxKezplSHqyXVoFHH9bTDu47KYjn+cZCKNgcx+YSg=",
+  "client": {
+    "drop_excess_requests": false,
+    "enable_logging": true
+  },
+  "providers": {
+    "zai": {
+      "keys": [
+        {
+          "name": "zai-coding-plan",
+          "value": "env.ZAI_API_KEY",
+          "models": [
+            "*"
+          ],
+          "weight": 1.0
+        }
+      ],
+      "network_config": {
+        "base_url": "https://api.z.ai/api/anthropic",
+        "default_request_timeout_in_seconds": 300
+      },
+      "custom_provider_config": {
+        "base_provider_type": "anthropic",
+        "allowed_requests": {
+          "chat_completion": true,
+          "chat_completion_stream": true,
+          "list_models": true
+        }
+      }
+    }
+  },
+  "config_store": {
+    "enabled": true,
+    "type": "sqlite",
+    "config": {
+      "path": "config.db"
+    }
+  },
+  "mcp": {
+    "tool_manager_config": {
+      "disable_auto_tool_inject": true
+    },
+    "client_configs": [
+      {
+        "name": "context7",
+        "connection_type": "stdio",
+        "stdio_config": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@upstash/context7-mcp"
+          ]
+        },
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_on_all_virtual_keys": true
+      },
+      {
+        "name": "deepwiki",
+        "connection_type": "http",
+        "connection_string": "https://mcp.deepwiki.com/mcp",
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_on_all_virtual_keys": true
+      },
+      {
+        "name": "obsidian_brain",
+        "connection_type": "stdio",
+        "stdio_config": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "obsidian-brain@latest",
+            "server"
+          ]
+        },
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_on_all_virtual_keys": true
+      },
+      {
+        "name": "web_search",
+        "connection_type": "stdio",
+        "stdio_config": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@zhafron/mcp-web-search"
+          ]
+        },
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_on_all_virtual_keys": true
+      }
+    ]
+  },
+  "governance": {
+    "virtual_keys": [
+      {
+        "id": "vk-pi-local",
+        "name": "pi-local",
+        "value": "sk-bf-e281fae7-252a-4542-979e-2c51895f4434",
+        "is_active": true
+      }
+    ]
+  }
+}
