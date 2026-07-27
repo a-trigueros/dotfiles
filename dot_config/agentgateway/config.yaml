@@ -19,7 +19,7 @@ llm:
             - type: completions
       params:
         baseUrl: "https://api.z.ai/api/coding/paas/v4"
-        apiKey: "$ZAI_APIKEY"
+        apiKey: "$ZAI_API_KEY"
   virtualModels: []
 frontendPolicies:
   http:
