@@ -1,27 +1,12 @@
 ---
 name: note-structure
-description: Use this skill whenever creating, editing, or reorganizing any note in the vault. Defines the mandatory structure for every note — common frontmatter fields (type, created, tags, edges), the 10 edge types and their weights, the global/ vs projects/<name>/ namespace rules, the atomic note principle (one note = one concept/fact/decision/event), and file naming conventions. After reading this file, load the matching type/<type>.md file for type-specific fields and body structure before writing any frontmatter or content. Trigger for any task involving creating a note, adding edges between notes, classifying content into one of the 16 types, or deciding where a note belongs in the vault.
----
-
-## Purpose
-
-This skill defines how every note in this vault must be structured.
-Read this skill before creating or editing any note.
-For type-specific fields and body structure, load the corresponding file in `types/`.
-
----
-
-## Atomic principle
-
-One note = one concept, one fact, one decision, one event — never more.
-If a note covers a concept, when to use it, and how to use it in a context: that is three notes.
-50 to 300 words per note body. Exception: `type: playbook` and `type:note` is word-limit exempt.
-
+description: Obsidian note structure for Search, Query, Create, Update or Refactor user notes. Use this skill when searchinig, querying, creating, editing, or reorganizing any user note.
 ---
 
 ## Vault structure and namespace
 
-The vault is organized into two top-level namespaces. The file path is the namespace — it is never repeated in the frontmatter.
+The vault is organized into two top-level namespaces.
+The file path is the namespace — it is never repeated in the frontmatter.
 
 ```
 vault/
@@ -30,9 +15,13 @@ vault/
     concepts/
     sources/
     contacts/
-    ...
+    ... # All other note types
   projects/        ← knowledge anchored to a specific project
     project-name/
+      learning/
+      concepts/
+      sources/
+      ... # All other note types except contacts
     ...
 ```
 
@@ -46,11 +35,21 @@ Decisions, tasks, and project-specific patterns live here.
 
 **Context priority** — when operating in a project context, the agent must:
 
-1. Load `projects/<name>/` first.
+1. Search in `projects/<name>/` first.
 2. Enrich with `global/` nodes reached via edges.
-3. Never load another project's namespace unless an explicit edge points there.
+3. **Never** load another project's namespace unless an explicit edge points there.
 
-**Conflict resolution** — a global `pillar` may be overridden by a project `decision` via a `contradicts` edge (weight 1.0). The local decision always wins. No exclusion mechanism is needed — the edge is the signal.
+**Conflict resolution** — a global `pillar` may be overridden by a project `pillar` or `decision` via a `overrides` edge.
+The local decision always wins.
+No exclusion mechanism is needed — the edge is the signal.
+
+---
+
+## Atomic principle
+
+One note = one concept, one fact, one decision, one event — never more.
+If a note covers a concept, when to use it, and how to use it in a context: that is three notes.
+50 to 300 words per note body. Exception: `type: playbook` and `type:note` is word-limit exempt.
 
 ---
 
@@ -63,15 +62,15 @@ Every note starts with a YAML frontmatter block. No exceptions.
 ```yaml
 ---
 type: <note-type> # required — see Types section below
-created: YYYY-MM-DD # required — date the knowledge was acquired or formalized
-tags: [] # full paths of tag-nodes linked via tagged_with edges
+created: YYYY-MM-DD # required — date the knowledge was acquired or formalized. If not specified, confirm with user for using the date for the day.
+tags: [] # Context-relevant tags — Semantic proximity meaning. For instance concept--tunit may have tags: [testing-practices, dotnet, test-framework]
 edges: [] # outgoing relations — see Edges section below
 ---
 ```
 
 ### Field rules
 
-`type` — must be one of the 16 defined types. Determines which type skill to load.
+`type` — must be one of the 15 defined types. Determines which type skill to load.
 Controls valid edge types, body structure, and type-specific fields.
 
 `created` — the date this knowledge entered the vault, not the date of the event or fact described.
@@ -84,6 +83,13 @@ Do not use free-text strings. Every tag must correspond to an existing note.
 `edges` — list of outgoing relations from this note. Canonical source of truth for graph traversal.
 See the Edges section for structure and rules.
 
+If any field value is uncertain ask. Do not fill with placeholders.
+
+### Enrichment
+
+Some note types contains additional fields and rules.
+Load the relevant note type and use this information.
+
 ---
 
 ## Edges
@@ -92,9 +98,9 @@ Edges are stored in two places with a strict priority rule.
 
 ### Priority rule
 
-**Frontmatter edges are the source of truth.** The agent reads and writes edges from the frontmatter.
-Wikilinks in the body are for human navigation in Obsidian and may be present as a convenience.
-If a conflict exists between frontmatter and body wikilinks, frontmatter wins.
+**Frontmatter edges are the source of truth.** The agent reads and writes edges from the frontmatter. Any DataView query have to use these links.
+Wikilinks in the body are for human navigation in Obsidian and must be present either as a convenience or to be used when facing issue to create a proper dataview query.
+If a conflict exists between frontmatter and body wikilinks, present it to the user to solve it.
 
 ### Frontmatter edge structure
 
@@ -122,7 +128,8 @@ Each edge requires:
 - `type` — one of the 10 defined edge types
 - `weight` — as defined in the edge type system
 
-`reason` is required when `type: related_to`. Without a reason, the edge must not be created.
+`reason` is required when `type: related_to`.
+Without a reason, the edge must not be created.
 
 ### Body wikilinks (secondary)
 
@@ -136,7 +143,8 @@ This decision is supported by [[global/facts/fact--cosine-similarity-is-normaliz
 Wrong: `[[fact--cosine-similarity-is-normalized]]`
 Right: `[[global/facts/fact--cosine-similarity-is-normalized|Cosine Similarity]]`
 
-They are not parsed by the agent. Do not rely on them for reasoning.
+They must be present as natural content of the note.
+Only if the content goes against a note type definition they may be part of a list.
 
 ### Edge types and weights
 
@@ -144,6 +152,7 @@ They are not parsed by the agent. Do not rely on them for reasoning.
 | ----------------- | ------ | ------------------------------------------------------------------ |
 | `supported_by`    | 0.7    | target provides evidence for source                                |
 | `contradicted_by` | 1.0    | target disagrees with or invalidates source                        |
+| `overrides`       | 1.0    | target overrides source                                            |
 | `depends_on`      | 0.8    | target must be true before source makes sense                      |
 | `derived_from`    | 0.9    | source was created based on target                                 |
 | `related_to`      | 0.3    | topical connection, no stronger relation known — requires `reason` |
@@ -157,13 +166,23 @@ They are not parsed by the agent. Do not rely on them for reasoning.
 
 ### Edge rules
 
-An edge only targets what birthed or is related to the note.
+The target of an edge is what birthed the note.
+Exemples:
 
-**`related_to`** — use only if no other edge type applies. Weight is 0.3 (intentionally low).
-The `reason` field is mandatory. Reject the edge if reason is absent or vague.
+- a playbook is issued and illustrates a concept.
+- a source is redacted by an author (contact)
+- a concept supports or invalidate a pillar
+- a decision supports a pillar
+- a decision emerges from an hypothesis, an observation (pattern) or a fact.
+
+**`related_to`** — use only if no other edge type applies.
+Weight is 0.3 (intentionally low).
+The `reason` field is mandatory.
+Reject the edge if reason is absent or vague.
 
 **`preceded_by` / `followed_by`** — never create both directions on the same pair of notes.
-Convention: prefer `preceded_by` (source comes after target). The inverse is implicit.
+Convention: prefer `preceded_by` (source comes after target).
+The inverse is implicit.
 
 **Duplication** — never create two edges of the same type between the same pair of notes.
 
@@ -175,14 +194,11 @@ Create the target note first, then link.
 Before creating a wikilink in any note body, verify that the target note exists
 in the vault. If the target does not exist:
 
-1. Check whether the target subject has content available (vault search, then
-   web search, then training data — in that order).
+1. Check whether the target subject has content available
 2. If content is found, create the target note in full and link it.
 3. If no content is found and the target name is essential for navigation, create
-   a minimal stub note (frontmatter only, one-sentence body) — but only after
-   confirming with the user.
-4. If the user does not confirm the stub, remove the wikilink and use plain text
-   instead.
+   a minimal stub note (frontmatter only, one-sentence body) — but only after confirming with the user.
+4. If the user does not confirm the stub, remove the wikilink and use plain text instead.
 
 ### Depth limit
 
@@ -245,6 +261,7 @@ event--2021-04-22-convention-du-cercle.md
 event--2021-04-22-convention-du-cercle.md
 ```
 
+The slugs are redacted in english.
 
 Every note type can have a date.
 If there is a start date and a end date, like for extended events, use the start date in the slug.
@@ -253,33 +270,30 @@ If there is a start date and a end date, like for extended events, use the start
 
 ## Types
 
-16 note types are defined across 4 families.
+15 note types are defined across 4 families.
 
 ### Default paths by type
 
 This table is the source of truth for where each note type is stored.
 Use the path that matches the note's scope (global or project).
 
-| type         | global path          | project path                  |
-| ------------ | -------------------- | ----------------------------- |
-| `pillar`     | `global/pillars/`    | `projects/<name>/pillars/`    |
-| `decision`   | `global/decisions/`  | `projects/<name>/decisions/`  |
-| `concept`    | `global/concepts/`   | `projects/<name>/concepts/`   |
-| `question`   | `global/questions/`  | `projects/<name>/questions/`  |
-| `playbook`   | `global/playbooks/`  | `projects/<name>/playbooks/`  |
-| `task`       | —                    | `projects/<name>/tasks/`      |
-| `event`      | `global/events/`     | `projects/<name>/events/`     |
-| `pattern`    | `global/patterns/`   | `projects/<name>/patterns/`   |
-| `hypothesis` | `global/hypotheses/` | `projects/<name>/hypotheses/` |
-| `fact`       | `global/facts/`      | `projects/<name>/facts/`      |
-| `source`     | `global/sources/`    | `projects/<name>/sources/`    |
-| `bookmark`   | `global/bookmarks/`  | `projects/<name>/bookmarks/`  |
-| `contact`    | `global/contacts/`   | `projects/<name>/contacts/`   |
-| `reference`  | `global/references/` | `projects/<name>/references/` |
-| `note`       | `global/notes/`      | `projects/<name>/notes/`      |
-| `custom`     | `global/custom/`     | `projects/<name>/custom/`     |
-
-`task` is almost always project-specific. A global task is exceptional and must be justified.
+| type         | global path          | project path                  | family       |
+| ------------ | -------------------- | ----------------------------- | ------------ |
+| `pillar`     | `global/pillars/`    | `projects/<name>/pillars/`    | epistemic    |
+| `decision`   | `global/decisions/`  | `projects/<name>/decisions/`  | epistemic    |
+| `concept`    | `global/concepts/`   | `projects/<name>/concepts/`   | epistemic    |
+| `question`   | `global/questions/`  | `projects/<name>/questions/`  | epistemic    |
+| `playbook`   | `global/playbooks/`  | `projects/<name>/playbooks/`  | operational  |
+| `event`      | `global/events/`     | `projects/<name>/events/`     | operational  |
+| `pattern`    | `global/patterns/`   | `projects/<name>/patterns/`   | empirical    |
+| `hypothesis` | `global/hypotheses/` | `projects/<name>/hypotheses/` | empirical    |
+| `fact`       | `global/facts/`      | `projects/<name>/facts/`      | empirical    |
+| `source`     | `global/sources/`    | `projects/<name>/sources/`    | empirical    |
+| `bookmark`   | `global/bookmarks/`  | `projects/<name>/bookmarks/`  | empirical    |
+| `contact`    | `global/contacts/`   | `projects/<name>/contacts/`   | unstructured |
+| `reference`  | `global/references/` | `projects/<name>/references/` | unstructured |
+| `note`       | `global/notes/`      | `projects/<name>/notes/`      | unstructured |
+| `custom`     | `global/custom/`     | `projects/<name>/custom/`     | unstructured |
 
 ### Type skills
 
@@ -307,8 +321,7 @@ Load the relevant file after this one before creating or editing a note of that 
 
 ## Fallback rules
 
-**Unknown type** — if the content does not clearly fit any of the 16 types, use `type: note`.
-A `note` has no constraints. It is a staging area for knowledge not yet atomized.
+**Unknown type** — if the content does not clearly fit any of the 15 types, asks.
 
 **Unknown edge** — if no edge type fits, do not create an edge. Flag the gap instead.
 
