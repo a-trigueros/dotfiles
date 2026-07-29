@@ -59,7 +59,10 @@ export default async function (pi: ExtensionAPI) {
         cacheWrite: perMillion(model.pricing?.input_cache_write),
       },
       contextWindow: model.context_length ?? 128000,
-      maxTokens: model.max_output_tokens ?? 8192,
+      maxTokens: Math.max(model.max_output_tokens ?? 8192, 8192),
+      compat: {
+        thinkingFormat: "zai"
+      }
     })),
   });
 }
