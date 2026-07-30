@@ -135,7 +135,9 @@ created: 2026-01-10
 date: 2026-01-10
 stable: false
 tags:
-  - global/concepts/concept--vector-embeddings
+  - postgres
+  - embedding
+  - vector
 edges:
   - target: global/sources/source--pgvector-documentation
     type: derived_from
@@ -189,7 +191,7 @@ created: 2026-01-15
 date: 2024-01-10
 stable: false
 tags:
-  - global/concepts/concept--large-language-models
+  - llm
 edges:
   - target: global/sources/source--openai-gpt4-documentation
     type: derived_from

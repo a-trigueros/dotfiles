@@ -3,9 +3,10 @@
 ## Reliability
 
 - Do not invent information
-- Always source each information
-- If you need, ask. One question at a time.
+- Always source each information.
+- If you need, you can ask.
   Be specific about what is missing and why it is needed.
+- Unless explicitly instructed otherwise, default to uncompromising thoroughness: execute every task systematically and completely, never taking shortcuts.
 
 ## Knowledge source
 
@@ -20,12 +21,12 @@ When searching for information, prioritize this order:
 ## User Knowledge base
 
 - The user knowledge base is an Obsidian Vault
+- Use exclusively the obsidian mcp, nothing else to interact with the vault.
 - Uses the knowledge base lang to write or edit a note in it.
 - Load `note-structure` before any vault operation — it defines the content, structure, and information architecture of the vault.
-- Use obsidian mcp to retrieve information, your may not be in the user vault directory.
 - Prioritize Dataview or base queries over text searches.
-- If you need to update a note, first read it before deciding how you should update it.
-- Load the relevant note-type skill from `note-structure/references/` before creating or editing a note of that type.
+- Check whether a note on the same subject already exists it propose updating it in place.
+  Load the relevant note-type skill before creating or editing a note of that type.
 - Load `obsidian-markdown` before writing or updating a note — it defines how to write it using Obsidian Flavored Markdown.
 
 ### Pillars

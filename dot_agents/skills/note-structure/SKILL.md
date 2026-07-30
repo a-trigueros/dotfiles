@@ -76,9 +76,8 @@ Controls valid edge types, body structure, and type-specific fields.
 `created` — the date this knowledge entered the vault, not the date of the event or fact described.
 Never update it when the note content changes. The note IS the current state of knowledge.
 
-`tags` — list of full vault paths pointing to tag-nodes. Each tag is itself a note linked via `tagged_with`.
-Format: `global/concepts/concept--machine-learning`
-Do not use free-text strings. Every tag must correspond to an existing note.
+`tags` — list of tags related to the notes.
+See the Tags section for structure and rules.
 
 `edges` — list of outgoing relations from this note. Canonical source of truth for graph traversal.
 See the Edges section for structure and rules.
@@ -91,6 +90,13 @@ Some note types contains additional fields and rules.
 Load the relevant note type and use this information.
 
 ---
+
+## Tags
+
+Tags are structural indexes connecting notes by concept, type, or project regardless of their physical folder. When analyzing a note, extract a maximum of 5 to 7 future-proof, atomic keywords by identifying the core intent and categorizing entities into a standardized taxonomy (e.g., type/, subject/, project/). Prioritize consistency by reusing existing tags, avoiding synonyms, and ensuring every tag represents a concept you would actually search for in the future.
+
+Use lowercase letters, hyphens for multi-word terms (machine-learning).
+Keep the body text clean by removing redundant inline tags and relying on the frontmatter for primary classification.
 
 ## Edges
 

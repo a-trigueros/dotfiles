@@ -129,7 +129,8 @@ type: event
 created: 2026-01-10
 date: 2026-01-08
 tags:
-  - global/concepts/concept--large-language-models
+  - language-model
+  - ai
 edges:
   - target: global/facts/fact--claude-4-context-window
     type: followed_by

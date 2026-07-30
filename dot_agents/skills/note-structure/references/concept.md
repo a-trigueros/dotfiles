@@ -104,7 +104,9 @@ without loading any other note.
 type: concept
 created: 2026-01-22
 tags:
-  - global/concepts/concept--vector-space
+  - vector
+  - angle
+  - similarity
 edges:
   - target: global/concepts/concept--vector-space
     type: depends_on

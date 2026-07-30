@@ -109,7 +109,7 @@ ref_type: url
 public: true
 medium: paper
 tags:
-  - global/concepts/concept--large-language-models
+  - llm
 edges:
   - target: global/concepts/concept--vector-embeddings
     type: supports
