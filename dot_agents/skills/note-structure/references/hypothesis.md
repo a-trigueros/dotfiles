@@ -140,7 +140,7 @@ edges:
   - target: projects/client-x/patterns/pattern--recall-drops-above-threshold
     type: derived_from
     weight: 0.9
-  - target: projects/client-x/facts/fact--short-queries-recall-40pct-drop
+  - target: projects/client-x/facts/fact--2024-12-23-short-queries-recall-40pct-drop
     type: followed_by
     weight: 0.9
 ---

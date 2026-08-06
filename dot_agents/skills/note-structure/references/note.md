@@ -136,7 +136,7 @@ type: note
 created: 2026-03-15
 tags: []
 edges:
-  - target: projects/client-x/events/event--kickoff-call
+  - target: projects/client-x/events/event--2026-12-27-kickoff-call
     type: derived_from
     weight: 0.7
 ---

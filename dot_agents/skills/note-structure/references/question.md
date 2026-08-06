@@ -103,7 +103,7 @@ Vague questions ("how does ML work?") should be broken into atomic sub-questions
 type: question
 created: 2026-02-10
 area: vector search
-becomes: global/facts/fact--pgvector-latency-1m-vectors
+becomes: global/facts/fact--2022-10-23-pgvector-latency-1m-vectors
 tags: []
 edges:
   - target: global/concepts/concept--vector-embeddings

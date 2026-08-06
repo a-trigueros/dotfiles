@@ -17,9 +17,9 @@ If the statement has no traceable origin → it is not a fact, use `note` until 
 One fact = one statement about one subject.
 The subject must be precise enough that two related but distinct truths are two separate facts.
 
-correct: `fact--gpt4-turbo-context-window-128k`
-correct: `fact--gpt4o-context-window-256k`
-incorrect: `fact--openai-context-windows` (covers multiple subjects)
+correct: `fact--2023-01-17-gpt4-turbo-context-window-128k`
+correct: `fact--2023-01-17-gpt4o-context-window-256k`
+incorrect: `fact--2023-01-17-openai-context-windows` (covers multiple subjects)
 
 If a fact evolves — same subject, updated knowledge — the note is updated in place.
 The note IS the current state of knowledge. `created` reflects when the fact first entered
@@ -126,7 +126,7 @@ when they are necessary to make the statement unambiguous.
 
 ## Examples
 
-**global/facts/fact--pgvector-dimensions-limit.md**
+**global/facts/fact--2026-01-10-pgvector-dimensions-limit.md**
 
 ```yaml
 ---
@@ -154,7 +154,7 @@ This is a versioned specification — verify against the installed version befor
 
 ---
 
-**projects/client-x/facts/fact--short-queries-recall-40pct-drop.md**
+**projects/client-x/facts/fact--2026-04-12-short-queries-recall-40pct-drop.md**
 
 ```yaml
 ---
@@ -182,7 +182,7 @@ Measured on 2026-04-12 against the staging index (1.2M vectors, text-embedding-3
 
 ---
 
-**global/facts/fact--gpt4-turbo-context-window-128k.md**
+**global/facts/fact--2024-01-10-gpt4-turbo-context-window-128k.md**
 
 ```yaml
 ---

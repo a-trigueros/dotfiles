@@ -106,15 +106,15 @@ and when it does not. Vague patterns ("things get complicated") are not actionab
 type: pattern
 created: 2026-03-28
 observed_in:
-  - projects/client-x/events/event--search-benchmark-march
-  - projects/client-x/events/event--search-benchmark-april
+  - projects/client-x/events/event--2025-03-29-search-benchmark-march
+  - projects/client-x/events/event--2025-04-30-search-benchmark-april
 strength: strong
 tags: []
 edges:
   - target: projects/client-x/hypotheses/hypothesis--short-queries-cause-recall-drop
     type: supports
     weight: 0.7
-  - target: projects/client-x/events/event--search-benchmark-march
+  - target: projects/client-x/events/event--2025-03-29-search-benchmark-march
     type: derived_from
     weight: 0.9
 ---
@@ -138,8 +138,8 @@ No exceptions observed above 0.87. Below 0.83 the pattern does not hold.
 type: pattern
 created: 2026-02-05
 observed_in:
-  - projects/client-x/events/event--sprint-1-retrospective
-  - projects/client-y/events/event--phase-2-review
+  - projects/client-x/events/event--2024-12-10-sprint-1-retrospective
+  - projects/client-y/events/event--2025-01-03-phase-2-review
 strength: moderate
 tags: []
 edges:

@@ -93,7 +93,7 @@ created: 2026-03-20
 custom_type: retrospective
 tags: []
 edges:
-  - target: projects/client-x/events/event--kickoff-call
+  - target: projects/client-x/events/event--2024-12-16-kickoff-call
     type: derived_from
     weight: 0.9
   - target: projects/client-x/patterns/pattern--recall-drops-above-threshold

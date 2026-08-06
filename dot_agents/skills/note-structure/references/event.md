@@ -95,7 +95,7 @@ what happened, not an exhaustive account.
 
 ## Examples
 
-**projects/client-x/events/event--kickoff-call.md**
+**projects/client-x/events/event--2026-03-15-kickoff-call.md**
 
 ```yaml
 ---
@@ -104,10 +104,10 @@ created: 2026-03-01
 date: 2026-03-15
 tags: []
 edges:
-  - target: projects/client-x/decisions/decision--use-cosine-for-search
+  - target: projects/client-x/decisions/decision--2022-12-10-use-cosine-for-search
     type: derived_from
     weight: 0.9
-  - target: projects/client-x/events/event--first-delivery
+  - target: projects/client-x/events/event--2024-10-01-first-delivery
     type: followed_by
     weight: 0.7
 ---
@@ -121,7 +121,7 @@ Confirmed the semantic search direction and agreed on a 6-week delivery timeline
 
 ---
 
-**global/events/event--anthropic-claude-4-release.md**
+**global/events/event--2026-01-08-anthropic-claude-4-release.md**
 
 ```yaml
 ---
@@ -132,7 +132,7 @@ tags:
   - language-model
   - ai
 edges:
-  - target: global/facts/fact--claude-4-context-window
+  - target: global/facts/fact--2024-10-23-claude-4-context-window
     type: followed_by
     weight: 0.7
 ---
@@ -145,7 +145,7 @@ and instruction following.
 
 ---
 
-**projects/client-x/events/event--project-phase-1.md**
+**projects/client-x/events/event--2026-03-15-project-phase-1.md**
 
 ```yaml
 ---
@@ -155,7 +155,7 @@ date: 2026-03-15
 end_date: 2026-04-30
 tags: []
 edges:
-  - target: projects/client-x/events/event--kickoff-call
+  - target: projects/client-x/events/event--2023-07-29-kickoff-call
     type: preceded_by
     weight: 0.7
 ---

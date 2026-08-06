@@ -200,7 +200,7 @@ ref_type: file
 public: false
 tags: []
 edges:
-  - target: projects/client-x/decisions/decision--use-cosine-for-search
+  - target: projects/client-x/decisions/decision--2022-10-08-use-cosine-for-search
     type: supports
     weight: 0.8
 ---

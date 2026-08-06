@@ -183,7 +183,7 @@ edges:
   - target: global/playbooks/playbook--weekly-review
     type: depends_on
     weight: 0.7
-  - target: projects/client-x/decisions/decision--use-linear-for-tasks
+  - target: projects/client-x/decisions/decision--2024-10-22-use-linear-for-tasks
     type: depends_on
     weight: 0.8
 ---

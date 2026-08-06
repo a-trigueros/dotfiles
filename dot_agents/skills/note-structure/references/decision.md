@@ -92,7 +92,7 @@ what was decided and the core reason, without needing to traverse edges.
 
 ## Examples
 
-**projects/client-x/decision--use-cosine-for-search.md**
+**projects/client-x/decision--2022-02-25-use-cosine-for-search.md**
 
 ```yaml
 ---
@@ -108,7 +108,7 @@ edges:
   - target: global/pillars/pillar--simplicity-over-cleverness
     type: depends_on
     weight: 0.8
-  - target: global/facts/fact--cosine-similarity-is-normalized
+  - target: global/facts/fact--2013-02-02-cosine-similarity-is-normalized
     type: depends_on
     weight: 0.8
   - target: projects/client-x/pillars/pillar--performance-is-non-negotiable
@@ -127,7 +127,7 @@ the accuracy requirement.
 
 ---
 
-**global/decision--adopt-obsidian-for-knowledge-graph.md**
+**global/decision--2020-09-14-adopt-obsidian-for-knowledge-graph.md**
 
 ```yaml
 ---

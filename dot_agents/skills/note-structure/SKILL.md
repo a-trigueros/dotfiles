@@ -244,11 +244,11 @@ Right: `[[global/concepts/concept--vector-space|Vector Space]]`
 The full vault path is the note's unique identity in the graph.
 
 ```
-global/learning/fact--transformer-attention-is-quadratic.md
+global/learning/fact--2022-01-12-transformer-attention-is-quadratic.md
 global/concepts/concept--cosine-similarity.md
 global/sources/source--attention-is-all-you-need.md
 global/contacts/contact--jane-doe.md
-projects/project-x/decision--use-cosine-for-search.md
+projects/project-x/decision--2025-02-03-use-cosine-for-search.md
 projects/project-x/playbook--weekly-review.md
 ```
 
@@ -270,6 +270,9 @@ event--2021-04-22-convention-du-cercle.md
 The slugs are redacted in english.
 
 Every note type can have a date.
+
+These note types `decision`, `event`, `fact` and `question` **must** have a date.
+
 If there is a start date and a end date, like for extended events, use the start date in the slug.
 
 ---
