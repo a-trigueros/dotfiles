@@ -31,6 +31,7 @@ lazyssh = "latest"
 mas = { version = "latest", os = "macos" }
 neovim = "latest"
 node = "lts"
+oh-my-pi = { version = "latest", rename_exe = "omp" }
 opencode = "latest"
 pnpm = "latest"
 {{- if eq .chezmoi.os "windows" }}
@@ -76,7 +77,6 @@ zoxide = "latest"
 "github:GreyhavenHQ/greywall" = "latest"
 "github:GreyhavenHQ/greyproxy" = "latest"
 "pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
-"npm:@earendil-works/pi-coding-agent" = "latest"
 "npm:@maximhq/bifrost" = "latest"
 
 [env]
@@ -124,5 +124,4 @@ cd = 'z'
 ".." = 'cd ..'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
-p = 'greywall -- pi'
 
