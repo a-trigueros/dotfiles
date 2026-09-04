@@ -42,5 +42,7 @@
       ]
     }
   },
-  "plugin": []
+  "plugin": [
+    "@dietrichgebert/ponytail"
+  ]
 }
