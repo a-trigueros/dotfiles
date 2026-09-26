@@ -1,0 +1,21 @@
+[settings]
+experimental = true
+
+[env]
+ZAI_MCP_URL = "https://api.z.ai/api/mcp/web_search/sse?Authorization=${ZAI_API_KEY}"
+
+# =========================
+# Bifrost
+# =========================
+[daemons.bifrost]
+run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- bifrost'"
+auto = ["start", "stop"]
+ready_port = 8080
+
+# =========================
+# Agentgateway
+# =========================
+[daemons.agentgateway]
+run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- agentgateway -f $HOME/.config/agentgateway/config.yaml'"
+auto = ["start", "stop"]
+ready_port = 15000

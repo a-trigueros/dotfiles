@@ -12,14 +12,14 @@ ui:
 llm:
   gateways: default
   models:
-    - name: "*"
-      provider:
-        custom:
-          formats:
-            - type: completions
-      params:
-        baseUrl: "https://api.z.ai/api/coding/paas/v4"
-        apiKey: "$ZAI_API_KEY"
+  - name: '*'
+    provider:
+      custom:
+        formats:
+        - type: completions
+    params:
+      baseUrl: https://api.z.ai/api/coding/paas/v4
+      apiKey: $ZAI_API_KEY
   virtualModels: []
 frontendPolicies:
   http:
@@ -27,34 +27,31 @@ frontendPolicies:
 mcp:
   gateways: default
   targets:
-    - name: context7
-      stdio:
-        cmd: npx
-        args:
-          - -y
-          - "@upstash/context7-mcp"
-        env: {}
-        clear_env: false
-    - name: deepwiki
-      mcp:
-        host: https://mcp.deepwiki.com/mcp
-    - name: obsidian-brain
-      stdio:
-        cmd: npx
-        args:
-          - -y
-          - obsidian-brain@latest
-          - server
-        env: {}
-        clear_env: false
-    - name: web-search
-      stdio:
-        cmd: npx
-        args:
-          - -y
-          - "@zhafron/mcp-web-search"
-        env: {}
-        clear_env: false
+  - name: context7
+    stdio:
+      cmd: context7-mcp
+      env: {}
+      clear_env: false
+  - name: deepwiki
+    mcp:
+      host: https://mcp.deepwiki.com/mcp
+  - name: obsidian-brain
+    stdio:
+      cmd: obsidian-brain
+      args:
+      - server
+      env: {}
+      clear_env: false
+  - name: z.ai-web-search-sse
+    mcp:
+      host: https://api.z.ai/api/mcp/web_search/sse
+    policies:
+      backendAuth:
+        key:
+          value: $ZAI_API_KEY
+          location:
+            queryParameter:
+              name: Authorization
   port: null
   statefulMode: stateful
   prefixMode: always

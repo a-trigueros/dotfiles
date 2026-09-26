@@ -1,0 +1,7 @@
+[providers]
+keychain = { type = "keychain", service = "fnox" }
+onepass = { type = "1password" }
+
+[secrets]
+OP_SERVICE_ACCOUNT_TOKEN= { provider = "keychain", value = "op-token" }
+ZAI_API_KEY = { provider = "onepass", value = "op://Alex - Services/Zai - Gateway/password"}

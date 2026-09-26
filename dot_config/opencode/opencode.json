@@ -7,9 +7,7 @@
     "context7": {
       "type": "local",
       "command": [
-        "npx",
-        "-y",
-        "@upstash/context7-mcp"
+        "context7-mcp"
       ]
     },
     "deepwiki": {
@@ -19,9 +17,7 @@
     "obsidian-brain": {
       "type": "local",
       "command": [
-        "npx",
-        "-y",
-        "obsidian-brain@latest",
+        "obsidian-brain",
         "server"
       ]
     },

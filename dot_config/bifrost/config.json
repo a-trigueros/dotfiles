@@ -35,7 +35,7 @@
     "enabled": true,
     "type": "sqlite",
     "config": {
-      "path": "config.db"
+      "path": "/Users/atrigueros/.config/bifrost/config.db"
     }
   },
   "mcp": {
@@ -47,11 +47,7 @@
         "name": "context7",
         "connection_type": "stdio",
         "stdio_config": {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@upstash/context7-mcp"
-          ]
+          "command": "context7-mcp"
         },
         "tools_to_execute": [
           "*"
@@ -71,10 +67,8 @@
         "name": "obsidian_brain",
         "connection_type": "stdio",
         "stdio_config": {
-          "command": "npx",
+          "command": "obsidian-brain",
           "args": [
-            "-y",
-            "obsidian-brain@latest",
             "server"
           ]
         },
@@ -84,15 +78,9 @@
         "allow_on_all_virtual_keys": true
       },
       {
-        "name": "web_search",
-        "connection_type": "stdio",
-        "stdio_config": {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@zhafron/mcp-web-search"
-          ]
-        },
+        "name": "zai_web_search_sse",
+        "connection_type": "sse",
+        "connection_string": "env.ZAI_MCP_URL",
         "tools_to_execute": [
           "*"
         ],
