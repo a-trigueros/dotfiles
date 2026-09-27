@@ -1,0 +1,11 @@
+providers:
+  bifrost:
+    baseUrl: http://localhost:8080/openai
+    api: openai-completions
+    apiKey: sk-bf-e281fae7-252a-4542-979e-2c51895f4434
+    models:
+      - id: glm-5.3-flash
+        name: glm-5.3-flash
+        contextWindow: 1048576
+        maxTokens: 131072
+        reasonning: true

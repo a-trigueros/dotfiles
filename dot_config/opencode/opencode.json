@@ -3,23 +3,49 @@
   "instructions": [
     "~/.agents/AGENTS.md"
   ],
+  "provider": {
+    "bifrost": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Bifrost",
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1",
+        "apiKey": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7",
+        "modelsDiscovery": {
+          "enabled": true
+        }
+      },
+      "models": {
+        "zai/glm-4.5": {
+          "name": "GLM-4.5"
+        },
+        "zai/glm-4.6": {
+          "name": "GLM-4.6"
+        },
+        "zai/glm-5": {
+          "name": "GLM-5"
+        },
+        "zai/glm-5.1": {
+          "name": "GLM-5.1"
+        },
+        "zai/glm-5.2": {
+          "name": "GLM-5.2"
+        },
+        "zai/glm-5.3": {
+          "name": "GLM-5.3"
+        },
+        "zai/glm-5.3-flash": {
+          "name": "GLM-5.3-Flash"
+        }
+      }
+    }
+  },
   "mcp": {
-    "context7": {
-      "type": "local",
-      "command": [
-        "context7-mcp"
-      ]
-    },
-    "deepwiki": {
+    "bifrost": {
       "type": "remote",
-      "url": "https://mcp.deepwiki.com/mcp"
-    },
-    "obsidian-brain": {
-      "type": "local",
-      "command": [
-        "obsidian-brain",
-        "server"
-      ]
+      "url": "http://localhost:8080/mcp",
+      "headers": {
+        "x-bf-vk": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7"
+      }
     },
     "serena": {
       "type": "local",
@@ -28,17 +54,10 @@
         "start-mcp-server",
         "--project-from-cwd"
       ]
-    },
-    "web-search": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@zhafron/mcp-web-search"
-      ]
     }
   },
   "plugin": [
+    "opencode-models-discovery",
     "@dietrichgebert/ponytail"
   ]
 }

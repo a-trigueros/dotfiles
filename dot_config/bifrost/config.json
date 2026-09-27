@@ -3,7 +3,10 @@
   "encryption_key": "U5KxKezplSHqyXVoFHH9bTDu47KYjn+cZCKNgcx+YSg=",
   "client": {
     "drop_excess_requests": false,
-    "enable_logging": true
+    "enable_logging": true,
+    "allowed_headers": [
+      "*"
+    ]
   },
   "providers": {
     "zai": {
@@ -22,12 +25,7 @@
         "default_request_timeout_in_seconds": 300
       },
       "custom_provider_config": {
-        "base_provider_type": "anthropic",
-        "allowed_requests": {
-          "chat_completion": true,
-          "chat_completion_stream": true,
-          "list_models": true
-        }
+        "base_provider_type": "anthropic"
       }
     }
   },
@@ -94,6 +92,21 @@
         "id": "vk-pi-local",
         "name": "pi-local",
         "value": "sk-bf-e281fae7-252a-4542-979e-2c51895f4434",
+        "allow_all_providers": true,
+        "is_active": true
+      },
+      {
+        "id": "vk-opencode-local",
+        "name": "opencode-local",
+        "value": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7",
+        "allow_all_providers": true,
+        "is_active": true
+      },
+      {
+        "id": "vk-goose-local",
+        "name": "goose-local",
+        "value": "sk-bf-6fbbb647-ce81-4315-8ea6-b043d8299831",
+        "allow_all_providers": true,
         "is_active": true
       }
     ]

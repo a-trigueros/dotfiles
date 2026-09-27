@@ -1,0 +1,24 @@
+setupVersion: 2
+theme:
+  dark: dark-catppuccin
+  light: light-catppuccin
+symbolPreset: nerd
+colorBlindMode: false
+terminal:
+  showProgress: true
+power:
+  sleepPrevention: idle
+features:
+  unexpectedStopDetection: smart
+memory:
+  backend: "off"
+bashInterceptor:
+  enabled: false
+vault:
+  enabled: false
+task:
+  enableLsp: false
+  isolation:
+    mode: none
+composer:
+  shape: rail
