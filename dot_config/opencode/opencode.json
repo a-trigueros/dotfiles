@@ -13,29 +13,6 @@
         "modelsDiscovery": {
           "enabled": true
         }
-      },
-      "models": {
-        "zai/glm-4.5": {
-          "name": "GLM-4.5"
-        },
-        "zai/glm-4.6": {
-          "name": "GLM-4.6"
-        },
-        "zai/glm-5": {
-          "name": "GLM-5"
-        },
-        "zai/glm-5.1": {
-          "name": "GLM-5.1"
-        },
-        "zai/glm-5.2": {
-          "name": "GLM-5.2"
-        },
-        "zai/glm-5.3": {
-          "name": "GLM-5.3"
-        },
-        "zai/glm-5.3-flash": {
-          "name": "GLM-5.3-Flash"
-        }
       }
     }
   },

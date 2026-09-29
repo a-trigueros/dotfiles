@@ -1,0 +1,8 @@
+[settings.supervisor]
+auto_start = false
+
+[daemons]
+
+[namespaces.autostart-services-7f1a5a03a1cd5ea2]
+dir = "{{ .chezmoi.homeDir }}/.config/autostart-services"
+config = ["{{ .chezmoi.homeDir }}/.local/state/mise/daemons/7f1a5a03a1cd5ea2/pitchfork.toml"]

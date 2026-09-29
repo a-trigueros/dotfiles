@@ -3,24 +3,61 @@ config:
   database:
     url: sqlite:///Users/atrigueros/.config/agentgateway/data.db
   modelCatalog:
-    - file: /Users/atrigueros/.config/agentgateway/base-costs.json
+  - file: /Users/atrigueros/.config/agentgateway/base-costs.json
 gateways:
   default:
-    port: 4000
+    port: 16000
 ui:
   gateways: default
 llm:
   gateways: default
-  models:
-  - name: '*'
+  providers:
+  - name: zai
     provider:
       custom:
+        providerOverride: zai
         formats:
         - type: completions
     params:
       baseUrl: https://api.z.ai/api/coding/paas/v4
       apiKey: $ZAI_API_KEY
-  virtualModels: []
+  models:
+  - name: '*'
+    provider:
+      reference: zai
+  - name: glm-4.5
+    provider:
+      reference: zai
+  - name: glm-4.5-air
+    provider:
+      reference: zai
+  - name: glm-4.6
+    provider:
+      reference: zai
+  - name: glm-4.7
+    provider:
+      reference: zai
+  - name: glm-5
+    provider:
+      reference: zai
+  - name: glm-5-turbo
+    provider:
+      reference: zai
+  - name: glm-5.1
+    provider:
+      reference: zai
+  - name: glm-5.2
+    provider:
+      reference: zai
+  - name: glm-5.3
+    provider:
+      reference: zai
+  - name: glm-5.3-flash
+    provider:
+      reference: zai
+  - name: glm-5.3-flashx
+    provider:
+      reference: zai
 frontendPolicies:
   http:
     maxBufferSize: 33554432
@@ -43,7 +80,7 @@ mcp:
       env: {}
       clear_env: false
   - name: z.ai-web-search-sse
-    mcp:
+    sse:
       host: https://api.z.ai/api/mcp/web_search/sse
     policies:
       backendAuth:
@@ -52,7 +89,6 @@ mcp:
           location:
             queryParameter:
               name: Authorization
-  port: null
   statefulMode: stateful
   prefixMode: always
   failureMode: failOpen
