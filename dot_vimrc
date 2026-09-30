@@ -1,0 +1,467 @@
+" ============================================================================
+"  ~/.vimrc — expérience « LazyVim » sous Vim 9.1 (macOS)
+"  Sauvegarde de l'ancienne config : ~/.vimrc.backup-20260930
+"
+"  Après édition, lance :  :PlugInstall
+"
+"  ── Raccourcis principaux (référence rapide) ──────────────────────────────
+"    <leader> = Espace
+"    <leader>e / <leader>E    NERDTree toggle / révéler le fichier courant
+"    <leader>w                = Ctrl-w (toutes les commandes fenêtres)
+"    <leader>| / <leader>-    split vertical / horizontal
+"    <C-h/j/k/l>              naviguer entre les fenêtres
+"    [b / ]b                  buffer précédent / suivant
+"    <leader><leader>         buffers (fzf, flou)
+"    <C-p> / <leader>ff       fichiers du projet (fzf, flou)
+"    <leader>fr/fb/fh         fichiers récents / buffers / aide (fzf)
+"    <leader>sw / sW          recherche floue live du mot courant (rg+fzf)
+"    <leader>/                recherche floue live (motif libre)
+"    <leader>sq               grep exact du mot → quickfix
+"    <leader>bd / <leader>bo  supprimer le buffer / tous les autres
+"    gcc / gc{motion}         commenter / décommenter (vim-commentary)
+"    ys / cs / ds             entourer / changer / supprimer (vim-surround)
+"    <leader>sw               chercher le mot courant dans le projet (rg)
+"    <leader>/                chercher un motif dans le projet (rg)
+"    <Esc><Esc>               désactiver le surlignage de recherche
+"    <leader>ul ou <leader>l  afficher les invisibles (tabs, EOL)
+"    <leader>uw               toggle wrap
+"    jk                       retour au mode normal (insertion / terminal)
+"    <C-s>                    sauvegarder
+"    <A-j> / <A-k>            déplacer ligne/sélection vers le bas/haut
+" ============================================================================
+
+" ─── Initialisation ────────────────────────────────────────────────────────
+set nocompatible
+set encoding=utf-8
+scriptencoding utf-8
+
+" Leader = Espace (LazyVim-style). Doit être défini AVANT les plugins.
+let g:mapleader = " "
+let mapleader = " "
+
+" jk → mode normal (défini tôt, comme dans ta config d'origine)
+inoremap jk <Esc>
+if has('terminal')
+  tnoremap jk <C-\><C-n>
+endif
+
+" ─── Plugins (vim-plug) — équivalents « core » de LazyVim ─────────────────
+call plug#begin('~/.vim/plugged')
+
+  Plug 'catppuccin/vim', { 'as': 'catppuccin', 'branch': 'main' }  " colorscheme
+  Plug 'vim-airline/vim-airline'
+  Plug 'preservim/nerdtree',      { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+  Plug 'liuchengxu/vim-which-key' " menus <leader> (chargé au démarrage pour l'enregistrement)
+  Plug 'tpope/vim-commentary'     " ≈ mini.comment        : gcc, gc{motion}
+  Plug 'tpope/vim-surround'       " ≈ mini.surround       : ys, cs, ds
+  Plug 'tpope/vim-repeat'         " . rejoue aussi surround/commentary
+  Plug 'tpope/vim-abolish'        " ≈ remplaçements malins : crs/crm/crc
+  Plug 'tpope/vim-unimpaired'     " ≈ ]b [b ]q [q ]t [t (navigation)
+  Plug 'inkarkat/vim-ReplaceWithRegister' " ≈ gra/gr{motion} (remplacer par registre)
+  Plug 'thinca/vim-visualstar'    " * sur une sélection visuelle
+  Plug 'machakann/vim-highlightedyank' " surlignage du yank (feedback visuel)
+  Plug 'junegunn/fzf'             " fournit fzf#run (le binaire fzf est déjà dans ton PATH)
+  Plug 'junegunn/fzf.vim'         " ≈ Telescope : fichiers/buffers/grep flous
+  Plug 'airblade/vim-rooter'      " cwd = racine du projet (comme LazyVim)
+call plug#end()
+
+filetype plugin indent on
+syntax on
+
+" matchit : % saute entre if/endif, <div>/</div>… (≈ mini.ai de LazyVim)
+if has('packages')
+  silent! packadd matchit
+endif
+
+" ═══════════════════════════════════════════════════════════════════════════
+"  OPTIONS — calquées sur LazyVim (lua/config/options.lua)
+" ═══════════════════════════════════════════════════════════════════════════
+
+" ─── UI ────────────────────────────────────────────────────────────────────
+set termguicolors
+set number
+set relativenumber
+set ruler
+set showmode
+set showcmd
+set laststatus=2
+set splitbelow                 " ≈ LazyVim : nouveaux splits en bas
+set splitright                 " ≈ LazyVim : nouveaux splits à droite
+set pumheight=10
+set cursorline
+set fillchars=vert:│,fold:·,eob:~
+set visualbell
+
+" ─── Édition (conserve TES réglages d'indentation : 2 espaces) ────────────
+set expandtab
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set smartindent
+set formatoptions=tcqrn1       " conservé de ta config
+set textwidth=79               " conservé de ta config
+
+" ─── Fichiers / buffers ───────────────────────────────────────────────────
+set hidden
+set nobackup
+set nowritebackup
+set noswapfile
+set undofile                   " historique persistant (LazyVim l'active)
+set undodir=~/.vim/undodir//
+set confirm
+set autoread
+set updatetime=200             " ≈ LazyVim
+set timeoutlen=300             " pour jk et <leader>w sans latence
+set title
+
+" ─── Recherche ────────────────────────────────────────────────────────────
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set showmatch
+
+" ripgrep comme moteur de :grep (installé sur ta machine) ≈ telescope live_grep
+set grepprg=rg\ --vimgrep
+set grepformat=%f:%l:%c:%m
+
+" ─── Divers ───────────────────────────────────────────────────────────────
+set clipboard=unnamed          " ≈ LazyVim : presse-papiers système
+set scrolloff=10               " ≈ LazyVim
+set sidescrolloff=8
+set backspace=indent,eol,start
+set path+=**
+set wildmenu
+set wildmode=longest:full,full
+set wildignore+=**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/target/**
+set modelines=0
+set listchars=tab:▸\ ,eol:¬    " conservé de ta config
+set matchpairs+=<:>
+
+" ═══════════════════════════════════════════════════════════════════════════
+"  KEYMAPS — calqués sur LazyVim (lua/config/keymaps.lua)
+" ═══════════════════════════════════════════════════════════════════════════
+
+" ─── Sortir du mode insertion / terminal (déjà défini plus haut) ─────────
+"   inoremap jk <Esc>  |  tnoremap jk <C-\><C-n>
+
+" ─── Sauvegarder / quitter ────────────────────────────────────────────────
+nnoremap <silent> <C-s> :update<CR>
+inoremap <silent> <C-s> <Esc>:update<CR>a
+vnoremap <silent> <C-s> <Esc>:update<CR>
+" ≈ LazyVim : quitter tout / sauver tout (commentaire hors du mapping : le "
+" signe " en fin de mapping ferait partie du raccourci !)
+nnoremap <silent> <leader>qq :confirm qa<CR>
+nnoremap <silent> <leader>ww :wa<CR>
+
+" ─── Buffers ≈ LazyVim (barre bufferline + <S-h>/<S-l>) ──────────────────
+nnoremap <silent> <S-h> :bprevious<CR>
+nnoremap <silent> <S-l> :bnext<CR>
+nnoremap <silent> [b    :bprevious<CR>
+nnoremap <silent> ]b    :bnext<CR>
+nnoremap <silent> [B    :bfirst<CR>
+nnoremap <silent> ]B    :blast<CR>
+nnoremap <silent> <leader>bd :bdelete<CR>
+" garder uniquement le buffer actif
+nnoremap <silent> <leader>bo :%bdelete<BAR>edit#<BAR>bd#<CR>
+
+" ─── Fenêtres ─────────────────────────────────────────────────────────────
+" ≈ LazyVim : Ctrl+hjkl pour naviguer
+nnoremap <silent> <C-h> <C-w>h
+nnoremap <silent> <C-j> <C-w>j
+nnoremap <silent> <C-k> <C-w>k
+nnoremap <silent> <C-l> <C-w>l
+
+" Fenêtres via <leader>w : mappings EXPLICITES (et non un nmap <leader>w
+" <C-w> global) pour que which-key affiche un vrai sous-menu avec des
+" descriptions au lieu d'être écrasé par la feuille native <C-w>
+nnoremap <silent> <leader>wh <C-w>h
+nnoremap <silent> <leader>wj <C-w>j
+nnoremap <silent> <leader>wk <C-w>k
+nnoremap <silent> <leader>wl <C-w>l
+nnoremap <silent> <leader>wv :vsplit<CR>
+nnoremap <silent> <leader>ws :split<CR>
+nnoremap <silent> <leader>wd :close<CR>
+nnoremap <silent> <leader>wo :only<CR>
+nnoremap <silent> <leader>w= <C-w>=
+" <Bar> est la forme protégée du pipe : un | nu terminerait la commande
+" :nnoremap et exécuterait ":vsplit<CR>" comme une commande séparée !
+nnoremap <silent> <leader><Bar> :vsplit<CR>
+nnoremap <silent> <leader>- :split<CR>
+
+" ─── Splits de fichiers (≈ LazyVim <leader>ed / <leader>ef) ──────────────
+nnoremap <silent> <leader>ev :vsplit<CR>:edit<Space>
+nnoremap <silent> <leader>es :split<CR>:edit<Space>
+
+" ─── Déplacement écran centré (≈ LazyVim) ─────────────────────────────────
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" ─── Indentation qui reste en mode visuel ─────────────────────────────────
+vnoremap < <gv
+vnoremap > >gv
+
+" ─── Déplacer lignes / sélection (Alt+j / Alt+k) ─────────────────────────
+nnoremap <silent> <A-j> :m .+1<CR>==
+nnoremap <silent> <A-k> :m .-2<CR>==
+inoremap <silent> <A-j> <Esc>:m .+1<CR>==gi
+inoremap <silent> <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <silent> <A-j> :m '>+1<CR>gv=gv
+vnoremap <silent> <A-k> :m '<-2<CR>gv=gv
+
+" ─── Recherche ────────────────────────────────────────────────────────────
+" / et ? restent en « magic » par défaut : le préfixe \v rendait les
+" caractères = ? # < > & spéciaux (E64 sur "/=>" par exemple).
+" Si tu veux le very magic à la demande : nnoremap / /\v
+nnoremap <silent> <Esc><Esc> :let @/=''<CR>
+" conservé de ta config : vider la recherche
+" (l'ancien <leader><space> « clear search » est remplacé par <Esc><Esc>
+"  ci-dessus : <leader><leader> doit rester libre pour le switch de buffers
+"  fzf, comme dans LazyVim)
+
+" * fonctionne sur la sélection visuelle (vim-visualstar)
+" Remplacer yank : gra{motion} (≈ LazyVim gr{motion})
+
+" ─── Grep projet ≈ telescope live_grep ───────────────────────────────────
+" Grep depuis la racine git du fichier (fallback : son dossier) — JAMAIS
+" depuis le cwd, sinon "vim ~/unfichier" + <leader>sw crawl tout ~ !
+" Grep EXACT (quickfix) — l'équivalent flou est <leader>sw ci-dessous
+function! s:ProjectGrep(args) abort
+  let l:git = systemlist('git -C ' . shellescape(expand('%:p:h')) . ' rev-parse --show-toplevel')
+  let l:root = (v:shell_error || empty(l:git)) ? expand('%:p:h') : l:git[0]
+  let l:cwd = getcwd()
+  execute 'lcd ' . fnameescape(l:root)
+  try
+    execute 'grep ' . a:args
+  finally
+    execute 'lcd ' . fnameescape(l:cwd)
+  endtry
+  copen
+endfunction
+" mots sous le curseur dans le quickfix (grep exact)
+nnoremap <silent> <leader>sq :call <SID>ProjectGrep(expand('<cword>'))<CR>
+" Recherche floue live ≈ telescope live_grep (LazyVim <leader>sw)
+command! -bang -nargs=* RgLive
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always --smart-case ' .
+      \   '--glob "!node_modules" --glob "!.git" --glob "!dist" --glob "!build" --glob "!target" -- ' .
+      \   shellescape(<q-args>), 1,
+      \   fzf#vim#with_preview('right:50%'), <bang>0)
+" mot sous le curseur, prérempli (éditable en live)
+nnoremap <silent> <leader>sw :execute 'RgLive ' . expand('<cword>')<CR>
+nnoremap <silent> <leader>sW :execute 'RgLive ' . expand('<cWORD>')<CR>
+" motif libre, flou, en live
+nnoremap <leader>/ :RgLive<CR>
+
+" <leader>xx → toggle quickfix (≈ Trouble de LazyVim), en pur VimScript
+function! s:ToggleQuickfix() abort
+  for l:win in range(1, winnr('$'))
+    if getwinvar(l:win, '&buftype') ==# 'quickfix'
+      cclose | return
+    endif
+  endfor
+  copen
+endfunction
+nnoremap <silent> <leader>xx :call <SID>ToggleQuickfix()<CR>
+nnoremap <silent> <leader>xq :cclose<CR>
+
+" ─── Fuzzy finder (fzf) ≈ Telescope de LazyVim ──────────────────────────
+nnoremap <silent> <C-p>           :Files<CR>       " fichiers du projet
+nnoremap <silent> <leader>ff      :Files<CR>
+nnoremap <silent> <leader><leader> :Buffers<CR>    " switch de buffer flou
+nnoremap <silent> <leader>fb      :Buffers<CR>
+nnoremap <silent> <leader>fr      :History<CR>     " fichiers récents
+nnoremap <silent> <leader>fh      :Helptags<CR>    " aide floue
+" liste brute (fallback sans fzf)
+nnoremap <silent> <leader>,  :ls<CR>:buffer<Space>
+
+" ─── Fichiers (NERDTree) ─────────────────────────────────────────────────
+nnoremap <silent> <leader>e :NERDTreeToggle<CR>
+nnoremap <silent> <leader>E :NERDTreeFind<CR>
+
+" ─── Toggles UI ≈ LazyVim <leader>u ──────────────────────────────────────
+" invisibles / wrap / numéros / orthographe (toggles ≈ LazyVim <leader>u)
+nnoremap <silent> <leader>ul :set invlist<CR>
+nnoremap <silent> <leader>l  :set invlist<CR>
+nnoremap <silent> <leader>uw :set invwrap<CR>
+nnoremap <silent> <leader>un :set invnumber<CR>:set invrelativenumber<CR>
+nnoremap <silent> <leader>uc :let &background = (&background == 'dark' ? 'light' : 'dark')<CR>
+nnoremap <silent> <leader>uh :nohlsearch<CR>
+nnoremap <silent> <leader>us :set invspell<CR>
+
+" ─── Formatage ───────────────────────────────────────────────────────────
+" reformatage de paragraphe (conservé de ta config, ex <leader>q)
+nnoremap <leader>gq gqip
+
+" ─── which-key sur <leader> ───────────────────────────────────────────────
+nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
+
+" Labels EXPLICITES pour which-key : chaque touche du préfixe leader décrite
+let g:which_key_map = {}
+call which_key#register('<Space>', "g:which_key_map")
+
+" Affichage soigné (options valides de vim-which-key)
+let g:which_key_sep = '→'
+let g:which_key_timeout = 300
+
+" Racine
+let g:which_key_map['name'] = '<leader> (style LazyVim)'
+let g:which_key_map['e'] = 'explorer : ouvrir / fermer'
+let g:which_key_map['E'] = 'explorer : révéler le fichier courant'
+let g:which_key_map['/'] = 'recherche floue live (rg + fzf)'
+let g:which_key_map['<Space>'] = 'buffers flou (switch rapide)'
+let g:which_key_map['l'] = 'caractères invisibles (toggle)'
+let g:which_key_map[','] = 'liste :ls (fallback)'
+let g:which_key_map['<Bar>'] = 'split vertical'
+
+" Groupes
+let g:which_key_map['f'] = {
+      \ 'name': '+fichiers (fzf)',
+      \ 'f': 'fichiers du projet',
+      \ 'b': 'buffers ouverts',
+      \ 'r': 'fichiers récents',
+      \ 'h': 'tags d aide',
+      \ }
+" NB : la clé du mapping est <Bar> (forme protégée du pipe). ATTENTION : ne
+" PAS dupliquer avec la clé '|' — le plugin fusionne <Bar> → | et un
+" extend() sur deux chaînes lève E712 !
+let g:which_key_map['<Bar>'] = 'split vertical'
+let g:which_key_map['-'] = 'split horizontal'
+
+" Groupes
+let g:which_key_map['b'] = {
+      \ 'name': '+buffers',
+      \ 'd': 'supprimer le buffer courant',
+      \ 'o': 'ne garder que le buffer actif',
+      \ }
+let g:which_key_map['w'] = {
+      \ 'name': '+fenêtres',
+      \ 'h': 'aller à gauche',
+      \ 'j': 'aller en bas',
+      \ 'k': 'aller en haut',
+      \ 'l': 'aller à droite',
+      \ 'v': 'split vertical',
+      \ 's': 'split horizontal',
+      \ 'd': 'fermer la fenêtre',
+      \ 'o': 'fermer les autres',
+      \ '=': 'rééquilibrer',
+      \ }
+let g:which_key_map['q'] = {
+      \ 'name': '+quitter / sauver',
+      \ 'q': 'quitter tout',
+      \ 'w': 'sauver tous les buffers',
+      \ }
+let g:which_key_map['s'] = {
+      \ 'name': '+recherche',
+      \ 'w': 'mot sous le curseur (flou live)',
+      \ 'W': 'WORD sous le curseur (flou live)',
+      \ 'q': 'grep exact → quickfix',
+      \ }
+let g:which_key_map['x'] = {
+      \ 'name': '+quickfix',
+      \ 'x': 'ouvrir / fermer la quickfix',
+      \ 'q': 'fermer la quickfix',
+      \ }
+let g:which_key_map['u'] = {
+      \ 'name': '+affichage',
+      \ 'l': 'caractères invisibles',
+      \ 'w': 'retour à la ligne automatique',
+      \ 'n': 'numéros de ligne',
+      \ 'c': 'bascule clair / sombre',
+      \ 'h': 'désactiver le surlignage recherche',
+      \ 's': 'correcteur orthographique',
+      \ }
+let g:which_key_map['g'] = {
+      \ 'name': '+texte',
+      \ 'q': 'reformater le paragraphe',
+      \ }
+
+" ═══════════════════════════════════════════════════════════════════════════
+"  AUTOCMDS — comportements du core LazyVim
+" ═══════════════════════════════════════════════════════════════════════════
+
+" Répertoire undo
+augroup vimrc_undodir
+  autocmd!
+  autocmd BufWritePre * call mkdir(expand('~/.vim/undodir'), 'p')
+augroup END
+
+" Recharger un fichier modifié à l'extérieur (≈ LazyVim autoread group)
+augroup vimrc_autoread
+  autocmd!
+  autocmd FocusGained,BufEnter * checktime
+augroup END
+
+" Revenir à la dernière position d'édition
+augroup vimrc_restore_pos
+  autocmd!
+  autocmd BufReadPost *
+        \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
+        \   execute 'normal! g`"' |
+        \ endif
+augroup END
+
+" Lancer :checktime au focus (déjà couvert) + resize auto des splits
+augroup vimrc_resize
+  autocmd!
+  autocmd VimResized * wincmd =
+augroup END
+
+" Fermer NERDTree si c'est la dernière fenêtre (comportement type LazyVim)
+augroup vimrc_nerdtree
+  autocmd!
+  autocmd BufEnter *
+        \ if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+        \|   q | endif
+augroup END
+
+" ═══════════════════════════════════════════════════════════════════════════
+"  PARAMÈTRES DES PLUGINS
+" ═══════════════════════════════════════════════════════════════════════════
+
+" ─── catppuccin (ton thème actuel sous LazyVim) ──────────────────────────
+let g:catppuccin_flavour = 'macchiato'
+silent! colorscheme catppuccin
+
+" ─── airline (statusline, ≈ lualine de LazyVim) ─────────────────────────
+let g:airline_theme = 'catppuccin_macchiato'
+let g:airline_powerline_fonts = 1        " Nerd Fonts détectées sur ta machine
+let g:airline#extensions#tabline#enabled = 1   " bufferline intégrée
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" ─── fzf ─────────────────────────────────────────────────────────────────
+" :Files listera avec rg (respecte .gitignore) y compris fichiers cachés utiles
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*" --glob "!node_modules/*"'
+let g:fzf_preview_window = 'right:50%'
+" Raccourcis internes fzf (dans la fenêtre fzf)
+let g:fzf_action = { 'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit' }
+
+" ─── vim-rooter : cwd = racine projet (≈ LazyVim) ────────────────────────
+let g:rooter_patterns = ['.git', 'package.json', 'Cargo.toml', 'pyproject.toml', 'go.mod', '.obsidian']
+let g:rooter_silent_chdir = 1
+let g:rooter_resolve_links = 1
+
+" ─── NERDTree ────────────────────────────────────────────────────────────
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeWinSize = 32
+let g:NERDTreeStatusline = " "        " statusline épurée dans l'arbre
+
+" ─── vim-highlightedyank ────────────────────────────────────────────────
+let g:highlightedyank_highlight_duration = 200
+
+" ─── vim-togglelist (<leader>xx / <leader>xq intégrés ci-dessus) ────────
+let g:toggle_list_no_mappings = 1
+
+" ═══════════════════════════════════════════════════════════════════════════
+"  NOTES
+"  - LSP / autocomplétion / treesitter : uniquement en Neovim (tu as déjà
+"    LazyVim installé dans ~/.config/nvim pour ça).
+"  - `vim -es` ne charge pas l'UI : teste avec `vim` normal.
+" ============================================================================
