@@ -5,13 +5,104 @@
   "description": "Custom Bifrost provider",
   "api_key_env": "CUSTOM_BIFROST_API_KEY",
   "base_url": "http://127.0.0.1:8080/v1",
+  "dynamic_models": true,
   "models": [
     {
+      "name": "zai/glm-4.5",
+      "context_limit": 128000,
+      "input_token_cost": 0.0000006,
+      "output_token_cost": 0.0000022,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-4.5-air",
+      "context_limit": 128000,
+      "input_token_cost": 0.0000002,
+      "output_token_cost": 0.0000011,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-4.6",
+      "context_limit": 200000,
+      "input_token_cost": 0.0000006,
+      "output_token_cost": 0.0000022,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-4.7",
+      "context_limit": 200000,
+      "input_token_cost": 0.0000006,
+      "output_token_cost": 0.0000022,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5",
+      "context_limit": 200000,
+      "input_token_cost": 0.000001,
+      "output_token_cost": 0.0000032,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5-turbo",
+      "context_limit": 200000,
+      "input_token_cost": 0.000001,
+      "output_token_cost": 0.0000032,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5.1",
+      "context_limit": 200000,
+      "input_token_cost": 0.0000014,
+      "output_token_cost": 0.0000044,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5.2",
+      "context_limit": 1000000,
+      "input_token_cost": 0.0000014,
+      "output_token_cost": 0.0000044,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5.3",
+      "context_limit": 1000000,
+      "input_token_cost": 0.0000014,
+      "output_token_cost": 0.0000044,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
       "name": "zai/glm-5.3-flash",
-      "context_limit": null,
-      "input_token_cost": null,
-      "output_token_cost": null,
-      "currency": null,
+      "context_limit": 1048576,
+      "input_token_cost": 0.00000015,
+      "output_token_cost": 0.0000005,
+      "currency": "$",
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "zai/glm-5.3-flashx",
+      "context_limit": 1048576,
+      "input_token_cost": 0.00000015,
+      "output_token_cost": 0.0000005,
+      "currency": "$",
       "supports_cache_control": null,
       "reasoning": false
     }
@@ -25,7 +116,6 @@
   "base_path": null,
   "env_vars": null,
   "auth": null,
-  "dynamic_models": null,
   "skip_canonical_filtering": false,
   "model_doc_link": null,
   "setup_steps": [],

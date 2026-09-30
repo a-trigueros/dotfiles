@@ -19,6 +19,8 @@ vault:
 task:
   enableLsp: false
   isolation:
-    mode: none
+    enabled: false
 composer:
   shape: rail
+modelRoles:
+  default: bifrost/zai/glm-5.3-flash

@@ -33,10 +33,8 @@ neovim = "latest"
 node = "lts"
 oh-my-pi = { version = "latest", rename_exe = "omp" }
 opencode = "latest"
+pitchfork = "latest"
 pnpm = "latest"
-{{- if eq .chezmoi.os "windows" }}
-powershell-core = "latest"
-{{- end }}
 python = "latest"
 ripgrep = "latest"
 rust = { version = "latest", os = ["macos", "linux"] }
@@ -59,14 +57,9 @@ zoxide = "latest"
 "cargo:meli" = { version = "latest", os = ["macos", "linux"] }
 "cargo:sheldon" = { version = "latest", os = ["macos", "linux"] }
 
-"github:agentgateway/agentgateway" = "latest"
 "github:murex/TCR" = "latest"
 "github:nushell/nushell" = "latest"
 "github:remotemobprogramming/mob" = { version = "latest", os = [
-  "macos",
-  "linux",
-]}
-"github:rtk-ai/rtk" = { version = "latest", os = [
   "macos",
   "linux",
 ]}
@@ -76,8 +69,16 @@ zoxide = "latest"
 ]}
 "github:GreyhavenHQ/greywall" = "latest"
 "github:GreyhavenHQ/greyproxy" = "latest"
-"pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
+
+"github:agentgateway/agentgateway" = "latest"
 "npm:@maximhq/bifrost" = "latest"
+"npm:@upstash/context7-mcp" = "latest"
+"npm:obsidian-brain" = { version = "latest", allow_builds = true }
+"github:rtk-ai/rtk" = { version = "latest", os = [
+  "macos",
+  "linux",
+]}
+"pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
 
 [env]
 EDITOR = "nvim"
@@ -125,3 +126,10 @@ cd = 'z'
 "..." = 'cd ../..'
 "...." = 'cd ../../..'
 
+[bootstrap.services.pitchfork]
+scope = "user"
+command = "/opt/homebrew/bin/mise x -- pitchfork supervisor run --boot"
+environment = { PITCHFORK_MISE_BIN = "/opt/homebrew/bin/mise" }
+working_directory = "~"
+requires_tools = true
+restart = "on-failure"
