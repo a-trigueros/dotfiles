@@ -46,7 +46,8 @@ if has('terminal')
 endif
 
 " ─── Plugins (vim-plug) — équivalents « core » de LazyVim ─────────────────
-call plug#begin('~/.vim/plugged')
+" silent! évite le warning si git est absent (NAS) ; les plugins sont optionnels
+silent! call plug#begin('~/.vim/plugged')
 
   Plug 'catppuccin/vim', { 'as': 'catppuccin', 'branch': 'main' }  " colorscheme
   Plug 'vim-airline/vim-airline'
@@ -63,10 +64,11 @@ call plug#begin('~/.vim/plugged')
   Plug 'junegunn/fzf'             " fournit fzf#run (le binaire fzf est déjà dans ton PATH)
   Plug 'junegunn/fzf.vim'         " ≈ Telescope : fichiers/buffers/grep flous
   Plug 'airblade/vim-rooter'      " cwd = racine du projet (comme LazyVim)
-call plug#end()
+silent! call plug#end()   " (E484 bénin sur les Vim anciens sans fichiers syntax)
 
-filetype plugin indent on
-syntax on
+" silent! : sur un Vim ancien (NAS), les fichiers runtime peuvent manquer
+silent! filetype plugin indent on
+silent! syntax on
 
 " matchit : % saute entre if/endif, <div>/</div>… (≈ mini.ai de LazyVim)
 if has('packages')
@@ -78,9 +80,14 @@ endif
 " ═══════════════════════════════════════════════════════════════════════════
 
 " ─── UI ────────────────────────────────────────────────────────────────────
-set termguicolors
+" Options modernes gardées par exists() : ignorées proprement sur Vim ancien
+if exists('+termguicolors')
+  set termguicolors
+endif
 set number
-set relativenumber
+if exists('+relativenumber')
+  set relativenumber
+endif
 set ruler
 set showmode
 set showcmd
@@ -89,7 +96,7 @@ set splitbelow                 " ≈ LazyVim : nouveaux splits en bas
 set splitright                 " ≈ LazyVim : nouveaux splits à droite
 set pumheight=10
 set cursorline
-set fillchars=vert:│,fold:·,eob:~
+silent! set fillchars=vert:│,fold:·,eob:~   " ignoré si Vim < 8.0.1800 (eob)
 set visualbell
 
 " ─── Édition (conserve TES réglages d'indentation : 2 espaces) ────────────
@@ -106,8 +113,10 @@ set hidden
 set nobackup
 set nowritebackup
 set noswapfile
-set undofile                   " historique persistant (LazyVim l'active)
-set undodir=~/.vim/undodir//
+if has('persistent_undo')      " historique persistant (Vim ≥ 7.3)
+  set undofile
+  set undodir=~/.vim/undodir//
+endif
 set confirm
 set autoread
 set updatetime=200             " ≈ LazyVim
@@ -121,9 +130,11 @@ set ignorecase
 set smartcase
 set showmatch
 
-" ripgrep comme moteur de :grep (installé sur ta machine) ≈ telescope live_grep
-set grepprg=rg\ --vimgrep
-set grepformat=%f:%l:%c:%m
+" ripgrep comme moteur de :grep (fallback : grep par défaut si rg absent)
+if executable('rg')
+  set grepprg=rg\ --vimgrep
+  set grepformat=%f:%l:%c:%m
+endif
 
 " ─── Divers ───────────────────────────────────────────────────────────────
 set clipboard=unnamed          " ≈ LazyVim : presse-papiers système
@@ -135,7 +146,7 @@ set wildmenu
 set wildmode=longest:full,full
 set wildignore+=**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/target/**
 set modelines=0
-set listchars=tab:▸\ ,eol:¬    " conservé de ta config
+silent! set listchars=tab:▸\ ,eol:¬    " conservé de ta config
 set matchpairs+=<:>
 
 " ═══════════════════════════════════════════════════════════════════════════
@@ -242,18 +253,20 @@ function! s:ProjectGrep(args) abort
 endfunction
 " mots sous le curseur dans le quickfix (grep exact)
 nnoremap <silent> <leader>sq :call <SID>ProjectGrep(expand('<cword>'))<CR>
-" Recherche floue live ≈ telescope live_grep (LazyVim <leader>sw)
-command! -bang -nargs=* RgLive
-      \ call fzf#vim#grep(
-      \   'rg --column --line-number --no-heading --color=always --smart-case ' .
-      \   '--glob "!node_modules" --glob "!.git" --glob "!dist" --glob "!build" --glob "!target" -- ' .
-      \   shellescape(<q-args>), 1,
-      \   fzf#vim#with_preview('right:50%'), <bang>0)
-" mot sous le curseur, prérempli (éditable en live)
-nnoremap <silent> <leader>sw :execute 'RgLive ' . expand('<cword>')<CR>
-nnoremap <silent> <leader>sW :execute 'RgLive ' . expand('<cWORD>')<CR>
-" motif libre, flou, en live
-nnoremap <leader>/ :RgLive<CR>
+" Recherche floue live ≈ telescope live_grep (si fzf.vim installé)
+if isdirectory(expand('~/.vim/plugged/fzf.vim')) && executable('fzf')
+  command! -bang -nargs=* RgLive
+        \ call fzf#vim#grep(
+        \   'rg --column --line-number --no-heading --color=always --smart-case ' .
+        \   '--glob "!node_modules" --glob "!.git" --glob "!dist" --glob "!build" --glob "!target" -- ' .
+        \   shellescape(<q-args>), 1,
+        \   fzf#vim#with_preview('right:50%'), <bang>0)
+  " mot sous le curseur, prérempli (éditable en live)
+  nnoremap <silent> <leader>sw :execute 'RgLive ' . expand('<cword>')<CR>
+  nnoremap <silent> <leader>sW :execute 'RgLive ' . expand('<cWORD>')<CR>
+  " motif libre, flou, en live
+  nnoremap <leader>/ :RgLive<CR>
+endif
 
 " <leader>xx → toggle quickfix (≈ Trouble de LazyVim), en pur VimScript
 function! s:ToggleQuickfix() abort
@@ -268,18 +281,24 @@ nnoremap <silent> <leader>xx :call <SID>ToggleQuickfix()<CR>
 nnoremap <silent> <leader>xq :cclose<CR>
 
 " ─── Fuzzy finder (fzf) ≈ Telescope de LazyVim ──────────────────────────
-nnoremap <silent> <C-p>           :Files<CR>       " fichiers du projet
-nnoremap <silent> <leader>ff      :Files<CR>
-nnoremap <silent> <leader><leader> :Buffers<CR>    " switch de buffer flou
-nnoremap <silent> <leader>fb      :Buffers<CR>
-nnoremap <silent> <leader>fr      :History<CR>     " fichiers récents
-nnoremap <silent> <leader>fh      :Helptags<CR>    " aide floue
+" RAPPEL : jamais de commentaire en fin de mapping — le RHS est rejoué
+" comme des touches, un " y serait interprété comme préfixe de registre !
+if isdirectory(expand('~/.vim/plugged/fzf.vim')) && executable('fzf')
+  nnoremap <silent> <C-p>            :Files<CR>
+  nnoremap <silent> <leader>ff       :Files<CR>
+  nnoremap <silent> <leader><leader> :Buffers<CR>
+  nnoremap <silent> <leader>fb       :Buffers<CR>
+  nnoremap <silent> <leader>fr       :History<CR>
+  nnoremap <silent> <leader>fh       :Helptags<CR>
+endif
 " liste brute (fallback sans fzf)
 nnoremap <silent> <leader>,  :ls<CR>:buffer<Space>
 
-" ─── Fichiers (NERDTree) ─────────────────────────────────────────────────
-nnoremap <silent> <leader>e :NERDTreeToggle<CR>
-nnoremap <silent> <leader>E :NERDTreeFind<CR>
+" ─── Fichiers (NERDTree, si installé) ────────────────────────────────────
+if isdirectory(expand('~/.vim/plugged/nerdtree'))
+  nnoremap <silent> <leader>e :NERDTreeToggle<CR>
+  nnoremap <silent> <leader>E :NERDTreeFind<CR>
+endif
 
 " ─── Toggles UI ≈ LazyVim <leader>u ──────────────────────────────────────
 " invisibles / wrap / numéros / orthographe (toggles ≈ LazyVim <leader>u)
@@ -295,9 +314,10 @@ nnoremap <silent> <leader>us :set invspell<CR>
 " reformatage de paragraphe (conservé de ta config, ex <leader>q)
 nnoremap <leader>gq gqip
 
-" ─── which-key sur <leader> ───────────────────────────────────────────────
-nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
-nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
+" ─── which-key sur <leader> (ignoré si plugin absent — Vim du NAS) ───────
+if isdirectory(expand('~/.vim/plugged/vim-which-key'))
+  nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+  nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
 
 " Labels EXPLICITES pour which-key : chaque touche du préfixe leader décrite
 let g:which_key_map = {}
@@ -378,6 +398,7 @@ let g:which_key_map['g'] = {
       \ 'name': '+texte',
       \ 'q': 'reformater le paragraphe',
       \ }
+endif
 
 " ═══════════════════════════════════════════════════════════════════════════
 "  AUTOCMDS — comportements du core LazyVim
