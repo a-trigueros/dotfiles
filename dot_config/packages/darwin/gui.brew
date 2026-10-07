@@ -1,5 +1,3 @@
-tap "dail8859/notepadnext"
-
 brew "sketchybar"
 
 cask "1password"

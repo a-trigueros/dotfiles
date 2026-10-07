@@ -1,6 +1,3 @@
-# Podman dependency
-brew "krunkit"
-
 brew "btop"
 brew "chezmoi"
 brew "container"

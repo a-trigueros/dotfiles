@@ -5,40 +5,27 @@ postinstall = [
 ]
 
 [tasks.setup-taps]
-description = "Setup taps used by homebrew"
+description = "1. Setup taps used by homebrew"
 run = '''
 brew bundle install --file="~/.config/packages/darwin/taps.brew"
+awk -F'"' '/^tap /{print $2}' ~/.config/packages/darwin/taps.brew | xargs brew trust
 '''
 
-[tasks.update]
-description = "Update all mise & system applications"
-run = [
-  { task = "update-mise" },
-  { task = "update-homebrew" },
-  { task = "update-mas" },
-]
-
 [tasks.install-core]
-description = "Setup taps used by homebrew"
+description = "2. Install core applications"
 run = '''
 brew bundle install --file="~/.config/packages/darwin/core.brew"
 '''
 
 [tasks.install-gui]
-description = "Install GUI apps"
+description = "3. Install GUI apps"
 run = '''
 brew bundle install --file="~/.config/packages/darwin/gui.brew"
 brew services start sketchybar
 '''
 
-[tasks.install-gaming]
-description = "Install Gaming apps"
-run = '''
-brew bundle install --file="~/.config/packages/darwin/gaming.brew"
-'''
-
 [tasks.setup-alfred]
-description = "Configure Alfred theme and workflows"
+description = "4. Configure Alfred theme and workflows (setup 1Password to allow cli)"
 run = '''
 target_dir="$HOME/.local/share/alfred/bootstrap"
 mkdir -p "$target_dir"
@@ -92,6 +79,54 @@ done
 echo ""
 echo "Alfred setup completed."
 '''
+
+[tasks.provision-secrets]
+description = "5. Local secrets provisionning (for services & goose)"
+run = '''
+set -euo pipefail
+
+OP_TOKEN="$(op read 'op://Alex/1P token/password')"
+security add-generic-password -U -s fnox -a op-token -w "$OP_TOKEN"
+echo "[ok] keychain fnox/op-token"
+
+VK_KEY="$(jq -r '.governance.virtual_keys[] | select(.id=="vk-goose-local") | .value' "$HOME/.config/bifrost/config.json")"
+security add-generic-password -U -s goose -a secrets -w "{\"CUSTOM_BIFROST_API_KEY\":\"$VK_KEY\"}"
+echo "[ok] keychain goose/secrets"
+
+echo "Installed local secrets"
+'''
+
+[tasks.install-pitchfork-service]
+description = "6. Install services"
+run = '''
+set -euo pipefail
+
+mise trust ~/.config/autostart-services
+mise -C ~/.config/autostart-services install
+
+mise bootstrap services apply --yes
+mise bootstrap services status
+
+mise -C ~/.config/autostart-services daemons register
+launchctl kickstart -k gui/$(id -u)/dev.mise.pitchfork
+
+mise -C ~/.config/autostart-services daemons ls
+echo "Pitchfork service installed."
+'''
+
+[tasks.install-gaming]
+description = "X. Install Gaming apps"
+run = '''
+brew bundle install --file="~/.config/packages/darwin/gaming.brew"
+'''
+
+[tasks.update]
+description = "Update all mise & system applications"
+run = [
+  { task = "update-mise" },
+  { task = "update-homebrew" },
+  { task = "update-mas" },
+]
 
 [tasks.update-homebrew]
 description = "Install homebrew apps"
