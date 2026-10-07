@@ -109,6 +109,14 @@ run = '''
 mas upgrade
 '''
 
+[tasks.build-goose-zsh-integration]
+description = 'Allow to talk to goose directly from your zsh prompt.'
+hide = true
+run = '''
+mkdir -p $HOME/.zshrc.d
+goose term init zsh > $HOME/.zshrc.d/goose.zsh
+'''
+
 [tasks.build-zsh-autoload]
 description = 'Run the command and store the content in the filename in the nushell autoload path'
 hide = true
@@ -130,6 +138,7 @@ depends = [
   { task = "build-zsh-autoload", args = ["mise activate zsh", "mise.zsh"] },
   { task = "build-zsh-autoload", args = ["starship init zsh", "starship.zsh"] },
   { task = "build-zsh-autoload", args = ["zoxide init zsh", "zoxide.zsh"] },
+  { task = "build-goose-zsh-integration" },
 ]
 run= ":"
 
