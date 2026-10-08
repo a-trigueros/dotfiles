@@ -1,6 +1,7 @@
 {
   "$schema": "https://www.getbifrost.ai/schema",
   "encryption_key": "U5KxKezplSHqyXVoFHH9bTDu47KYjn+cZCKNgcx+YSg=",
+  "setup_token": "bootstrap",
   "client": {
     "drop_excess_requests": false,
     "enable_logging": true,
@@ -33,7 +34,7 @@
     "enabled": true,
     "type": "sqlite",
     "config": {
-      "path": "/Users/atrigueros/.config/bifrost/config.db"
+      "path": "/Users/alex.t/.config/bifrost/config.db"
     }
   },
   "mcp": {

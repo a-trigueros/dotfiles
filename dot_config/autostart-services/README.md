@@ -46,6 +46,11 @@ mise bootstrap services status        # user-service:pitchfork doit être runnin
 mise daemons register                 # (à valider : peut nécessiter un superviseur actif)
 launchctl kickstart -k gui/$(id -u)/dev.mise.pitchfork
 
+### Configurer bifrost
+
+Se connecter à l'url `http://localhost:8080`.
+Quand l'application demande un mot de passe d'initialisation, utiliser "bootstrap"
+
 ## 3. Vérification
 
 ps aux | grep '[p]itchfork supervisor'   # un seul, avec "run --boot"
