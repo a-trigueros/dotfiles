@@ -1,11 +1,11 @@
 [settings]
 experimental = true
 
-[env]
-ZAI_MCP_URL = "https://api.z.ai/api/mcp/web_search/sse?Authorization=${ZAI_API_KEY}"
+[daemons_settings]
+namespace = "autostart-services"
 
 [daemons.bifrost]
-run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- bifrost'"
+run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- sh -c \"export ZAI_MCP_URL=https://api.z.ai/api/mcp/web_search/sse?Authorization=\\$ZAI_API_KEY && exec bifrost\"'"
 ready_port = 8080
 boot_start = true
 
