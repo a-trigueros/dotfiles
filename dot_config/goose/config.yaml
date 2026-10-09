@@ -127,7 +127,7 @@ extensions:
     type: streamable_http
     name: Bifrost
     description: Bifrost gateway
-    uri: http://localhost:8080/mcp
+    uri: http://localhost:16000/mcp
     envs: {}
     env_keys: []
     headers:

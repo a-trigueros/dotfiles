@@ -5,8 +5,8 @@ experimental = true
 namespace = "autostart-services"
 
 [daemons.bifrost]
-run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- sh -c \"export ZAI_MCP_URL=https://api.z.ai/api/mcp/web_search/sse?Authorization=\\$ZAI_API_KEY && exec bifrost\"'"
-ready_port = 8080
+run = "sh -c 'export OP_SERVICE_ACCOUNT_TOKEN=$(fnox get OP_SERVICE_ACCOUNT_TOKEN) && fnox exec -- sh -c \"export ZAI_MCP_URL=https://api.z.ai/api/mcp/web_search/sse?Authorization=\\$ZAI_API_KEY && exec bifrost -port 16000\"'"
+ready_port = 16000
 boot_start = true
 
 # [daemons.agentgateway]

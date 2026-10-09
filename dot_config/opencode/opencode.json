@@ -8,7 +8,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Bifrost",
       "options": {
-        "baseURL": "http://127.0.0.1:8080/v1",
+        "baseURL": "http://127.0.0.1:16000/v1",
         "apiKey": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7",
         "modelsDiscovery": {
           "enabled": true
@@ -19,7 +19,7 @@
   "mcp": {
     "bifrost": {
       "type": "remote",
-      "url": "http://localhost:8080/mcp",
+      "url": "http://localhost:16000/mcp",
       "headers": {
         "x-bf-vk": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7"
       }

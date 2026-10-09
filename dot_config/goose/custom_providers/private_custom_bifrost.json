@@ -4,7 +4,7 @@
   "display_name": "Bifrost",
   "description": "Custom Bifrost provider",
   "api_key_env": "CUSTOM_BIFROST_API_KEY",
-  "base_url": "http://127.0.0.1:8080/v1",
+  "base_url": "http://127.0.0.1:16000/v1",
   "dynamic_models": true,
   "models": [
     {
