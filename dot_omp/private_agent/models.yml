@@ -1,7 +1,7 @@
 providers:
   bifrost:
-    baseUrl: http://localhost:8080/openai
+    baseUrl: http://localhost:16000/openai
     api: openai-completions
-    apiKey: sk-bf-e281fae7-252a-4542-979e-2c51895f4434
+    apiKey: !op read 'op://Alex - Services/BIFROST_VKEY_PI/password'
     discovery:
       type: openai-models-list

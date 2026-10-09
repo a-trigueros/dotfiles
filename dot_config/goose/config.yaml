@@ -129,9 +129,10 @@ extensions:
     description: Bifrost gateway
     uri: http://localhost:16000/mcp
     envs: {}
-    env_keys: []
+    env_keys:
+    - CUSTOM_BIFROST_API_KEY
     headers:
-      x-bf-vk: sk-bf-6fbbb647-ce81-4315-8ea6-b043d8299831
+      x-bf-vk: ${CUSTOM_BIFROST_API_KEY}
     timeout: 300
     socket: null
     bundled: null

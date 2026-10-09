@@ -89,9 +89,13 @@ OP_TOKEN="$(op read 'op://Alex/1P token/password')"
 security add-generic-password -U -s fnox -a op-token -w "$OP_TOKEN"
 echo "[ok] keychain fnox/op-token"
 
-VK_KEY="$(jq -r '.governance.virtual_keys[] | select(.id=="vk-goose-local") | .value' "$HOME/.config/bifrost/config.json")"
-security add-generic-password -U -s goose -a secrets -w "{\"CUSTOM_BIFROST_API_KEY\":\"$VK_KEY\"}"
+GOOSE_KEY="$(op read 'op://Alex - Services/Bifrost Bootstrap/password')"
+security add-generic-password -U -s goose -a secrets -w "{\"CUSTOM_BIFROST_API_KEY\":\"$GOOSE_KEY\"}"
 echo "[ok] keychain goose/secrets"
+
+OC_KEY="$(op read 'op://Alex - Services/BIFROST_VKEY_OPENCODE/password')"
+printf '%s' "$OC_KEY" > "$HOME/.config/opencode/bifrost-vk" && chmod 600 "$HOME/.config/opencode/bifrost-vk"
+echo "[ok] opencode bifrost-vk file"
 
 echo "Installed local secrets"
 '''

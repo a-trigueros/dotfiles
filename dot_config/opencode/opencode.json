@@ -9,7 +9,7 @@
       "name": "Bifrost",
       "options": {
         "baseURL": "http://127.0.0.1:16000/v1",
-        "apiKey": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7",
+        "apiKey": "{file:~/.config/opencode/bifrost-vk}",
         "modelsDiscovery": {
           "enabled": true
         }
@@ -21,7 +21,7 @@
       "type": "remote",
       "url": "http://localhost:16000/mcp",
       "headers": {
-        "x-bf-vk": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7"
+        "x-bf-vk": "{file:~/.config/opencode/bifrost-vk}"
       }
     },
     "serena": {

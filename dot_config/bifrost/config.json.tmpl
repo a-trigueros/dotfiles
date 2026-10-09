@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.getbifrost.ai/schema",
   "encryption_key": "U5KxKezplSHqyXVoFHH9bTDu47KYjn+cZCKNgcx+YSg=",
-  "setup_token": "bootstrap",
+  "setup_token": "env.BIFROST_BOOTSTRAP",
   "client": {
     "drop_excess_requests": false,
     "enable_logging": true,
@@ -90,23 +90,23 @@
   "governance": {
     "virtual_keys": [
       {
-        "id": "vk-pi-local",
-        "name": "pi-local",
-        "value": "sk-bf-e281fae7-252a-4542-979e-2c51895f4434",
+        "id": "vk-pi",
+        "name": "pi",
+        "value": "env.BIFROST_VKEY_PI",
         "allow_all_providers": true,
         "is_active": true
       },
       {
-        "id": "vk-opencode-local",
-        "name": "opencode-local",
-        "value": "sk-bf-9e6b9edf-1917-49bb-8c78-d9eac417e1c7",
+        "id": "vk-opencode",
+        "name": "opencode",
+        "value": "env.BIFROST_VKEY_OPENCODE",
         "allow_all_providers": true,
         "is_active": true
       },
       {
-        "id": "vk-goose-local",
-        "name": "goose-local",
-        "value": "sk-bf-6fbbb647-ce81-4315-8ea6-b043d8299831",
+        "id": "vk-goose",
+        "name": "goose",
+        "value": "env.BIFROST_VKEY_GOOSE",
         "allow_all_providers": true,
         "is_active": true
       }

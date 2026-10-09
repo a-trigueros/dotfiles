@@ -4,4 +4,9 @@ onepass = { type = "1password" }
 
 [secrets]
 OP_SERVICE_ACCOUNT_TOKEN= { provider = "keychain", value = "op-token" }
-ZAI_API_KEY = { provider = "onepass", value = "op://Alex - Services/Zai - Gateway/password"}
+ZAI_API_KEY = { provider = "onepass", value = "op://Alex - Services/Zai - Gateway/password" }
+BIFROST_VKEY_PI = { provider = "onepass", value = "op://Alex - Services/BIFROST_VKEY_PI/password" }
+BIFROST_VKEY_OPENCODE = { provider = "onepass", value = "op://Alex - Services/BIFROST_VKEY_OPENCODE/password" }
+BIFROST_VKEY_GOOSE = { provider = "onepass", value = "op://Alex - Services/BIFROST_VKEY_GOOSE/password" }
+BIFROST_BOOTSTRAP = { provider = "onepass", value = "op://Alex - Services/Bifrost Bootstrap/password" }
+

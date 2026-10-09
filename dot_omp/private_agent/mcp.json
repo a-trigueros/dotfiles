@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json",
+  "mcpServers": {
+    "bifrost": {
+      "type": "http",
+      "url": "http://localhost:16000/mcp",
+      "headers": {
+        "x-bf-vk": "!op read 'op://Alex - Services/BIFROST_VKEY_PI/password'"
+      }
+    },
+    "serena": {
+      "type": "stdio",
+      "command": "serena",
+      "args": ["start-mcp-server", "--project-from-cwd"]
+    }
+  }
+}
