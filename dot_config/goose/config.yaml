@@ -144,4 +144,5 @@ providers:
 GOOSE_TELEMETRY_ENABLED: false
 GOOSE_MODE: smart_approve
 GOOSE_THINKING_EFFORT: max
+GOOSE_DISABLE_KEYRING: true
 active_provider: custom_bifrost
