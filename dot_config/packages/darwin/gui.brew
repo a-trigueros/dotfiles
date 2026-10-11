@@ -1,5 +1,3 @@
-brew "sketchybar"
-
 cask "1password"
 cask "alfred"
 cask "alienator88-sentinel"
@@ -28,6 +26,7 @@ cask "obsidian"
 cask "the-unarchiver"
 cask "utm"
 cask "visual-studio-code"
+cask "vorssaint"
 cask "vlc"
 cask "wezterm"
 cask "zettlr"
