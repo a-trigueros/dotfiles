@@ -6,7 +6,6 @@ brew "curl"
 brew "ffmpeg"
 brew "htop"
 brew "mise"
-brew "podman"
 
 cask "1password-cli"
 cask "font-jetbrains-mono-nerd-font"
