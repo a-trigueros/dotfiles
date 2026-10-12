@@ -50,6 +50,7 @@ yazi = "latest"
 yt-dlp = "latest"
 zellij = { version = "latest", os = ["macos", "linux"] }
 zoxide = "latest"
+"aqua:jorgerojas26/lazysql" = "latest"
 "aqua:sharkdp/fd" = "latest"
 "cargo:cargo-expand" = { version = "latest", os = ["macos", "linux"] }
 "cargo:eza" = "latest"
@@ -78,7 +79,7 @@ zoxide = "latest"
   "macos",
   "linux",
 ]}
-"pipx:serena-agent" = { version = "latest", postinstall = "serena init", os = [ "macos" ] }
+"pipx:serena-agent" = { version = "latest", postinstall = "serena init", uvx_args = "--python 3.13" }
 
 [env]
 EDITOR = "nvim"
