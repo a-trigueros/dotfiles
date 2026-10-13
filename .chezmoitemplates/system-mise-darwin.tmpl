@@ -182,3 +182,31 @@ autoload_dir="$HOME/Library/Application Support/nushell/autoload"
 mkdir -p "$autoload_dir"
 sh -c '{{ "{{" }} usage.command {{ "}}" }}' > "$autoload_dir/{{ "{{" }} usage.filename {{ "}}" }}"
 '''
+
+[tasks.install-fuse-ssh]
+description = "fuse-ssh permet de monter via ssh le dossier d'une machine distante"
+run = '''
+set -euo pipefail
+
+brew list --cask macfuse   >/dev/null 2>&1 || brew install --cask macfuse
+brew list --cask sshfs-mac >/dev/null 2>&1 || brew install --cask sshfs-mac
+
+[[ -d /Library/Filesystems/macfuse.fs ]] && echo "macFUSE installé"
+
+if ! kextstat 2>/dev/null | grep -q io.macfuse.filesystems.macfuse; then
+  echo "Kext macFUSE non chargé — approbation requise."
+  echo "   → Ouvrez Réglages Système → Confidentialité et sécurité → Autoriser"
+
+  # Charge manuellement le kext (reprend l'astuce 'Troubleshooting' du wiki officiel ;
+  # remplacer <major> par votre version majeure de macOS)
+  major="$(sw_vers -productVersion | cut -d. -f1)"
+  /usr/bin/sudo /usr/bin/kmutil load -p \
+    "/Library/Filesystems/macfuse.fs/Contents/Extensions/${major}/macfuse.kext" || true
+  open "x-apple.systempreferences:com.apple.preference.security"
+  echo "   → Cliquez 'Autoriser', redémarrez, puis relancez ce script."
+else
+  echo "Kext macFUSE chargé"
+fi
+'''
+
+

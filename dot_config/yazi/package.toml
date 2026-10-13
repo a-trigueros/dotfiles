@@ -3,5 +3,10 @@ use = "imsi32/yatline-catppuccin"
 rev = "6c3f166"
 hash = "e1d5b1c34c53c4c4661d910eb3a6fd95"
 
+[[plugin.deps]]
+use = "uhs-robert/sshfs"
+rev = "2a10f73"
+hash = "9bc5b0969bb16a9dc4b5cc0e62a25ce4"
+
 [flavor]
 deps = []
