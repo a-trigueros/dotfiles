@@ -1,7 +1,6 @@
 cask "1password"
 cask "alfred"
 cask "alienator88-sentinel"
-cask "appcleaner"
 cask "beyond-compare"
 cask "bleunlock"
 cask "block-goose"
@@ -32,7 +31,6 @@ cask "wezterm"
 cask "zettlr"
 
 mas "1Password for Safari", id: 1569813296
-mas "Amphetamine", id: 937984704
 mas "Cyberduck", id: 409222199
 mas "Hidden Bar", id: 1452453066
 mas "MindNode", id: 1289197285
