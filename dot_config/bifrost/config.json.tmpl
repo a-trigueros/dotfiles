@@ -51,7 +51,7 @@
         "tools_to_execute": [
           "*"
         ],
-        "allow_on_all_virtual_keys": true
+        "allow_by_default": true
       },
       {
         "name": "deepwiki",
@@ -60,7 +60,7 @@
         "tools_to_execute": [
           "*"
         ],
-        "allow_on_all_virtual_keys": true
+        "allow_by_default": true
       },
       {
         "name": "obsidian_brain",
@@ -74,7 +74,26 @@
         "tools_to_execute": [
           "*"
         ],
-        "allow_on_all_virtual_keys": true
+        "allow_by_default": true
+      },
+      {
+        "name": "ddgs",
+        "connection_type": "stdio",
+        "is_ping_available": true,
+        "stdio_config": {
+          "command": "ddgs",
+          "args": [
+            "mcp"
+          ],
+          "envs": [
+            "HOME",
+            "PATH"
+          ]
+        },
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_by_default": true
       },
       {
         "name": "zai_web_search_sse",
@@ -83,8 +102,9 @@
         "tools_to_execute": [
           "*"
         ],
-        "allow_on_all_virtual_keys": true
-      }
+        "allow_by_default": true
+      },
+
     ]
   },
   "governance": {

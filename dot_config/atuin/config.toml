@@ -1,2 +1,5 @@
 [theme]
 name = "catppuccin-macchiato-blue"
+
+[ai]
+enabled = true
