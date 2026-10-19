@@ -5,7 +5,7 @@ name = "Alexandre Trigueros"
 email = "80602661+a-trigueros@users.noreply.github.com"
 
 [ui]
-default-command = "log"
+default-command = ["log", "--limit", "10"]
 editor = "nvim"
 diff-editor = ":builtin"
 # merge-editor = "nvim"
