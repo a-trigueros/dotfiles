@@ -99,6 +99,9 @@ EZA_COLORS = "da=38;5;245:sn=38;5;28:sb=38;5;28:ur=38;5;40:uw=38;5;40:ux=38;5;40
 EZA_ICON_SPACING = "2"
 {{ if eq .chezmoi.os "darwin" }}
 DOCKER_HOST = 'unix:///Users/$USER/.local/share/containers/podman/machine/podman.sock'
+TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="{{ "{{" }} exec(command=\"podman info --format '{{ "{{" }}.Host.RemoteSocket.Path}}'\", cache_key='podman-socket', cache_duration='1d') | replace(from='unix://', to='') }}"
+TESTCONTAINERS_RYUK_CONTAINER_PRIVILEGED=true
+
 SSH_AUTH_SOCK = '~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock'
 
 VAULT_PATH = "{{ .chezmoi.homeDir }}/vaults/brain/"
