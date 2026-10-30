@@ -2,6 +2,6 @@ providers:
   bifrost:
     baseUrl: http://localhost:16000/openai
     api: openai-completions
-    apiKey: !op read 'op://Alex - Services/BIFROST_VKEY_PI/password'
+    apiKey: "!cat $HOME/.config/omp/bifrost-vk"
     discovery:
       type: openai-models-list

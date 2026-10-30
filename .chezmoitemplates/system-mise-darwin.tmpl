@@ -86,6 +86,11 @@ OC_KEY="$(op read 'op://Alex - Services/BIFROST_VKEY_OPENCODE/password')"
 printf '%s' "$OC_KEY" > "$HOME/.config/opencode/bifrost-vk" && chmod 600 "$HOME/.config/opencode/bifrost-vk"
 echo "[ok] opencode bifrost-vk file"
 
+OMP_KEY="$(op read 'op://Alex - Services/BIFROST_VKEY_PI/password')"
+mkdir -p "$HOME/.config/omp"
+printf '%s' "$OMP_KEY" > "$HOME/.config/omp/bifrost-vk" && chmod 600 "$HOME/.config/omp/bifrost-vk"
+echo "[ok] omp bifrost-vk file"
+
 echo "Installed local secrets"
 '''
 

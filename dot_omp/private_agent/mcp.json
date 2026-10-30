@@ -5,13 +5,8 @@
       "type": "http",
       "url": "http://localhost:16000/mcp",
       "headers": {
-        "x-bf-vk": "!op read 'op://Alex - Services/BIFROST_VKEY_PI/password'"
+        "x-bf-vk": "!cat $HOME/.config/omp/bifrost-vk"
       }
-    },
-    "serena": {
-      "type": "stdio",
-      "command": "serena",
-      "args": ["start-mcp-server", "--project-from-cwd"]
     }
   }
 }
