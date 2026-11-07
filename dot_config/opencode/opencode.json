@@ -96,7 +96,6 @@
     }
   },
   "plugin": [
-    "opencode-models-discovery",
-    "@dietrichgebert/ponytail"
+    "opencode-models-discovery"
   ]
 }
