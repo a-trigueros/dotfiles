@@ -63,6 +63,34 @@ still bind.
 checks are the universal ones: deep module, complexity bounded by the problem
 space, naming coherence.
 
+## Strengthening the domain
+
+Rules for domain models (profile D) and their aggregates, after Jimmy Bogard's
+"Strengthening your domain" series:
+
+- **Closure of operations.** An operation leaves the aggregate consistent —
+  the caller never "remembers" a second call that fixes state afterwards. If
+  two calls must happen in sequence to stay coherent, merge them into one
+  intention-revealing operation that does all of the bookkeeping itself.
+- **Double dispatch for what the aggregate cannot know.** When an operation
+  needs a responsibility too big for the aggregate (a complex calculation, a
+  policy) or information from outside its boundary (the database, another
+  service, an external API — e.g. "this name must be unique in the DB"),
+  pass that capability as a method parameter: the aggregate method calls the
+  service passing itself (`balanceCalculator.Calculate(this)`), gets the
+  answer, and stays responsible for applying it. Never inject dependencies
+  into an aggregate through a DI container, and never expose raw state so
+  callers can orchestrate the steps from outside.
+- **Services are side-effect free on their argument.** A service signature
+  accepts the object and returns a result (`decimal Calculate(Fee)`); it
+  never mutates what it receives, so it can be called as often as needed.
+- **No half-baked states.** An operation applies fully or throws before any
+  mutation — never leave the aggregate in an in-between state the caller
+  must repair.
+- **Avoid setters.** State changes only through intention-revealing methods
+  (`Renew()`, `Cancel()`), never through property assignment from outside;
+  guarded transitions over a `private set` are the typical shape.
+
 ## Functional code
 
 These rules are OO exercises; do not grade FP code with them. The recognized
