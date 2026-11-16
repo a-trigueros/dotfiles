@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: cancel-pending-order
+expected_outcome: |
+  The cancellation is exposed as a domain intention (sub-resource POST route),
+  not a full-order PUT/PATCH writing a status field. Dedicated DTOs on the
+  wire, business-rule failure mapped to 409/422 with Problem Details, plural
+  routes with route-parameter identity.

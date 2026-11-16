@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: countries-reference-crud
+expected_outcome: |
+  Plain CRUD delivered without over-engineering: correct verbs per operation,
+  201+Location / 204 / 404 semantics, plural routes with {id} parameter,
+  Problem Details errors, dedicated DTOs, and no speculative additions
+  (no hypermedia, no versioning scaffolding, no invented workflow).
