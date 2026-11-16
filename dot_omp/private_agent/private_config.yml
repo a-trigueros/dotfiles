@@ -1,4 +1,4 @@
-setupVersion: 2
+setupVersion: 3
 theme:
   dark: dark-catppuccin
   light: light-catppuccin
@@ -24,3 +24,5 @@ composer:
   shape: rail
 modelRoles:
   default: bifrost/zai/glm-5.3-flash
+update:
+  auto: false
