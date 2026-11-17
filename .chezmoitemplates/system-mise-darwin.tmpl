@@ -165,7 +165,10 @@ depends = [
   { task = "build-zsh-autoload", args = ["starship init zsh", "starship.zsh"] },
   { task = "build-zsh-autoload", args = ["zoxide init zsh", "zoxide.zsh"] },
   { task = "build-zsh-autoload", args = ["wt config shell init zsh", "wt.zsh"] },
+  { task = "build-zsh-autoload", args = ["djo shell init zsh", "djo.zsh"] },
+  { task = "build-zsh-autoload", args = ["djo shell completion zsh", "djo_completions.zsh"] },
 ]
+
 run= ":"
 
 [tasks.build-nushell-autoload]
