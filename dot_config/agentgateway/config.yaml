@@ -3,7 +3,7 @@ config:
   database:
     url: sqlite:///Users/atrigueros/.config/agentgateway/data.db
   modelCatalog:
-  - file: /Users/atrigueros/.config/agentgateway/base-costs.json
+    - file: /Users/atrigueros/.config/agentgateway/base-costs.json
 gateways:
   default:
     port: 16000
@@ -12,83 +12,81 @@ ui:
 llm:
   gateways: default
   providers:
-  - name: zai
-    provider:
-      custom:
-        providerOverride: zai
-        formats:
-        - type: completions
-    params:
-      baseUrl: https://api.z.ai/api/coding/paas/v4
-      apiKey: $ZAI_API_KEY
+    - name: zai
+      provider:
+        custom:
+          providerOverride: zai
+          formats:
+            - type: completions
+      params:
+        baseUrl: https://api.z.ai/api/coding/paas/v4
+        apiKey: $ZAI_API_KEY
   models:
-  - name: '*'
-    provider:
-      reference: zai
-  - name: glm-4.5
-    provider:
-      reference: zai
-  - name: glm-4.5-air
-    provider:
-      reference: zai
-  - name: glm-4.6
-    provider:
-      reference: zai
-  - name: glm-4.7
-    provider:
-      reference: zai
-  - name: glm-5
-    provider:
-      reference: zai
-  - name: glm-5-turbo
-    provider:
-      reference: zai
-  - name: glm-5.1
-    provider:
-      reference: zai
-  - name: glm-5.2
-    provider:
-      reference: zai
-  - name: glm-5.3
-    provider:
-      reference: zai
-  - name: glm-5.3-flash
-    provider:
-      reference: zai
-  - name: glm-5.3-flashx
-    provider:
-      reference: zai
+    - name: "*"
+      provider:
+        reference: zai
+    - name: glm-4.5
+      provider:
+        reference: zai
+    - name: glm-4.5-air
+      provider:
+        reference: zai
+    - name: glm-4.6
+      provider:
+        reference: zai
+    - name: glm-4.7
+      provider:
+        reference: zai
+    - name: glm-5
+      provider:
+        reference: zai
+    - name: glm-5-turbo
+      provider:
+        reference: zai
+    - name: glm-5.1
+      provider:
+        reference: zai
+    - name: glm-5.2
+      provider:
+        reference: zai
+    - name: glm-5.3
+      provider:
+        reference: zai
+    - name: glm-5.3-flash
+      provider:
+        reference: zai
+    - name: glm-5.3-flashx
+      provider:
+        reference: zai
 frontendPolicies:
   http:
     maxBufferSize: 33554432
 mcp:
   gateways: default
   targets:
-  - name: context7
-    stdio:
-      cmd: context7-mcp
-      env: {}
-      clear_env: false
-  - name: deepwiki
-    mcp:
-      host: https://mcp.deepwiki.com/mcp
-  - name: obsidian-brain
-    stdio:
-      cmd: obsidian-brain
-      args:
-      - server
-      env: {}
-      clear_env: false
-  - name: z.ai-web-search-sse
-    sse:
-      host: https://api.z.ai/api/mcp/web_search/sse
-    policies:
-      backendAuth:
-        key:
-          value: $ZAI_API_KEY
-          location:
-            queryParameter:
-              name: Authorization
+    - name: context7
+      mcp:
+        host: https://mcp.context7.com/mcp
+    - name: deepwiki
+      mcp:
+        host: https://mcp.deepwiki.com/mcp
+    - name: obsidian-brain
+      stdio:
+        cmd: obsidian-brain
+        args:
+          - server
+        env: {}
+        clear_env: false
+    - name: z.ai-web-search-sse
+      sse:
+        host: https://api.z.ai/api/mcp/web_search/sse
+      policies:
+        backendAuth:
+          key:
+            value: $ZAI_API_KEY
+            location:
+              queryParameter:
+                name: Authorization
   statefulMode: stateful
   prefixMode: always
   failureMode: failOpen

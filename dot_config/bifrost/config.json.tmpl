@@ -27,6 +27,10 @@
       },
       "custom_provider_config": {
         "base_provider_type": "anthropic"
+      },
+      "concurrency_and_buffer_size": {
+        "concurrency": 10,
+        "buffer_size": 5000
       }
     }
   },
@@ -44,10 +48,8 @@
     "client_configs": [
       {
         "name": "context7",
-        "connection_type": "stdio",
-        "stdio_config": {
-          "command": "context7-mcp"
-        },
+        "connection_type": "http",
+        "connection_string": "https://mcp.context7.com/mcp",
         "tools_to_execute": [
           "*"
         ],
