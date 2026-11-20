@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: put-notify-flag
+expected_outcome: |
+  Profile update exposed as PUT on /users/{id} carrying the complete
+  representation in the body (PUT semantics, not a PATCH diff); the notify
+  option travels in the query string (execution variability), not in the
+  body DTO. Invalid or missing flag value rejected 400 naming the flag;
+  unknown id -> bare 404; success returns the updated representation (200)
+  or 204; /api/v1 defaults applied.

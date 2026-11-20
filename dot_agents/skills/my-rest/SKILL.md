@@ -1,6 +1,6 @@
 ---
 name: my-rest
-description: Design, build, review, and test REST APIs according to the user's paradigms — business-oriented HTTP contracts over CRUD-by-default, strict HTTP semantics (verbs, status codes, RFC 9457 Problem Details), REST representations decoupled from the domain model, and pragmatic Richardson level 2 with hypermedia affordances when workflows matter. Use this skill whenever designing, creating, modifying, reviewing, refactoring, or testing a REST API or HTTP endpoint — including resource and route design, DTO/request/response modeling, controllers or Minimal APIs, status code selection, error payloads, API versioning, pagination at the boundary, OpenAPI/Swagger documentation, and API integration tests. Trigger even when the user doesn't say "REST" — e.g. "add an endpoint", "expose this as an API", "wire a controller", "fix the 500", "model this resource". Read references/dotnet.md for any C#/.NET API work; read references/http-semantics.md when choosing verbs, status codes, versioning strategies, or error/caching contracts. General code quality is governed by the my-craft skill; this skill governs the HTTP contract itself.
+description: Design, build, review, and test REST APIs according to the user's paradigms — business-oriented HTTP contracts over CRUD-by-default, strict HTTP semantics (verbs, status codes, RFC 9457 Problem Details), REST representations decoupled from the domain model, and pragmatic Richardson level 2 with hypermedia affordances when workflows matter. Use this skill whenever designing, creating, modifying, reviewing, refactoring, or testing a REST API or HTTP endpoint — including resource and route design, DTO/request/response modeling, controllers or Minimal APIs, status code selection, error payloads, query-parameter roles (read filters vs write-time operation context), API versioning, pagination at the boundary, OpenAPI/Swagger documentation, and API integration tests. Trigger even when the user doesn't say "REST" — e.g. "add an endpoint", "expose this as an API", "wire a controller", "fix the 500", "model this resource". Read references/dotnet.md for any C#/.NET API work; read references/http-semantics.md when choosing verbs, status codes, versioning strategies, or error/caching contracts. General code quality is governed by the my-craft skill; this skill governs the HTTP contract itself.
 ---
 
 # REST contracts
@@ -79,10 +79,59 @@ Routing conventions:
   the default exists precisely for code that outlives its "temporary"
   label.
 - Resources are **plural nouns** (`/products`); an individual resource is
-  uniquely identified by a route parameter (`/products/{id}`).
-- Query parameters serve GET reads: they carry options, context, and filters
-  (pagination, sorting, search criteria). They shape or narrow a read — they
-  never identify the resource; identity lives in the path.
+  uniquely identified by a route parameter (`/products/{id}`), and a detail
+  or sub-representation is a nested route (`/products/{id}/preferences`).
+  The URL identifies the resource; the verb says what is done to it.
+- **Query parameters modulate the request — they never select the resource
+  and never carry its data.** The query string is the request's execution
+  environment: identity lives in the path, data lives in the body, and the
+  query alters how the operation behaves. Its role depends on the verb:
+  - On reads (GET), query parameters filter and shape what is returned:
+    pagination, sorting, search criteria.
+  - On writes (POST/PUT/PATCH/DELETE), query parameters alter the
+    **behavior of the operation** — variability in how the verb applies,
+    without touching what defines the resource: `DELETE /users/3?hideOnly=true`
+    (logical delete rather than physical), `POST /items?draft=true` (created
+    in draft state), `POST /imports?allowPartial=true` (batch import that
+    tolerates invalid rows instead of rejecting all). A behavior option is
+    not resource data: it stays in the query instead of being smuggled into
+    the body as a payload field.
+  - The body carries the **data** — the client-supplied representation that
+    defines or changes the resource. When the "option" is really a value the
+    client chooses (a name, a price, a category), it is data, not behavior:
+    it belongs in the body, or behind an intention-revealing action when it
+    is a domain transition.
+- **Behavior flag or domain action?** A query flag is a *variant of
+  execution* of the operation the verb already names — how the delete
+  happens, how the creation proceeds, how strictly the import validates. A
+  dedicated route is a *domain intention* with its own preconditions and
+  workflow (`POST /orders/{id}/cancellations` — only while Pending). Some
+  signals mean the case is **genuinely ambiguous** — stop and ask instead
+  of picking silently (a guessed boundary is a contract someone has to
+  unpick later):
+  - the option changes *which* business operation runs (deactivating an
+    account vs erasing its data are two operations, not two ways to run
+    one);
+  - the effect is irreversible with legal or regulatory consequence (RGPD
+    erasure, financial cancellation);
+  - the outcome opens a lifecycle of its own (erasure confirmation,
+    reactivation, audit trail).
+  Absent those signals, a variant of one named operation stays a flag.
+- **Flag conventions.** Query parameters — behavior flags and read filters
+  alike — are **camelCase**: the published name is the C# name they bind
+  from, with no `[FromQuery(Name = ...)]` renaming, so the code, the
+  OpenAPI document, and client tooling speak one name. Query keys owned by
+  a third-party tool keep that tool's specification instead (`pageSize`,
+  `orderBy`, `filter` for Gridify) — a library's own URL builders speak its
+  names, and renaming keys around a library is friction no convention is
+  worth. Boolean flags carry an explicit value (`?hideOnly=true`): in
+  ASP.NET a valueless key fails binding with 400, it does not mean true.
+  For a **declared** key, an unrecognized value is rejected at the boundary
+  — 400 + Problem Details naming the flag; it must never silently fall
+  back to the default. A key that is not declared for the route is simply
+  ignored — no unknown-key rejection filter: the strictness begins where
+  the contract speaks. Behavior flags and their defaults are part of the
+  published contract: document them in OpenAPI.
 - One route, one handler. A sub-resource is its own route with its own
   handler (`/orders/{id}/cancellations`), not extra actions piled onto the
   parent handler. Fat handlers hide route semantics and grow without limit.
@@ -151,7 +200,13 @@ developer discipline — should prevent common mistakes:
   to protect it; `AllowAnonymous` is the only way to open one, and it reads
   as a deliberate decision at the exact endpoint it opens. Do not sprinkle
   `[Authorize]` per endpoint and hope none was forgotten — one forgotten
-  attribute is an open endpoint.
+  attribute is an open endpoint. When the host has no authentication scheme
+  yet (an anonymous scaffold), closed-by-default cannot be wired without
+  locking every request out; record the fallback policy as the wiring to
+  add the moment the first scheme lands, in the place the reviewer reads
+  (the README). What is never acceptable is an endpoint left open by
+  oversight — a deliberate, documented deferral is a decision; silence is
+  an open door.
 - **Error transformation is centralized.** Business failures — exceptions or
   a Result monad — become Problem Details in exactly one place: a global
   exception handler or a shared helper. Actions stay declarative; scattered
@@ -185,7 +240,16 @@ The signature is the documentation. A typed result (`ActionResult<T>`,
 `Results<Ok<T>, NotFound>`) already states what an endpoint produces; content
 negotiation states the media type; the HTTP RFCs state the error semantics.
 Do not restate any of that in attributes or response-type metadata — a
-twice-written contract is a contract that rots out of sync. The same
+twice-written contract is a contract that rots out of sync. The one
+exception is when the signature cannot express the fact to the tooling: on
+.NET, a bare `NoContentResult` return publishes as `200` in the OpenAPI
+document (verified empirically), so a single
+`[ProducesResponseType(Status204NoContent)]` carries contract information
+nothing else conveys — that is not restatement. The same logic governs
+comments in infrastructure code: contract and endpoint code carries no
+comments, but tooling classes (OpenAPI document transformers, doc-emitting
+handlers) may carry a single *why* no signature can express — e.g. why the
+emitted route segment differs from the route template. The same
 discipline applies to comments: names and types carry the *what*; a comment
 earns its line only by carrying a *why* the signature cannot show (my-craft).
 An error mapping visible in the code (`Conflict(ProblemDetails)`) needs no

@@ -79,13 +79,26 @@ Conventions:
 - Singleton access goes through a **route parameter** (`{id:int}`) — one
   identifier, unique per resource.
 - GET filters, options, and read context travel in **query parameters**
-  (`?page=2&status=active`); mutations carry data in the body, never in the
-  query.
+  (`?page=2&status=active`). Mutations carry the representation in the body,
+  while write-time behavior flags (`?draft=true`, `?hideOnly=true`) also
+  travel in the query — bind them with `[FromQuery]`, never as body fields
+  (see the query-parameter rules in SKILL.md). Query parameters are
+  camelCase: the published name is the declared parameter name, with no
+  `[FromQuery(Name = ...)]` renaming; keys owned by a third-party tool keep
+  that tool's specification (Gridify: `pageSize`, `orderBy`, `filter`). A
+  valueless key (`?hideOnly` alone) fails binding with 400 — booleans need
+  the explicit `=true|false`, and an invalid value must surface as 400,
+  never a silent default.
 - `ControllerBase`, `[ApiController]`, `[Route("api/[controller]")]`.
 
 Rules (why: consistency and predictable contracts):
 
 - Always return `ActionResult<T>` — no naked types, no bare `IActionResult`.
+- One exception to "no metadata": a bare `NoContentResult` return publishes
+  as `200` in the OpenAPI document (ApiExplorer cannot infer 204 from it —
+  verified empirically), so a single
+  `[ProducesResponseType(StatusCodes.Status204NoContent)]` is required there.
+  It carries contract information, it is not restatement.
 - Use the helper methods: `Ok`, `NotFound`, `CreatedAtAction`, `NoContent`,
   `BadRequest` — they set status codes and `Location` correctly.
 - Constructor injection; no `[FromServices]` on actions.

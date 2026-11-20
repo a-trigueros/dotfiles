@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: ambiguous-removal-semantics
+expected_outcome: |
+  The wipe option is genuinely ambiguous under the flag/domain-action
+  boundary (irreversible RGPD anonymization reads as a domain intention
+  with its own consequences, not a mere execution variant). The expected
+  outcome is NOT a silently chosen contract: the run ends by asking the
+  user which semantic applies, contrasting the concrete alternatives
+  (behavior flag on the removal vs dedicated intention-revealing route),
+  with no final implementation committed.

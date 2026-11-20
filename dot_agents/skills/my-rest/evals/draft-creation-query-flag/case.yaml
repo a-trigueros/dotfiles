@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: draft-creation-query-flag
+expected_outcome: |
+  The draft option travels in the query string of the POST route (creation
+  context), not in the request DTO; the DTO carries only client-supplied
+  item data and the flag maps to the service's asDraft parameter. POST on a
+  plural collection route, 201 + Location, /api/v1 defaults applied.

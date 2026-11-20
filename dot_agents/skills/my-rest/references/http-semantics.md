@@ -41,6 +41,12 @@ Design note: PATCH expresses a mechanical diff, not a business intention —
 for pure CRUD resources (reference data, settings); domain actions deserve
 intention-revealing routes instead of field writes.
 
+Query parameters never carry identity (that is the path's job). On reads
+they filter what is returned; on writes they alter the behavior of the
+operation — options like `?draft=true` or `?hideOnly=true` that modulate
+how the verb applies without becoming body fields (paradigm rules in
+SKILL.md).
+
 ## Status codes
 
 Five classes, identified by the first digit. The status code communicates

@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: soft-delete-query-flag
+expected_outcome: |
+  The hide-only option travels in the query string of the DELETE route
+  (operation context), not in a request body or DTO field; physical delete
+  stays the default without the flag. Plural route with route-parameter
+  identity, DELETE verb, lean success status, /api/v1 defaults applied.
