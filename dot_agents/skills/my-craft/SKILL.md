@@ -1,6 +1,6 @@
 ---
 name: my-craft
-description: Apply the user's software craftsmanship rules whenever writing, modifying, fixing, refactoring, reviewing, or generating code in any language — including small edits, tests, configs, and generated code. Encodes the ladder of automated guarantees (compiler > analyzer > architecture test > assertion > convention), deep modules, no hasty abstractions (rule of three), make illegal states unrepresentable, tests as knowledge (per-operation `<Operation>Should` classes, nested `Fail` with `When_<business reason>` failures), naming coherence, and a paradigm gate with per-situation Object Calisthenics profiles. Read references/object-oriented.md for object-oriented code (SOLID, calisthenics profiles, domain strengthening: closure of operations, double dispatch, no half-baked states, avoiding setters), references/csharp.md for any C#/.NET code.
+description: Apply the user's software craftsmanship rules whenever writing, modifying, fixing, refactoring, reviewing, or generating code in any language — including small edits, tests, configs, and generated code. Encodes the ladder of automated guarantees (compiler > analyzer > architecture test > assertion > convention), deep modules, no hasty abstractions (rule of three), make illegal states unrepresentable, tests as knowledge (per-operation `<Operation>Should` classes, nested `Fail` with `When_<business reason>` failures), naming coherence, and a paradigm gate with per-situation Object Calisthenics profiles. Read references/object-oriented.md for object-oriented code (SOLID, calisthenics profiles, domain strengthening: closure of operations, double dispatch, no half-baked states, avoiding setters), references/validation-layers.md whenever a change submits, validates, or rejects data in a SPA/API (the four validation layers: frontend, exposure, domain, system), references/csharp.md for any C#/.NET code.
 ---
 
 # Craft
@@ -40,6 +40,12 @@ can verify a property, the build must fail without it.
   a type that cannot hold the invalid state over validation that runs later.
   Each impossible state is a bug that will never exist, a test that is not
   needed, a support ticket that never opens.
+- **Error control is layered, not singular.** A SPA/API submission is
+  validated at four layers — frontend, exposure, domain, system — each with
+  a different trade-off between report completeness, speed, and
+  user-exploitability. Place each check at every layer that can carry it;
+  keep each layer's report matched to what its consumer can exploit
+  (`references/validation-layers.md`).
 - **Model errors, don't smuggle them.** A business failure surfaces as a typed
   business exception or a result monad — whichever the codebase and its
   libraries already support. Never a bool success flag a caller can ignore.
@@ -226,8 +232,12 @@ profile**: one paradigm, not two gates.
   role — Object Calisthenics is strict on a pure domain model and relaxed
   where persistence or serialization dictate the shape.
 
-## Language references
+## References
 
+- **Validation layers (SPA/API)** → read `references/validation-layers.md`
+  whenever a change submits, validates, or rejects data: where each check
+  belongs — frontend, exposure, domain, system — and the information profile
+  each layer owes its consumer.
 - **C# / .NET** → read `references/csharp.md`: build hygiene, type
   comparison, resource ownership, validation layering, value objects,
   exceptions, time injection, persistence concurrency, log policy, naming,
@@ -247,5 +257,6 @@ All checkable — verify each before reporting completion:
 - [ ] Business failures are typed exceptions or result monads — no bool success flags.
 - [ ] No knowledge you wrote is duplicated across tests; every snapshot diff was read.
 - [ ] Each rule you enforced sits as high on the ladder as the project allows.
+- [ ] Each check added sits at every validation layer that can carry it: shape rules at frontend AND exposure, context rules in the domain, committed-data rules enforced by schema constraints (`references/validation-layers.md`).
 - [ ] The diff contains only what the task needs; violations outside it are named, not fixed.
 - [ ] Every known shortcut is flagged `shortcut: <limit>, <when to upgrade>`.

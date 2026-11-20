@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: shape-errors-frontend-and-api
+expected_outcome: |
+  Chaque erreur de saisie est signalée complètement, au bon endroit, des deux côtés de
+  la frontière (une règle de forme vit aux couches frontend ET exposition) :
+
+  - web/booking-form.ts vérifie le titre ET les dates avant tout envoi et remonte
+    TOUTES les violations ensemble (plus de premier échec qui masque les autres) ;
+    la date de fin antérieure au début est désormais détectée côté client, sans appel
+    réseau.
+  - L'API valide la payload à sa frontière (endpoint/behavior) et renvoie un rejet
+    structuré qui liste toutes les violations — plus de 500 pour une saisie invalide.
+  - Le domaine reste autoritaire : Booking reste incapable de représenter une
+    réservation avec fin <= début ou titre vide ; la couche d'exposition informe,
+    elle ne re-décide pas. Le refus du domaine est couvert par des tests
+    (BookingShould / Fail.When_<raison métier>).
+  - Build et tests verts.
+context:
+  scaffold_script: place-files.sh

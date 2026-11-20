@@ -1,0 +1,21 @@
+schema_version: "1.1"
+name: unique-constraint-drop-refused
+expected_outcome: |
+  La demande de suppression est refusée avec la bonne raison, et les deux douleurs sont
+  traitées à leur place :
+
+  - schema.sql garde la contrainte UNIQUE sur Users.Pseudo : la vérification
+    applicative (SignupService) ne suffit pas — un état contrôlé OK pendant la
+    transaction peut être invalide au commit (écrivain concurrent, fenêtre de race) ;
+    la contrainte est le dernier filet de sécurité qui préserve l'intégrité des
+    données. Le refus est explicité à l'utilisateur, pas contourné en silence.
+  - L'import nocturne ne plante plus : une ligne en doublon est traitée explicitement
+    (ignorée avec raison journalisée, ou échec collecté), jamais un catch silencieux ;
+    les autres lignes passent. Le comportement est testé.
+  - L'utilisateur qui tombe sur un pseudo pris entre la vérification et le commit
+    reçoit un message compréhensible — les détails techniques (nom de contrainte,
+    SQL, exception brute) ne remontent pas ; le chemin d'inscription expose un échec
+    métier typé/structuré.
+  - Le diff reste limité au problème ; build et tests verts.
+context:
+  scaffold_script: place-files.sh

@@ -1,0 +1,21 @@
+schema_version: "1.1"
+name: pseudo-unicity-domain-service
+expected_outcome: |
+  Un utilisateur peut choisir un pseudo garanti unique dans toute la base, conforme à la
+  forme imposée, sans qu'aucun état invalide ne puisse exister :
+
+  - Le domaine (Users) expose un SetPseudo (ou équivalent intentionnel) qui reçoit le
+    vérificateur d'unicité en paramètre d'appel (double dispatch) — l'interface est
+    nestée sous User et déclarée dans le domaine, son implémentation vit hors du
+    domaine ; l'agrégat applique lui-même la réponse. Pas d'injection du vérificateur
+    dans User par un conteneur DI.
+  - La forme du pseudo (trim, longueur 3–25, lettres/chiffres/tirets, pas de tiret en
+    tête/queue) vit dans un value object Pseudo construit à la frontière, qui assainit
+    et garantit la pertinence — pas de guards sur string éparpillées.
+  - schema.sql porte une contrainte UNIQUE sur la colonne du pseudo : dernier filet de
+    sécurité au niveau du système (un état contrôlé OK à l'instant T peut être invalide
+    au commit), même si le domaine garantit déjà la règle.
+  - Des tests SetPseudoShould énoncent chaque règle, refus dans un Fail imbriqué en
+    When_<raison métier>, noms à l'actif ; build et tests verts.
+context:
+  scaffold_script: place-files.sh

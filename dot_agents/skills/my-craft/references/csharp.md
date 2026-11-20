@@ -44,13 +44,18 @@ the type is. Pit of success: the right usage is the natural one.
 
 ## Validation layering
 
-Two validations, two layers:
+The four-layer model (`references/validation-layers.md`) binds here:
 
-- **Invariants** live in the model: value objects and constructors that refuse
-  invalid states (compiler tier — the model cannot exist in an invalid state).
-- **Caller-facing validation** lives at the exposure layer (`FluentValidation`)
-  and returns the fullest explicit error set for the caller, not the first
-  failure.
+- **Invariants** live in the model: value objects and constructors that
+  refuse invalid states — layer 3 of the model, sitting on the compiler tier
+  (the model cannot exist in an invalid state).
+- **Caller-facing validation** lives at the exposure layer (`FluentValidation`,
+  or CQRS behaviors on the command pipeline) — layer 2: the fullest explicit
+  error set for the caller, not the first failure.
+- **Committed data keeps its layer-4 enforcement**: the unique constraint or
+  trigger exists in the schema even when the domain already guarantees the
+  rule — a state checked earlier in the transaction can be invalidated at
+  commit by a concurrent writer.
 
 When both exist for one rule, the model stays authoritative; the exposure
 layer informs, it does not re-decide.

@@ -80,7 +80,10 @@ Rules for domain models (profile D) and their aggregates, after Jimmy Bogard's
   service passing itself (`balanceCalculator.Calculate(this)`), gets the
   answer, and stays responsible for applying it. Never inject dependencies
   into an aggregate through a DI container, and never expose raw state so
-  callers can orchestrate the steps from outside.
+  callers can orchestrate the steps from outside. When an ensure interface
+  concerns only one aggregate (`IEnsurePseudoUnicity` for
+  `User.SetPseudo`, uniqueness across the whole database), nest it under
+  that aggregate and declare it in the domain.
 - **Services are side-effect free on their argument.** A service signature
   accepts the object and returns a result (`decimal Calculate(Fee)`); it
   never mutates what it receives, so it can be called as often as needed.
