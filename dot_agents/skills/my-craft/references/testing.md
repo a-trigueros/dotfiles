@@ -8,7 +8,9 @@ trade off, say the trade-off out loud instead of silently choosing.
   state; any run order gives the same results.
 - **Composable** — one dimension of variability per test; the suite is the
   composition.
-- **Deterministic** — no wall clock, no randomness, no environment.
+- **Deterministic** — no wall clock, no randomness, no environment; time
+  reaches production code only as an injected dependency
+  (references/csharp.md), which the test replaces to own the timeline.
 - **Fast** — in-process, milliseconds.
 - **Writable** — fixtures are one helper away.
 - **Readable** — the name states the business fact; the body tells the story.

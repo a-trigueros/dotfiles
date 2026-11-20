@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Booking.UnitTests/Booking.UnitTests.csproj" />
+  <Project Path="Booking/Booking.csproj" />
+</Solution>

@@ -45,6 +45,17 @@ can verify a property, the build must fail without it.
   libraries already support. Never a bool success flag a caller can ignore.
   `Try`-style returns are reserved for failures the process must survive
   (lookup misses, parse attempts).
+- **Exceptions keep their detail.** A catch handles, wraps with context, or
+  rethrows — it never swallows. A catch that deliberately does nothing says
+  why in a comment; a rethrow carries the original exception and stack, not
+  a copy that loses them (.NET: `throw;`, CA2200).
+- **Time is injected I/O.** The clock crosses the same boundary as any other
+  input — injected as a dependency, never read from static ambient
+  properties (.NET: `TimeProvider`, not `DateTime.Now`). Ambient time hides
+  a dependency and makes deadlines, expiry, and timestamps untestable.
+- **Complexity signals stay visible.** No mechanism that folds or scatters
+  hand-written code out of sight — regions, split class declarations. A
+  300-line class must look like 300 lines when someone judges it.
 - **Deep modules.** Narrow interface, deep implementation. Complexity lives
   inside the module; the caller sees little of it. Pass-through layers and
   boilerplate do the opposite — they transfer complexity upward without
@@ -72,6 +83,20 @@ can verify a property, the build must fail without it.
   nobody will prioritize — the death-by-a-thousand-cuts pattern kills
   codebases through unflagged small cuts, never through one big mistake.
 
+## Organization
+
+Position is a contract with the reader:
+
+- **One order per module.** Every module places its symbols in the same
+  order — its data first, then its public surface, then its internals — so
+  a reader navigates by position and a review notices the missing piece at
+  its known place (.NET member order: references/csharp.md).
+- **Colocate by user story.** In story-driven codebases (CQRS, vertical
+  slices) the whole story lives in one file, ordered as it executes: the
+  command or query, its dependencies, what it returns, its validators, its
+  handler. A layer-first split (`Command.cs`, `Handler.cs`...) scatters the
+  story and hides the whole from the diff and the review.
+
 ## Tests as knowledge
 
 A test encodes knowledge about expected behavior. The assertion is the
@@ -93,6 +118,12 @@ reviewing tests.
   Runner output then reads as sentences:
   `ReserveSkuShould.Fail.When_available_stock_is_insufficient`. A method name
   states a fact the business would recognize — never `Test1` or `Should_Throw`.
+  State it as the action the behavior performs: active voice, conjugated on
+  what happens when the operation runs (`Decrements_the_available_level_of_the_reserved_sku`,
+  `Turns_a_valid_supplier_row_into_an_order_line`) — never a passive,
+  past-state description of a result (`A_row_is_mapped_to_an_order_line`).
+  A mechanism verb is fine when the mechanism is the contract, but the action
+  stays the subject of the sentence.
 - Crystallize rules where they live: a type with behavior (aggregate, value
   object) gets its own `<Type>Should` tests stating each business rule
   directly. Transitive coverage through a higher-level API neither expresses
@@ -139,9 +170,14 @@ ahead:
 5. Next cycle.
 
 Order the cycles: blocking cases first (`Fail.When_*` — the contract of what
-must be refused), then passing cases from simplest to most complex. One test
-asserts one business knowledge; a knowledge asserted anywhere is never
-re-asserted in another test.
+must be refused, its whole surface pinned: inputs, unknown references,
+boundary values). Every default or fallback the code supplies — a lookup
+that answers 0 for an unknown key, a default entity, an optional absent
+value — is knowledge like any other: a test states the fallback behavior
+explicitly; nothing fallback-driven stays implicit behind a computation.
+Then passing cases from simplest to most complex. One test asserts one
+business knowledge; a knowledge asserted anywhere is never re-asserted in
+another test.
 
 One at a time is a seriality rule, not a permission rule: the session keeps
 flowing from cycle to cycle. What it forbids is open cycles — writing test
@@ -149,15 +185,42 @@ N+1 while N is still red, implementing code for a future test, batching
 several tests before a run. Exactly one cycle is open at any moment, and the
 suite decides when it is closed.
 
-## Paradigm gate
+## Paradigm
 
-Design disciplines do not transfer blindly across paradigms. Before applying
-rules, classify the code you are writing:
+The skill targets object-oriented languages — C# first. For **native FP
+languages** (F#...): judge by their own idioms — immutability, total
+functions and pattern matching, narrow signatures, domain types — never
+grade them with OO checklists. Everything below is the **C# fusion
+profile**: one paradigm, not two gates.
 
-- **Paradigm**: object-oriented → read `references/object-oriented.md`.
-  Functional → judge by its own idioms: immutability, total functions and
-  pattern matching, narrow signatures, domain types. Never grade FP code with
-  OO checklists, or the reverse.
+- **Objects encapsulate.** An object exists to present its content and its
+  capabilities to those entitled to them — intention-revealing methods, no
+  exposed state. The OO rules (`references/object-oriented.md`) stay fully
+  in force; the functional style relaxes nothing about encapsulation.
+- **Monadic signatures when the project carries them.** A method may return
+  a monad (`Result<T, TError>`, `Either`, `Option` — CSharpFunctionalExtensions,
+  LanguageExt) when the user asks for it or the solution already contains
+  the library or equivalent code. Never introduce a functional library
+  speculatively; the vanilla fallback keeps typed business exceptions.
+- **Functional internal style.** Type-system guarantees first: illegal
+  states unrepresentable; functions never mutate their parameters. Express
+  intent, not mechanics: `Where`/`Select`/composition over `foreach` + `if`,
+  switch expressions over `if`/`else` chains, names state business intent.
+  These style rules hold whether or not a monad library is present.
+  Internal mutability is a role decision, not a paradigm one: an aggregate
+  may keep guarded, encapsulated transitions while value objects stay
+  immutable (`references/object-oriented.md` profiles).
+- **Railway composition.** Inside the module, compose (`Map`/`Bind`/`Tee`)
+  and defer unwrapping to the last responsible moment: the monad is unfolded
+  once, at the outermost boundary (HTTP response, final log) — never
+  `Match`ed away mid-domain. Logging rides at decision points (on
+  success/failure side steps; writer-style accumulation where the library
+  offers it).
+- **Tests are paradigm-blind**: `<Operation>Should` + nested `Fail.When_*`
+  in every context.
+- **Error channel when nothing is settled**: idiomatic to the existing
+  codebase, else what the user asked; when in doubt, ask before choosing.
+
 - **If OO, the role of the class**: domain model, persistence model, contract
   (DTO), or infrastructure. The OO reference defines a strictness profile per
   role — Object Calisthenics is strict on a pure domain model and relaxed
@@ -166,8 +229,9 @@ rules, classify the code you are writing:
 ## Language references
 
 - **C# / .NET** → read `references/csharp.md`: build hygiene, type
-  comparison, resource ownership, validation layering, value objects, log
-  policy, naming, testing conventions.
+  comparison, resource ownership, validation layering, value objects,
+  exceptions, time injection, persistence concurrency, log policy, naming,
+  visibility, member and file ordering, testing conventions.
 - Other languages: apply the core; propose adding a reference file when a
   language recurs.
 

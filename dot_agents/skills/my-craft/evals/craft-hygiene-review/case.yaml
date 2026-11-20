@@ -1,0 +1,26 @@
+schema_version: "1.1"
+name: craft-hygiene-review
+expected_outcome: |
+  REVIEW.md relève chaque violation des règles d'hygiène artisanale plantées dans
+  les fixtures : le catch vide sans commentaire (OrderPipeline.Enqueue — exception
+  avalée ; un catch qui ne fait rien doit porter un commentaire expliquant pourquoi
+  ignorer est correct) ; le `throw ex;` qui reconstruit la stack trace au point du
+  catch et perd le détail de l'exception d'origine (le rethrow bare `throw;`
+  préserve) ; le DateTime.Now — l'heure est une dépendance injectée (I/O), jamais
+  une propriété statique ambiante (TimeProvider, déjà bien utilisé dans
+  PlaceOrderHandler, que la review ne doit donc PAS signaler sur ce point) ; les
+  mécanismes qui cachent le code (#region Intake/State, classe partial coupée en
+  deux fichiers) ; le désordre des membres d'OrderPipeline (ordre attendu :
+  constantes → champs privés injectés → champs d'instance privés → propriétés →
+  méthodes publiques → méthodes privées) ; la story PlaceOrder éclatée en trois
+  fichiers alors que commande, dépendances, résultat, validateurs et handler sont
+  colocalisés dans un même fichier, dans cet ordre ; le texte voué à la base sans
+  value object (ShippingLabel concaténée dans Enqueue, Notes brut dans CustomerRow
+  — pertinence du contenu garantie et assainissement mécanique au parse) ;
+  l'absence de jeton de concurrence sur CustomerRow (rowversion/[Timestamp]) et sa
+  transmission manquante au frontend via CustomerApiModel — prévention de
+  l'écrasement accidentel d'écritures concurrentes. La review ne demande PAS de
+  restructuration calisthénique des rows EF (profil persistance). Les citations
+  correspondent aux sources : pas de membre halluciné.
+context:
+  scaffold_script: place-files.sh

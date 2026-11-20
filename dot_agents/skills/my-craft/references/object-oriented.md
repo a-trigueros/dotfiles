@@ -91,10 +91,21 @@ Rules for domain models (profile D) and their aggregates, after Jimmy Bogard's
   (`Renew()`, `Cancel()`), never through property assignment from outside;
   guarded transitions over a `private set` are the typical shape.
 
-## Functional code
+## Functional style
 
-These rules are OO exercises; do not grade FP code with them. The recognized
-FP equivalents: immutability (≈ no setters), total functions and pattern
-matching (≈ no `else`), narrow signatures (≈ few arguments), domain types
-(≈ wrap primitives). Design review on FP code judges the same intents through
-those idioms.
+Two contexts, two treatments.
+
+**The C# fusion profile (primary)**: object-oriented structure with
+functional expression. The encapsulation rules above stay fully in force;
+methods expose monadic signatures (`Result`, `Either`, `Option`) when the
+user asks or the project already carries the library; internally, intent is
+expressed functionally — composition over loops, switch expressions, no
+parameter mutation, type-system guarantees first — and the monad composes
+railway-style (`Map`/`Bind`), unfolded only at the outermost boundary
+(HTTP response, final log). This profile is the default reading for C#.
+
+**Native FP languages** (F#...): these rules are OO exercises; do not grade
+FP code with them. The recognized FP equivalents: immutability (≈ no
+setters), total functions and pattern matching (≈ no `else`), narrow
+signatures (≈ few arguments), domain types (≈ wrap primitives). Design
+review on native FP code judges the same intents through those idioms.

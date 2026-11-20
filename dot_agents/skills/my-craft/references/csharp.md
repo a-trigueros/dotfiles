@@ -82,6 +82,77 @@ nothing left to check:
 - **Key dictionaries by the value object**, never by its inner string.
 - **Call it a Value Object** (DDD); a small vocabulary lives in
   `ValueObjects.cs`.
+- **Text bound for a column becomes a value object too.** `Parse` gives raw
+  text one mechanical choke point: relevance checks (shape, range, allowed
+  vocabulary) and sanitization (trim, casing, whitespace collapsing) run
+  once, at parse time — and the type guarantees no other form of that text
+  ever reaches the database. A free-form string concatenated on the way to
+  a write path bypasses every one of those guarantees.
+
+## Exceptions
+
+- **A catch block never swallows in silence.** It handles, wraps with
+  context, or rethrows. A block that deliberately does nothing states why
+  in a comment — "already logged upstream, rethrow would fail a replayed
+  batch" is a reason; silence is a lost failure. The scaffold's analyzers
+  catch the empty shape (SonarAnalyzer S108, satisfied by any comment); the
+  craft rule is stricter: the comment must explain why doing nothing is
+  correct.
+- **The detail of the original exception survives the catch.** `throw ex;`
+  restarts the stack trace at the catch site and erases where and why the
+  failure happened — CA2200 ("Rethrow to preserve stack details", enabled
+  by default as a warning, so this scaffold's build fails on it): rethrow
+  bare, without naming the exception:
+
+  ```csharp
+  try
+  {
+      await orders.SaveChangesAsync(cancellationToken);
+  }
+  catch (DbUpdateException ex)
+  {
+      log.LogError(ex, "Persist failed for {Ref}", orderRef);
+      throw; // original exception and stack survive
+  }
+
+  try
+  {
+      await orders.SaveChangesAsync(cancellationToken);
+  }
+  catch (DbUpdateException ex)
+  {
+      log.LogError(ex, "Persist failed for {Ref}", orderRef);
+      throw ex; // WRONG: stack restarts here — the original site is lost
+  }
+  ```
+
+  When wrapping in a richer business exception, pass the original as the
+  `InnerException` — never rebuild from `ex.Message` alone.
+
+## Time is injected I/O
+
+Reading the clock is input: it crosses the same boundary as a database read
+and arrives through an injected dependency, never a static ambient
+property. In .NET: `TimeProvider` injected (`GetUtcNow()`, `GetLocalNow()`;
+composed as `TimeProvider.System` at the application entry point).
+`DateTime.Now`, `DateTime.UtcNow`, `DateTimeOffset.Now` stay confined to
+the outermost glue that feeds the provider. Tests then substitute a
+`FakeTimeProvider` (Microsoft.Extensions.TimeProvider.Testing) and own the
+timeline (see testing.md) — which is only possible because production code
+asked for the time instead of taking it. An ambient `DateTime.Now` in
+domain or application code is a review-blocking defect: it hides a
+dependency and makes every deadline, expiry, and timestamp untestable.
+
+## Persistence — concurrency
+
+When the ORM offers optimistic-concurrency versioning, turn it on and make
+it travel: a version column (`rowversion` in SQL Server; a `[Timestamp]`
+property in EF Core) turns a lost update into a
+`DbUpdateConcurrencyException` instead of a silent overwrite. The version
+is part of the read model — it flows to the frontend and comes back with
+the write it guards
+(https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations).
+Rows two users can edit concurrently, with no token: review-blocking.
 
 ## Logging — log policy
 
@@ -104,13 +175,81 @@ predicate name → `bool`, no antonyms between name and type or comment. In C#
 this is analyzer territory when possible: prefer an `.editorconfig` rule over
 a review remark.
 
+## Visibility — no code-hiding mechanisms
+
+Hand-written code stays fully visible in one place: no `#region`, no
+`partial` class split across files. Folding and scattering hide the real
+size and the weak complexity signals — a 300-line class that folds into 40
+is never judged, reviewed, or refactored at its true cost. Machine-written
+halves of generated classes keep their natural `partial` shape; hand-
+authored code neither folds nor splits itself.
+
+## Member ordering
+
+Within a class, members appear in one fixed order — each kind of member has
+exactly one place, so a reader navigates by position instead of searching:
+
+1. Constants
+2. Injected private fields (constructor-injected dependencies)
+3. Other private instance fields
+4. Properties
+5. Public methods
+6. Private methods
+
+The order is part of the class's readability contract: a review notices the
+missing kind at its known place. Enforce it at the analyzer tier when the
+project carries a rule for it; never relitigate per file.
+
+## File organization — user-story slices
+
+In story-driven codebases (CQRS, vertical slices), one story, one file —
+the file reads top-down as the story executes:
+
+1. The command or query
+2. Its dependencies (the ports/services it needs)
+3. What it returns (the result type)
+4. Its validators
+5. The handler, last
+
+Splitting a story across `Command.cs` / `Validator.cs` / `Handler.cs`
+scatters it across the technical layers, multiplies files, and hides the
+whole from the diff and the review.
+
+## Functional style in C#
+
+- Monadic signatures (`Result<T, TError>`, `Either`, `Option`) are the
+  default for operations that can fail when the user asks for them or the
+  solution already carries CSharpFunctionalExtensions / LanguageExt (or
+  equivalent code). Never introduce a functional library on your own
+  initiative; the fallback stays typed business exceptions.
+- Compose railway-oriented (`Map`/`Bind`/`Tee`) and keep the value on the
+  tracks: unfold (`Match`, `TryGet`, `GetOrDefault`) once, at the outermost
+  boundary (HTTP response, final log) — never mid-domain. Log at decision
+  points; a writer-style log accumulator is welcome where the library offers
+  one.
+- Express intent, not mechanics: `Where`/`Select`/LINQ aggregation over
+  `foreach` + accumulator, switch expressions over `if`/`else` chains.
+  Functions never mutate their parameters. These style rules hold whether or
+  not a monad library is present.
+- Internal state stays a role decision: aggregates keep guarded, encapsulated
+  transitions (`private set` + intention methods) while their methods expose
+  monadic signatures; value objects stay immutable.
+- When no error convention is settled in the codebase and the user has not
+  asked, confirm with the user before choosing between typed business
+  exceptions and a monadic error channel.
+
 ## Testing
 
 - One test class per business operation, named `<Operation>Should`
   (`ReserveSkuShould`) — the class name is the operation, not "scenario".
-  Passing scenarios are methods stating the business outcome; every failure
-  case lives in a nested `public class Fail` with methods named
-  `When_<business reason>` (`When_available_stock_is_insufficient`). Runners
+  Passing scenarios are methods stating the business outcome in the active
+  voice — the action the behavior performs, never a passive past-state
+  description (`A_row_is_mapped...`); every failure case lives in a nested
+  `public class Fail` with methods named
+  `When_<business reason>` (`When_available_stock_is_insufficient`), the
+  whole failure surface pinned — inputs, unknown references, and every
+  default or fallback the code supplies (a fallback behavior is knowledge:
+  it gets its own test, never stays implicit). Runners
   report them as `OperationShould+Fail.When_...`, so a failed run reads as a
   sentence. Pin the operation's whole failure surface in its own `Fail`,
   input validation included: the contract under test is the operation, not

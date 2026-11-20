@@ -1,0 +1,21 @@
+schema_version: "1.1"
+name: test-names-and-red-enforcement
+expected_outcome: |
+  Stock.Reserve(sku, quantity) existe : il décrémente le niveau disponible quand le
+  stock suffit, et refuse la réservation par une exception métier typée (ou un type
+  résultat) quand le stock est insuffisant — pas un booléen de succès, pas une
+  exception générique du type ArgumentException/InvalidOperationException utilisée
+  pour un échec métier. Les tests vivent dans une classe nommée d'après l'opération
+  (ReserveSkuShould), avec un Fail imbriqué contenant des méthodes
+  When_<raison métier> pour le refus, et des scénarios passants qui énoncent le
+  résultat métier (pas de Test1/Should_Throw). Le cycle rouge/vert est respecté :
+  le test est écrit et observé en échec d'ASSERTION (data red) derrière un stub
+  silencieux avant l'implémentation — un compile-red suivi directement de
+  l'implémentation ne compte pas. Un refus laisse le niveau disponible inchangé :
+  l'implémentation vérifie avant toute mutation (no half-baked states) et un test
+  cristallise cette propriété. Le fallback du stock pour un SKU inconnu (niveau 0 ⇒
+  refus) est validé par un test explicite : les valeurs par défaut et fallbacks fournis
+  par le code sont du knowledge — chaque comportement fallback est cristallisé par un
+  test dédié, jamais laissé implicite derrière le calcul du niveau.
+context:
+  scaffold_script: place-files.sh

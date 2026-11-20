@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: value-object-valid-states
+expected_outcome: |
+  Une quantité invalide ne peut plus exister : un value object Quantity (sealed record
+  CLASS, pas une struct — pour fermer le trou du default — avec constructeur privé et
+  fabrique/fabriques type Parse/From) remplace l'int partout où une quantité circule.
+  Les guard clauses quantity <= 0 disparaissent d'OrderLine et de Cart : le type rend
+  l'état illégal non représentable — jusqu'au compilateur : passer un int brut à
+  Cart.Add ne compile plus. Le parsing de la chaîne brute du CSV se fait à la
+  frontière via la fabrique du value object (ImportMapper), pas par int.Parse suivi
+  d'une validation séparée. Des tests QuantityShould énoncent directement chaque règle
+  (zéro refusé, négatif refusé, construction valide, égalité...), avec des noms à
+  l'actif énonçant l'action du comportement — pas de nom passif décrivant un état
+  résultant du type A_row_is_mapped_to_an_order_line. TotalQuantity et TotalAmount se
+  calculent par composition LINQ (Sum/Select), pas par foreach. La garde unitPrice < 0
+  plantée est traitée au même niveau : un value object UnitPrice (même forme que
+  Quantity) porte la règle, et la garde disparaît d'OrderLine.
+context:
+  scaffold_script: place-files.sh

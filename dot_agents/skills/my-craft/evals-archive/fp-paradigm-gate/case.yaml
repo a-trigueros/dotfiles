@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: fp-paradigm-gate
+expected_outcome: |
+  Le module est écrit fonctionnellement en C# (fonctions statiques pures, records
+  immuables, Result de CSharpFunctionalExtensions). La gate de paradigme impose d'y
+  juger le code aux idiomes FP, pas aux checklists OO : cancel reste une fonction
+  statique pure du module — le record Reservation n'acquiert ni méthode métier ni
+  setter, aucune classe de service instanciable, interface ou injection n'est
+  introduite. cancel est totale : les refus (déjà annulée, introuvable) sont des cas
+  dédiés du canal d'erreur typé du Result, pas un booléen ni une exception. Les
+  tests suivent le style existant (xUnit) avec des noms à l'actif énonçant l'action
+  du comportement (Refuses_..., Turns_...), chaque raison métier de refus couverte
+  par un test nommé d'après elle.
+context:
+  scaffold_script: place-files.sh

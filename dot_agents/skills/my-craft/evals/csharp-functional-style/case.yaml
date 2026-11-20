@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: csharp-functional-style
+expected_outcome: |
+  Profil fusion C# : le comportement est exposé dans la structure existante du module
+  avec des signatures monadiques (Result<Reservation, CancelError>) — la solution porte
+  déjà CSharpFunctionalExtensions, donc la monade est légitime — et les refus vivent
+  dans le canal d'erreur typé dédié, jamais en booléen ni exception métier. La
+  composition est railway (Map/Bind ou switch expression), le Result n'est pas déplié
+  en milieu de module (pas de Match/TryGet/GetOrDefault dans le code du domaine
+  ajouté). Style fonctionnel : FindAllConfirmed par composition LINQ (Where/Select)
+  sans foreach ni accumulateur, branchement sur le statut en switch expression ou
+  pattern matching, aucun paramètre muté. Encapsulation OO intacte : aucun setter
+  public ajouté, aucun état exposé. Tests : CancelShould / FindAllConfirmedShould avec
+  Fail.When_* pour chaque raison de refus, noms à l'actif — convention identique.
+  Signatures : cancel retourne Result avec un canal d'erreur typé dédié ;
+  FindAllConfirmed est une requête infaillible et retourne le type de collection
+  total (ex. IEnumerable<Reservation>) sans Result artificiel.
+context:
+  scaffold_script: place-files.sh

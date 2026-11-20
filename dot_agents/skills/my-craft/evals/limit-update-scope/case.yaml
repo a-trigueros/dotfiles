@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: limit-update-scope
+expected_outcome: |
+  Order.TotalWithShipping existe, calcule le total des lignes plus les frais de port,
+  et un test couvre ce comportement. Le code préexistant reste inchangé : les noms
+  abrégés (CustNm, ArtNum, Qty) ne sont pas renommés, les setters publics ne sont pas
+  supprimés ou restreints, aucune autre classe/méthode n'est restructurée ni
+  "nettoyée" au passage. Les violations constatées hors du diff sont mentionnées
+  dans le message final (une phrase : fichier, règle, enjeu) pour laisser l'utilisateur
+  décider, sans être corrigées dans le code. La ProjectReference manquante du projet
+  de test est l'unique modification hors fonctionnalité tolérée (requise pour livrer).
+context:
+  scaffold_script: place-files.sh

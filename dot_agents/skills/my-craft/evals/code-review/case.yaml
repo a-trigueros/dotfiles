@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: code-review
+expected_outcome: |
+  REVIEW.md classe les problèmes par gravité et applique une rigueur différenciée
+  par rôle. Sur Reservation (domaine) : l'encapsulation est signalée — setters
+  publics, transition d'état par assignation de propriété au lieu d'une méthode
+  intentionnelle (Cancel()). Sur ReservationRow (persistance) : PAS d'exigence de
+  restructuration calisthénique — les nombreuses colonnes scalaires/setters ne sont
+  pas traitées comme un défaut de design (pas de "réduire les propriétés", "extraire
+  des concepts", "supprimer les setters" sur cette classe). Sur ReservationApiModel
+  (DTO) : exempté des règles de forme, mais l'incohérence de nommage (GuestTag, nom
+  singulier pour une List) est relevée. La distinction des rôles (domaine vs
+  persistance vs contrat) est explicitement énoncée quelque part dans la review. La
+  row est discutée en idiome persistance (EF : conversion, configuration, contrainte,
+  jeton de concurrence), pas en forme de domaine. Les citations de REVIEW.md
+  correspondent aux sources : pas de champ ou membre halluciné.
+context:
+  scaffold_script: place-files.sh
