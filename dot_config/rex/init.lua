@@ -1,427 +1,100 @@
--- Rex configuration — migrated from tmux and zellij.
--- Sources: ~/.tmux.conf (prefix ctrl+b) and ~/.config/zellij/config.kdl.
--- Herdr, Ghostty and WezTerm contribute no key bindings (see migration report).
--- Conflict decided by owner: ctrl+b stays tmux's sequence prefix; zellij's
--- plain ctrl+b (SwitchToMode "Tmux", config.kdl:217) is not bound, so zellij's
--- tmux mode is reached only via scroll or search mode, ctrl+b.
+-- Rex configuration — keybindings migrated from Herdr.
+-- Sources:
+--   ~/.config/Herdr/config.toml   [keys] overrides: navigate_workspace_up = "k",
+--                                 navigate_workspace_down = "j", next_agent = "prefix+J",
+--                                 previous_agent = "prefix+K"
+--   `herdr --default-config`      defaults, prefix = "ctrl+b"
+--   herdr source (via DeepWiki)   split_vertical = side by side = right;
+--                                 split_horizontal = top/bottom = down;
+--                                 resize mode is sticky: h/l width, j/k height,
+--                                 exits on enter or escape.
+--   rex docs, reference/mac-actions  names of every action of the Rex for Mac client.
+-- Herdr concepts map to Rex as: workspace ~= session, tab ~= tab,
+-- pane ~= pane, agent ~= the process occupying a pane.
+-- Herdr's keymap already follows the tmux-style ctrl+b prefix, so it replaces the
+-- previous tmux/zellij migration kept in init.lua.bak.
 
 -- ---------------------------------------------------------------------------
--- tmux (~/.tmux.conf, prefix ctrl+b)
+-- Panes (Herdr prefix-mode actions, prefix = ctrl+b)
 -- ---------------------------------------------------------------------------
 
--- `bind-key -r` bindings repeat without the prefix; ctrl+b ctrl+r enters a
--- sticky repeat mode, enter or escape leaves it.
-rex.mode("repeat", { exclusive = true })
-rex.bind("ctrl+b>ctrl+r", "client.mode.enter", { name = "repeat" })
-rex.bind("repeat/enter", "client.mode.exit")
-rex.bind("repeat/escape", "client.mode.exit")
-
-rex.bind("ctrl+b>;", "pane.split", { direction = "right" })
+-- split_vertical: side-by-side split (herdr source: splits toward the right)
+rex.bind("ctrl+b>v", "pane.split", { direction = "right" })
+-- split_horizontal: top/bottom split (herdr source: splits downward)
 rex.bind("ctrl+b>-", "pane.split", { direction = "down" })
-rex.bind("ctrl+b>r", "client.config.reload")
+
+-- focus_pane_left/down/up/right
+rex.bind("ctrl+b>h", "pane.focus", { direction = "left" })
 rex.bind("ctrl+b>j", "pane.focus", { direction = "down" })
 rex.bind("ctrl+b>k", "pane.focus", { direction = "up" })
 rex.bind("ctrl+b>l", "pane.focus", { direction = "right" })
-rex.bind("ctrl+b>h", "pane.focus", { direction = "left" })
-rex.bind("ctrl+b>ctrl+k", "pane.resize", { amount = 5, direction = "up" })
-rex.bind("repeat/ctrl+k", "pane.resize", { amount = 5, direction = "up" })
-rex.bind("ctrl+b>ctrl+j", "pane.resize", { amount = 5, direction = "down" })
-rex.bind("repeat/ctrl+j", "pane.resize", { amount = 5, direction = "down" })
-rex.bind("ctrl+b>ctrl+h", "pane.resize", { amount = 5, direction = "left" })
-rex.bind("repeat/ctrl+h", "pane.resize", { amount = 5, direction = "left" })
-rex.bind("ctrl+b>ctrl+l", "pane.resize", { amount = 5, direction = "right" })
-rex.bind("repeat/ctrl+l", "pane.resize", { amount = 5, direction = "right" })
-rex.bind("ctrl+b>up", "pane.resize", { direction = "up" })
-rex.bind("repeat/up", "pane.resize", { direction = "up" })
-rex.bind("ctrl+b>down", "pane.resize", { direction = "down" })
-rex.bind("repeat/down", "pane.resize", { direction = "down" })
-rex.bind("ctrl+b>left", "pane.resize", { direction = "left" })
-rex.bind("repeat/left", "pane.resize", { direction = "left" })
-rex.bind("ctrl+b>right", "pane.resize", { direction = "right" })
-rex.bind("repeat/right", "pane.resize", { direction = "right" })
+
+-- cycle_pane_next / cycle_pane_previous
+rex.bind("ctrl+b>tab", "pane.focus_next")
+rex.bind("ctrl+b>shift+tab", "pane.focus_previous")
+
+-- close_pane, zoom, rename_pane
+rex.bind("ctrl+b>x", "pane.close")
+rex.bind("ctrl+b>z", "pane.zoom")
+rex.bind("ctrl+b>shift+p", "pane.rename")
 
 -- ---------------------------------------------------------------------------
--- zellij (~/.config/zellij/config.kdl)
--- The file has no clear-defaults=true, so zellij's built-in default bindings
--- were also active; only the file's own bindings are migrated here.
--- Normal mode is Rex with no mode active; every other zellij mode is a Rex
--- mode. Modes the user stays in are exclusive; entersearch acts once.
+-- Sessions (Herdr workspaces ~= Rex sessions)
 -- ---------------------------------------------------------------------------
 
--- One wrapper for every "do X, then SwitchToMode Normal" binding.
-rex.action{
-  name  = "then_normal",
-  title = "Run an action and return to normal mode",
-  args  = { action = "string", args = "object?" },
-  run   = function(ctx, args)
-    rex.client.queue(args.action, args.args or {})
-    rex.client.queue("client.mode.exit_all")
-  end,
-}
+-- workspace_picker
+rex.bind("ctrl+b>w", "session.switch")
+-- navigate sessions (config.toml gave prefix+J/K to agent nav in Herdr;
+-- here they cycle sessions instead)
+rex.bind("ctrl+b>shift+j", "session.next")
+rex.bind("ctrl+b>shift+k", "session.previous")
+-- new_workspace
+rex.bind("ctrl+b>shift+n", "session.new")
+-- rename_workspace
+rex.bind("ctrl+b>shift+w", "session.rename")
 
-rex.mode("locked", { exclusive = true })
-rex.mode("resize", { exclusive = true })
-rex.mode("pane", { exclusive = true })
-rex.mode("move", { exclusive = true })
-rex.mode("tab", { exclusive = true })
-rex.mode("scroll", { exclusive = true })
-rex.mode("search", { exclusive = true })
-rex.mode("session", { exclusive = true })
-rex.mode("renametab", { exclusive = true })
-rex.mode("renamepane", { exclusive = true })
-rex.mode("tmux", { exclusive = true })
+-- ---------------------------------------------------------------------------
+-- Tabs
+-- ---------------------------------------------------------------------------
 
--- Normal mode (zellij "normal"): plain keys, no mode.
-rex.bind("ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("ctrl+h", "client.mode.enter", { name = "move" })
-rex.bind("alt+n", "pane.split.auto")
-rex.bind("alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("alt+h", "pane.focus", { direction = "left" })
-rex.bind("alt+left", "pane.focus", { direction = "left" })
-rex.bind("alt+l", "pane.focus", { direction = "right" })
-rex.bind("alt+right", "pane.focus", { direction = "right" })
-rex.bind("alt+j", "pane.focus", { direction = "down" })
-rex.bind("alt+down", "pane.focus", { direction = "down" })
-rex.bind("alt+k", "pane.focus", { direction = "up" })
-rex.bind("alt+up", "pane.focus", { direction = "up" })
+rex.bind("ctrl+b>c", "client.tab.new")          -- new_tab
+rex.bind("ctrl+b>n", "client.tab.next")         -- next_tab
+rex.bind("ctrl+b>p", "client.tab.previous")     -- previous_tab
+rex.bind("ctrl+b>shift+x", "client.tab.close")  -- close_tab
+rex.bind("ctrl+b>shift+t", "client.tab.rename") -- rename_tab
 
--- locked
-rex.bind("locked/ctrl+g", "client.mode.exit")
+-- switch_tab = prefix+1..9
+for i = 1, 9 do
+	rex.bind("ctrl+b>" .. i, "client.tab.goto", { index = i })
+end
 
--- resize
-rex.bind("resize/ctrl+n", "client.mode.exit")
-rex.bind("resize/h", "pane.resize", { direction = "left" })
-rex.bind("resize/left", "pane.resize", { direction = "left" })
-rex.bind("resize/j", "pane.resize", { direction = "down" })
-rex.bind("resize/down", "pane.resize", { direction = "down" })
-rex.bind("resize/k", "pane.resize", { direction = "up" })
-rex.bind("resize/up", "pane.resize", { direction = "up" })
-rex.bind("resize/l", "pane.resize", { direction = "right" })
-rex.bind("resize/right", "pane.resize", { direction = "right" })
--- zellij Decrease Left/Down/Up/Right shrink from that side: the same edge
--- moves as Rex's resize in the opposite direction.
-rex.bind("resize/shift+h", "pane.resize", { direction = "right" })
-rex.bind("resize/shift+j", "pane.resize", { direction = "up" })
-rex.bind("resize/shift+k", "pane.resize", { direction = "down" })
-rex.bind("resize/shift+l", "pane.resize", { direction = "left" })
-rex.bind("resize/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("resize/alt+n", "pane.split.auto")
-rex.bind("resize/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("resize/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("resize/alt+h", "pane.focus", { direction = "left" })
-rex.bind("resize/alt+left", "pane.focus", { direction = "left" })
-rex.bind("resize/alt+l", "pane.focus", { direction = "right" })
-rex.bind("resize/alt+right", "pane.focus", { direction = "right" })
-rex.bind("resize/alt+j", "pane.focus", { direction = "down" })
-rex.bind("resize/alt+down", "pane.focus", { direction = "down" })
-rex.bind("resize/alt+k", "pane.focus", { direction = "up" })
-rex.bind("resize/alt+up", "pane.focus", { direction = "up" })
-rex.bind("resize/enter", "client.mode.exit")
-rex.bind("resize/escape", "client.mode.exit")
-rex.bind("resize/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("resize/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("resize/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("resize/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("resize/ctrl+h", "client.mode.enter", { name = "move" })
+-- ---------------------------------------------------------------------------
+-- App and interface
+-- ---------------------------------------------------------------------------
 
--- pane
-rex.bind("pane/ctrl+p", "client.mode.exit")
-rex.bind("pane/h", "pane.focus", { direction = "left" })
-rex.bind("pane/left", "pane.focus", { direction = "left" })
-rex.bind("pane/l", "pane.focus", { direction = "right" })
-rex.bind("pane/right", "pane.focus", { direction = "right" })
-rex.bind("pane/j", "pane.focus", { direction = "down" })
-rex.bind("pane/down", "pane.focus", { direction = "down" })
-rex.bind("pane/k", "pane.focus", { direction = "up" })
-rex.bind("pane/up", "pane.focus", { direction = "up" })
-rex.bind("pane/p", "pane.focus_next")
-rex.bind("pane/n", "then_normal", { action = "pane.split", args = { direction = "auto" } })
-rex.bind("pane/d", "then_normal", { action = "pane.split", args = { direction = "down" } })
-rex.bind("pane/r", "then_normal", { action = "pane.split", args = { direction = "right" } })
-rex.bind("pane/x", "then_normal", { action = "pane.close" })
-rex.bind("pane/f", "then_normal", { action = "pane.zoom" })
-rex.bind("pane/c", "client.mode.enter", { name = "renamepane" })
-rex.bind("pane/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("pane/alt+n", "pane.split.auto")
-rex.bind("pane/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("pane/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("pane/alt+h", "pane.focus", { direction = "left" })
-rex.bind("pane/alt+left", "pane.focus", { direction = "left" })
-rex.bind("pane/alt+l", "pane.focus", { direction = "right" })
-rex.bind("pane/alt+right", "pane.focus", { direction = "right" })
-rex.bind("pane/alt+j", "pane.focus", { direction = "down" })
-rex.bind("pane/alt+down", "pane.focus", { direction = "down" })
-rex.bind("pane/alt+k", "pane.focus", { direction = "up" })
-rex.bind("pane/alt+up", "pane.focus", { direction = "up" })
-rex.bind("pane/enter", "client.mode.exit")
-rex.bind("pane/escape", "client.mode.exit")
-rex.bind("pane/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("pane/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("pane/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("pane/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("pane/ctrl+h", "client.mode.enter", { name = "move" })
+-- goto: Herdr's fuzzy jump ~= Rex's "Go to Anything…"
+rex.bind("ctrl+b>g", "pane.go_to")
+-- edit_scrollback: Herdr opens scrollback in an editor; the closest Rex
+-- surface is copy mode, which moves through scrollback by keyboard.
+rex.bind("ctrl+b>e", "pane.copy_mode.enter")
+-- toggle_sidebar
+rex.bind("ctrl+b>b", "client.sidebar.toggle")
+-- settings
+rex.bind("ctrl+b>s", "client.settings")
+-- reload_config (same key as Herdr)
+rex.bind("ctrl+b>shift+r", "client.config.reload")
 
--- move
-rex.bind("move/ctrl+h", "client.mode.exit")
-rex.bind("move/h", "pane.move", { direction = "left" })
-rex.bind("move/left", "pane.move", { direction = "left" })
-rex.bind("move/j", "pane.move", { direction = "down" })
-rex.bind("move/down", "pane.move", { direction = "down" })
-rex.bind("move/k", "pane.move", { direction = "up" })
-rex.bind("move/up", "pane.move", { direction = "up" })
-rex.bind("move/l", "pane.move", { direction = "right" })
-rex.bind("move/right", "pane.move", { direction = "right" })
-rex.bind("move/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("move/alt+n", "pane.split.auto")
-rex.bind("move/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("move/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("move/alt+h", "pane.focus", { direction = "left" })
-rex.bind("move/alt+left", "pane.focus", { direction = "left" })
-rex.bind("move/alt+l", "pane.focus", { direction = "right" })
-rex.bind("move/alt+right", "pane.focus", { direction = "right" })
-rex.bind("move/alt+j", "pane.focus", { direction = "down" })
-rex.bind("move/alt+down", "pane.focus", { direction = "down" })
-rex.bind("move/alt+k", "pane.focus", { direction = "up" })
-rex.bind("move/alt+up", "pane.focus", { direction = "up" })
-rex.bind("move/enter", "client.mode.exit")
-rex.bind("move/escape", "client.mode.exit")
-rex.bind("move/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("move/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("move/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("move/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("move/ctrl+t", "client.mode.enter", { name = "tab" })
-
--- tab
-rex.bind("tab/ctrl+t", "client.mode.exit")
-rex.bind("tab/r", "client.mode.enter", { name = "renametab" })
-rex.bind("tab/h", "client.tab.previous")
-rex.bind("tab/left", "client.tab.previous")
-rex.bind("tab/up", "client.tab.previous")
-rex.bind("tab/k", "client.tab.previous")
-rex.bind("tab/l", "client.tab.next")
-rex.bind("tab/right", "client.tab.next")
-rex.bind("tab/down", "client.tab.next")
-rex.bind("tab/j", "client.tab.next")
-rex.bind("tab/n", "then_normal", { action = "client.tab.new" })
-rex.bind("tab/x", "then_normal", { action = "client.tab.close" })
-rex.bind("tab/b", "then_normal", { action = "pane.move_to_new_tab" })
-rex.bind("tab/1", "then_normal", { action = "client.tab.goto", args = { index = 1 } })
-rex.bind("tab/2", "then_normal", { action = "client.tab.goto", args = { index = 2 } })
-rex.bind("tab/3", "then_normal", { action = "client.tab.goto", args = { index = 3 } })
-rex.bind("tab/4", "then_normal", { action = "client.tab.goto", args = { index = 4 } })
-rex.bind("tab/5", "then_normal", { action = "client.tab.goto", args = { index = 5 } })
-rex.bind("tab/6", "then_normal", { action = "client.tab.goto", args = { index = 6 } })
-rex.bind("tab/7", "then_normal", { action = "client.tab.goto", args = { index = 7 } })
-rex.bind("tab/8", "then_normal", { action = "client.tab.goto", args = { index = 8 } })
-rex.bind("tab/9", "then_normal", { action = "client.tab.goto", args = { index = 9 } })
-rex.bind("tab/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("tab/alt+n", "pane.split.auto")
-rex.bind("tab/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("tab/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("tab/alt+h", "pane.focus", { direction = "left" })
-rex.bind("tab/alt+left", "pane.focus", { direction = "left" })
-rex.bind("tab/alt+l", "pane.focus", { direction = "right" })
-rex.bind("tab/alt+right", "pane.focus", { direction = "right" })
-rex.bind("tab/alt+j", "pane.focus", { direction = "down" })
-rex.bind("tab/alt+down", "pane.focus", { direction = "down" })
-rex.bind("tab/alt+k", "pane.focus", { direction = "up" })
-rex.bind("tab/alt+up", "pane.focus", { direction = "up" })
-rex.bind("tab/enter", "client.mode.exit")
-rex.bind("tab/escape", "client.mode.exit")
-rex.bind("tab/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("tab/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("tab/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("tab/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("tab/ctrl+h", "client.mode.enter", { name = "move" })
-
--- scroll
-rex.bind("scroll/ctrl+s", "client.mode.exit")
-rex.bind("scroll/s", "client.mode.enter", { name = "entersearch", once = true })
--- config.kdl:217 (shared Ctrl b, last one wins) also covers scroll mode.
-rex.bind("scroll/ctrl+b", "client.mode.enter", { name = "tmux" })
-rex.bind("scroll/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("scroll/alt+n", "pane.split.auto")
-rex.bind("scroll/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("scroll/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("scroll/alt+h", "pane.focus", { direction = "left" })
-rex.bind("scroll/alt+left", "pane.focus", { direction = "left" })
-rex.bind("scroll/alt+l", "pane.focus", { direction = "right" })
-rex.bind("scroll/alt+right", "pane.focus", { direction = "right" })
-rex.bind("scroll/alt+j", "pane.focus", { direction = "down" })
-rex.bind("scroll/alt+down", "pane.focus", { direction = "down" })
-rex.bind("scroll/alt+k", "pane.focus", { direction = "up" })
-rex.bind("scroll/alt+up", "pane.focus", { direction = "up" })
-rex.bind("scroll/enter", "client.mode.exit")
-rex.bind("scroll/escape", "client.mode.exit")
-rex.bind("scroll/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("scroll/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("scroll/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("scroll/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("scroll/ctrl+h", "client.mode.enter", { name = "move" })
-
--- search
-rex.bind("search/ctrl+s", "client.mode.exit")
--- config.kdl:217 (shared Ctrl b, last one wins) also covers search mode.
-rex.bind("search/ctrl+b", "client.mode.enter", { name = "tmux" })
-rex.bind("search/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("search/alt+n", "pane.split.auto")
-rex.bind("search/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("search/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("search/alt+h", "pane.focus", { direction = "left" })
-rex.bind("search/alt+left", "pane.focus", { direction = "left" })
-rex.bind("search/alt+l", "pane.focus", { direction = "right" })
-rex.bind("search/alt+right", "pane.focus", { direction = "right" })
-rex.bind("search/alt+j", "pane.focus", { direction = "down" })
-rex.bind("search/alt+down", "pane.focus", { direction = "down" })
-rex.bind("search/alt+k", "pane.focus", { direction = "up" })
-rex.bind("search/alt+up", "pane.focus", { direction = "up" })
-rex.bind("search/enter", "client.mode.exit")
-rex.bind("search/escape", "client.mode.exit")
-rex.bind("search/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("search/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("search/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("search/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("search/ctrl+h", "client.mode.enter", { name = "move" })
-
--- entersearch (acts once)
-rex.bind("entersearch/ctrl+c", "client.mode.enter", { name = "scroll" })
--- config.kdl:196 (shared Enter/Esc, last one wins) covers escape and enter.
-rex.bind("entersearch/escape", "client.mode.exit")
-rex.bind("entersearch/enter", "client.mode.exit")
-rex.bind("entersearch/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("entersearch/alt+n", "pane.split.auto")
-rex.bind("entersearch/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("entersearch/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("entersearch/alt+h", "pane.focus", { direction = "left" })
-rex.bind("entersearch/alt+left", "pane.focus", { direction = "left" })
-rex.bind("entersearch/alt+l", "pane.focus", { direction = "right" })
-rex.bind("entersearch/alt+right", "pane.focus", { direction = "right" })
-rex.bind("entersearch/alt+j", "pane.focus", { direction = "down" })
-rex.bind("entersearch/alt+down", "pane.focus", { direction = "down" })
-rex.bind("entersearch/alt+k", "pane.focus", { direction = "up" })
-rex.bind("entersearch/alt+up", "pane.focus", { direction = "up" })
-rex.bind("entersearch/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("entersearch/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("entersearch/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("entersearch/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("entersearch/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("entersearch/ctrl+h", "client.mode.enter", { name = "move" })
-rex.bind("entersearch/ctrl+b", "client.mode.enter", { name = "tmux" })
-
--- renametab
-rex.bind("renametab/ctrl+c", "client.mode.exit")
-rex.bind("renametab/escape", "client.mode.exit")
-rex.bind("renametab/enter", "client.mode.exit")
-rex.bind("renametab/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("renametab/alt+n", "pane.split.auto")
-rex.bind("renametab/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("renametab/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("renametab/alt+h", "pane.focus", { direction = "left" })
-rex.bind("renametab/alt+left", "pane.focus", { direction = "left" })
-rex.bind("renametab/alt+l", "pane.focus", { direction = "right" })
-rex.bind("renametab/alt+right", "pane.focus", { direction = "right" })
-rex.bind("renametab/alt+j", "pane.focus", { direction = "down" })
-rex.bind("renametab/alt+down", "pane.focus", { direction = "down" })
-rex.bind("renametab/alt+k", "pane.focus", { direction = "up" })
-rex.bind("renametab/alt+up", "pane.focus", { direction = "up" })
-rex.bind("renametab/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("renametab/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("renametab/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("renametab/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("renametab/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("renametab/ctrl+h", "client.mode.enter", { name = "move" })
-rex.bind("renametab/ctrl+b", "client.mode.enter", { name = "tmux" })
-
--- renamepane
-rex.bind("renamepane/ctrl+c", "client.mode.exit")
-rex.bind("renamepane/escape", "client.mode.exit")
-rex.bind("renamepane/enter", "client.mode.exit")
-rex.bind("renamepane/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("renamepane/alt+n", "pane.split.auto")
-rex.bind("renamepane/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("renamepane/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("renamepane/alt+h", "pane.focus", { direction = "left" })
-rex.bind("renamepane/alt+left", "pane.focus", { direction = "left" })
-rex.bind("renamepane/alt+l", "pane.focus", { direction = "right" })
-rex.bind("renamepane/alt+right", "pane.focus", { direction = "right" })
-rex.bind("renamepane/alt+j", "pane.focus", { direction = "down" })
-rex.bind("renamepane/alt+down", "pane.focus", { direction = "down" })
-rex.bind("renamepane/alt+k", "pane.focus", { direction = "up" })
-rex.bind("renamepane/alt+up", "pane.focus", { direction = "up" })
-rex.bind("renamepane/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("renamepane/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("renamepane/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("renamepane/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("renamepane/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("renamepane/ctrl+h", "client.mode.enter", { name = "move" })
-rex.bind("renamepane/ctrl+b", "client.mode.enter", { name = "tmux" })
-
--- session
-rex.bind("session/ctrl+o", "client.mode.exit")
-rex.bind("session/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("session/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("session/alt+n", "pane.split.auto")
-rex.bind("session/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("session/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("session/alt+h", "pane.focus", { direction = "left" })
-rex.bind("session/alt+left", "pane.focus", { direction = "left" })
-rex.bind("session/alt+l", "pane.focus", { direction = "right" })
-rex.bind("session/alt+right", "pane.focus", { direction = "right" })
-rex.bind("session/alt+j", "pane.focus", { direction = "down" })
-rex.bind("session/alt+down", "pane.focus", { direction = "down" })
-rex.bind("session/alt+k", "pane.focus", { direction = "up" })
-rex.bind("session/alt+up", "pane.focus", { direction = "up" })
-rex.bind("session/enter", "client.mode.exit")
-rex.bind("session/escape", "client.mode.exit")
-rex.bind("session/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("session/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("session/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("session/ctrl+h", "client.mode.enter", { name = "move" })
-rex.bind("session/ctrl+b", "client.mode.enter", { name = "tmux" })
-
--- tmux mode (zellij's tmux emulation; reachable via scroll or search, ctrl+b)
-rex.bind("tmux/[", "client.mode.enter", { name = "scroll" })
-rex.bind("tmux/ctrl+b", "then_normal", { action = "pane.send_key", args = { key = "ctrl+b" } })
-rex.bind("tmux/shift+'", "then_normal", { action = "pane.split", args = { direction = "down" } })
-rex.bind("tmux/shift+5", "then_normal", { action = "pane.split", args = { direction = "right" } })
-rex.bind("tmux/z", "then_normal", { action = "pane.zoom" })
-rex.bind("tmux/c", "then_normal", { action = "client.tab.new" })
-rex.bind("tmux/,", "client.mode.enter", { name = "renametab" })
-rex.bind("tmux/p", "then_normal", { action = "client.tab.previous" })
-rex.bind("tmux/n", "then_normal", { action = "client.tab.next" })
-rex.bind("tmux/left", "then_normal", { action = "pane.focus", args = { direction = "left" } })
-rex.bind("tmux/right", "then_normal", { action = "pane.focus", args = { direction = "right" } })
-rex.bind("tmux/down", "then_normal", { action = "pane.focus", args = { direction = "down" } })
-rex.bind("tmux/up", "then_normal", { action = "pane.focus", args = { direction = "up" } })
-rex.bind("tmux/h", "then_normal", { action = "pane.focus", args = { direction = "left" } })
-rex.bind("tmux/l", "then_normal", { action = "pane.focus", args = { direction = "right" } })
-rex.bind("tmux/j", "then_normal", { action = "pane.focus", args = { direction = "down" } })
-rex.bind("tmux/k", "then_normal", { action = "pane.focus", args = { direction = "up" } })
-rex.bind("tmux/o", "pane.focus_next")
-rex.bind("tmux/x", "then_normal", { action = "pane.close" })
-rex.bind("tmux/ctrl+g", "client.mode.enter", { name = "locked" })
-rex.bind("tmux/alt+n", "pane.split.auto")
-rex.bind("tmux/alt+i", "client.tab.move", { direction = "backward" })
-rex.bind("tmux/alt+o", "client.tab.move", { direction = "forward" })
-rex.bind("tmux/alt+h", "pane.focus", { direction = "left" })
-rex.bind("tmux/alt+left", "pane.focus", { direction = "left" })
-rex.bind("tmux/alt+l", "pane.focus", { direction = "right" })
-rex.bind("tmux/alt+right", "pane.focus", { direction = "right" })
-rex.bind("tmux/alt+j", "pane.focus", { direction = "down" })
-rex.bind("tmux/alt+down", "pane.focus", { direction = "down" })
-rex.bind("tmux/alt+k", "pane.focus", { direction = "up" })
-rex.bind("tmux/alt+up", "pane.focus", { direction = "up" })
-rex.bind("tmux/enter", "client.mode.exit")
-rex.bind("tmux/escape", "client.mode.exit")
-rex.bind("tmux/ctrl+p", "client.mode.enter", { name = "pane" })
-rex.bind("tmux/ctrl+n", "client.mode.enter", { name = "resize" })
-rex.bind("tmux/ctrl+s", "client.mode.enter", { name = "scroll" })
-rex.bind("tmux/ctrl+o", "client.mode.enter", { name = "session" })
-rex.bind("tmux/ctrl+t", "client.mode.enter", { name = "tab" })
-rex.bind("tmux/ctrl+h", "client.mode.enter", { name = "move" })
+-- ---------------------------------------------------------------------------
+-- Herdr bindings intentionally left unbound (no Rex equivalent known)
+-- ---------------------------------------------------------------------------
+-- prefix+?        help                     no help overlay; closest is the command
+--                                          palette (client.palette.toggle)
+-- prefix+q        detach                   no client detach action
+-- prefix+o        open_notification_target closest is View Activity… (pane.view_activity)
+-- prefix+shift+g  new_worktree             no worktree action
+-- prefix+shift+d  close_workspace          session.close exists but its confirmation
+--                                          behavior is undocumented; left unbound on purpose
+-- next/previous_agent (prefix+J/K)         Rex has no agent rows; the activity view
+--                                          (client.sidebar.activity.toggle) covers this
+-- navigate_workspace_up/down (k/j overrides) sidebar-only in Herdr
+-- remote_image_paste (ctrl+v)                Herdr --remote only
