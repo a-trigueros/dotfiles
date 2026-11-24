@@ -3,3 +3,10 @@ name = "catppuccin-macchiato-blue"
 
 [ai]
 enabled = true
+
+[threads]
+enabled = true
+
+[daemon]
+enabled = true
+autostart = true
