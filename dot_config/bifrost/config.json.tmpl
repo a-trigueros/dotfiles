@@ -98,6 +98,19 @@
         "allow_by_default": true
       },
       {
+        "name": "mindwtr",
+        "connection_type": "http",
+        "connection_string": "http://127.0.0.1:8722/mcp",
+        "auth_type": "headers",
+        "headers": {
+          "Authorization": "Bearer 04429d91675068f91d794c58d43446bc14cc83be375a04b64e4bc0e6ce43674b"
+        },
+        "tools_to_execute": [
+          "*"
+        ],
+        "allow_by_default": true
+      },
+      {
         "name": "zai_web_search_sse",
         "connection_type": "sse",
         "connection_string": "env.ZAI_MCP_URL",
