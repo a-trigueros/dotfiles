@@ -11,6 +11,7 @@ navigate_workspace_up = "k"
 navigate_workspace_down = "j"
 next_agent  = "prefix+J"
 previous_agent = "prefix+K"
+copy_mode = "prefix+e"
 
 [theme]
 name = "catppuccin"
